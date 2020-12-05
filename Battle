@@ -1,0 +1,162 @@
+import random
+
+class Pokemon():
+    def __init__(self, name, type1, type2, level, max_HP, attack, defense, sp_attack, sp_defense, speed, 
+                    move1=None, move2=None, move3=None, move4=None):
+        self.name = name
+        self.typing = {'type1' : type1, 'type2' : type2} 
+        self.level = level
+        self.stats = {'current_HP' : max_HP, 'max_HP' : max_HP, 'attack' : attack, 'defense' : defense, 'sp_attack' : sp_attack,
+                        'sp_defense' : sp_defense, 'speed' : speed}
+        self.stat_modifiers = {'attack' : 0, 'defense' : 0, 'sp_attack' : 0, 'sp_defense' : 0, 'speed' : 0, 'accuracy' : 0, 'evasion' : 0} 
+        self.status = None
+        self.moves = [{'name' : move1, 'type' : '', 'category' : '', 'power' : 0, 'accuracy' : 0, 'current_pp' : 0, 'max_pp' : 0},
+                        {'name' : move2, 'type' : '', 'category' : '', 'power' : 0, 'accuracy' : 0, 'current_pp' : 0, 'max_pp' : 0},
+                        {'name' : move3, 'type' : '', 'category' : '', 'power' : 0, 'accuracy' : 0, 'current_pp' : 0, 'max_pp' : 0}, 
+                        {'name' : move4, 'type' : '', 'category' : '', 'power' : 0, 'accuracy' : 0, 'current_pp' : 0, 'max_pp' : 0}]
+        self.init_moves()
+
+    def show_stats(self):
+        'Prints the stats of the Pokemon with modifiers applied.' # TO DO: Add modifiers
+        print('Pokemon: ', self.name)
+        if self.typing['type2'] != None:
+            print(f'Type: {self.typing["type1"]}/{self.typing["type2"]}')
+        else:
+            print(f'Type: {self.typing["type1"]}')
+        print(f'Level: {self.level}')
+        print(f'HP: {self.stats["current_HP"]}/{self.stats["max_HP"]}')
+        print(f'Attack: {self.stats["attack"]}')
+        print(f'Defense: {self.stats["defense"]}')
+        print(f'Special Attack: {self.stats["sp_attack"]}')
+        print(f'Special Defense: {self.stats["sp_defense"]}')
+        print(f'Speed: {self.stats["speed"]}')
+        print()
+
+    def show_moves(self):
+        'Prints move information'
+        for n in range(0, 4):
+            if self.moves[n]['name'] != None:
+                print(f'Name: {self.moves[n]["name"]}')
+                print(f'Type: {self.moves[n]["type"]}')
+                print(f'Category: {self.moves[n]["category"]}')
+                print(f'Power: {self.moves[n]["power"]}')
+                print(f'Accuracy: {self.moves[n]["accuracy"]}')
+                print(f'PP: {self.moves[n]["current_pp"]}/{self.moves[n]["max_pp"]}')
+                print()
+
+    def init_moves(self):
+        'Adds move data from a dictionary to each of the Pokemon\'s moves'
+        move_dictionary = {'Dragon Claw' : ('Dragon', 'Physical', 80, 100, 24),
+                            'Earthquake' : ('Ground', 'Physical', 100, 100, 16),
+                            'Fire Fang' : ('Fire', 'Physical', 65, 95, 24),
+                            'Swords Dance' : ('Normal', 'Status', None, None, 32)}
+        for move_num in range(0, 4):
+            try:
+                current_move = self.moves[move_num]
+                move_name = self.moves[move_num]['name']
+                current_move['type'] = move_dictionary[move_name][0]
+                current_move['category'] = move_dictionary[move_name][1]
+                current_move['power'] = move_dictionary[move_name][2]
+                current_move['accuracy'] = move_dictionary[move_name][3]
+                current_move['current_pp'] = move_dictionary[move_name][4]
+                current_move['max_pp'] = move_dictionary[move_name][4]
+            except Exception:
+                # If current move name is not in dictionary, that move is set to None and is no longer displayed.
+                self.moves[move_num]['name'] = None
+
+# def attack(atk_p, move, def_p):
+#     if accuracy_check(attacking_pokemon, move, defending_pokemon) == True:
+
+#     else:
+
+#     pass
+
+def next_turn(pokemon_1, action_1, pokemon_2, action_2):
+    pass
+
+def crit_check():
+    pass
+
+def accuracy_check(attacking, move, defending):
+    num = 3
+    den = 3
+    modifier = attacking.stat_modifiers['accuracy'] - defending.stat_modifiers['evasion']
+
+    if modifier > 6:
+        modifier = 6
+    elif modifier < -6:
+        modifier = -6
+    if modifier > 0:
+        num = num + modifier
+    elif modifier < 0:
+        den = den + (modifier * -1)
+
+    accuracy = attacking.moves[move]['accuracy'] * (num / den)
+    check = random.randint(1, 100)
+    if check <= accuracy:
+        return True
+    else:
+        return False
+
+def weather_check():
+    pass
+
+def stab_check(attacking, move):
+    if (attacking.typing['type1'] or attacking.typing['type2']) == attacking.moves[move]['type']:
+        return 1.5
+    else:
+        return 1
+
+def type_effectiveness_check(attacking, move, defending):
+    """Return the damage multiplier for how super effective the move is. type_chart is a matrix showing how each type matches up between each
+    other. X-axis is the defending type, y-axis is the attacking type. Top left corner is (0, 0). Each type corresponds to a number on the 
+    x and y axis."""
+    type_key = {'Normal' : 0, 'Fire' : 1, 'Water' : 2, 'Grass' : 3, 'Electric' : 4, 'Ice' : 5, 'Fighting' : 6, 'Poison' : 7, 'Ground' : 8,
+                'Flying' : 9, 'Pyschic' : 10, 'Bug' : 11, 'Rock' : 12, 'Ghost' : 13, 'Dragon' : 14, 'Dark' : 15, 'Steel' : 16, 'Fairy' : 17}
+    type_chart = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5, 0, 1, 1, 0.5, 1],
+                    [1, 0.5, 0.5, 2, 1, 2, 1, 1, 1, 1, 1, 2, 0.5, 1, 0.5, 1, 2, 1],
+                    [1, 2, 0.5, 0.5, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 0.5, 1, 1, 1],
+                    [1, 0.5, 2, 0.5, 1, 1, 1, 0.5, 2, 0.5, 1, 0.5, 2, 1, 0.5, 1, 0.5, 1],
+                    [1, 1, 2, 0.5, 0.5, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0.5, 1, 1, 1],
+                    [1, 0.5, 0.5, 2, 1, 0.5, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 0.5, 1],
+                    [2, 1, 1, 1, 1, 2, 1, 0.5, 1, 0.5, 0.5, 0.5, 2, 0, 1, 2, 2, 0.5],
+                    [1, 1, 1, 2, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 1, 1, 0, 2],
+                    [1, 2, 1, 0.5, 2, 1, 1, 2, 1, 0, 1, 0.5, 2, 1, 1, 1, 2, 1],
+                    [1, 1, 1, 2, 0.5, 1, 2, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 0.5, 1],
+                    [1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 0.5, 1, 1, 1, 1, 0, 0.5, 1],
+                    [1, 0.5, 1, 2, 1, 1, 0.5, 0.5, 1, 0.5, 2, 1, 1, 0.5, 1, 2, 0.5, 0.5],
+                    [1, 2, 1, 1, 1, 2, 0.5, 1, 0.5, 2, 1, 2, 1, 1, 1, 1, 0.5, 1],
+                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0.5, 0],
+                    [1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 0.5],
+                    [1, 0.5, 0.5, 1, 0.5, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0.5, 2],
+                    [1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1]]
+
+    atk_id = type_key.get(attacking.moves[move]['type'])
+    def1_id = type_key.get(defending.typing['type1'])
+    mult_1 = type_chart[atk_id][def1_id]
+    try:
+        def2_id = type_key.get(defending.typing['type2'])
+        mult_2 = type_chart[atk_id][def2_id]
+    except:
+        mult_2 = 1
+
+    return mult_1 * mult_2
+
+def burn_check(attacking):
+    if atk_p['status'] == 'Burn' and attacking.moves[move]['category'] == 'Physical':
+        return 0.5
+    else:
+        return 1
+
+def sleep_check():
+    pass
+
+def frozen_check():
+    pass
+
+
+
+print()
+garchomp = Pokemon('Garchomp', 'Dragon', 'Ground', 100, 108, 130, 95, 80, 85, 102, 'Earthquake', 'Dragon Claw', 'Fire Fang', 'Swords Dance')
+print(type_effectiveness_check(garchomp, 1, garchomp))
