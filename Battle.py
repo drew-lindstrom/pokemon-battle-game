@@ -1,4 +1,5 @@
 import random
+from game_data import move_dict
 
 class Pokemon():
     def __init__(self, name, type1, type2, level, max_hp, attack, defense, sp_attack, sp_defense, speed, 
@@ -46,23 +47,23 @@ class Pokemon():
 
     def init_moves(self):
         """Adds move data from a dictionary to each of the Pokemon\'s moves"""
-        move_dictionary = {'Dragon Claw' : ('Dragon', 'Physical', 80, 100, 24),
-                            'Earthquake' : ('Ground', 'Physical', 100, 100, 16),
-                            'Fire Fang' : ('Fire', 'Physical', 65, 95, 24),
-                            'Swords Dance' : ('Normal', 'Status', None, None, 32),
-                            'Ice Shard' : ('Ice', 'Physical', 40, 100, 48),
-                            'Icicle Crash' : ('Ice', 'Physical', 85, 90, 16),
-                            'Knock Off' : ('Dark', 'Physical', 65, 100, 32)}
+        # move_dictionary = {'Dragon Claw' : ('Dragon', 'Physical', 80, 100, 24),
+        #                     'Earthquake' : ('Ground', 'Physical', 100, 100, 16),
+        #                     'Fire Fang' : ('Fire', 'Physical', 65, 95, 24),
+        #                     'Swords Dance' : ('Normal', 'Status', None, None, 32),
+        #                     'Ice Shard' : ('Ice', 'Physical', 40, 100, 48),
+        #                     'Icicle Crash' : ('Ice', 'Physical', 85, 90, 16),
+        #                     'Knock Off' : ('Dark', 'Physical', 65, 100, 32)}
         for move_num in range(0, 4):
             try:
                 current_move = self.moves[move_num]
                 move_name = self.moves[move_num]['name']
-                current_move['type'] = move_dictionary[move_name][0]
-                current_move['category'] = move_dictionary[move_name][1]
-                current_move['power'] = move_dictionary[move_name][2]
-                current_move['accuracy'] = move_dictionary[move_name][3]
-                current_move['current_pp'] = move_dictionary[move_name][4]
-                current_move['max_pp'] = move_dictionary[move_name][4]
+                current_move['type'] = move_dict[move_name][0]
+                current_move['category'] = move_dict[move_name][1]
+                current_move['power'] = move_dict[move_name][2]
+                current_move['accuracy'] = move_dict[move_name][3]
+                current_move['current_pp'] = move_dict[move_name][4]
+                current_move['max_pp'] = move_dict[move_name][4]
             except Exception:
                 # If current move name is not in dictionary, that move is set to None and is no longer displayed.
                 self.moves[move_num]['name'] = None
