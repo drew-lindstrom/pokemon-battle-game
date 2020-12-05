@@ -1,5 +1,5 @@
 import random
-from game_data import move_dict
+from game_data import move_dict, type_key, type_chart
 
 class Pokemon():
     def __init__(self, name, type1, type2, level, max_hp, attack, defense, sp_attack, sp_defense, speed, 
@@ -47,13 +47,7 @@ class Pokemon():
 
     def init_moves(self):
         """Adds move data from a dictionary to each of the Pokemon\'s moves"""
-        # move_dictionary = {'Dragon Claw' : ('Dragon', 'Physical', 80, 100, 24),
-        #                     'Earthquake' : ('Ground', 'Physical', 100, 100, 16),
-        #                     'Fire Fang' : ('Fire', 'Physical', 65, 95, 24),
-        #                     'Swords Dance' : ('Normal', 'Status', None, None, 32),
-        #                     'Ice Shard' : ('Ice', 'Physical', 40, 100, 48),
-        #                     'Icicle Crash' : ('Ice', 'Physical', 85, 90, 16),
-        #                     'Knock Off' : ('Dark', 'Physical', 65, 100, 32)}
+
         for move_num in range(0, 4):
             try:
                 current_move = self.moves[move_num]
@@ -64,6 +58,7 @@ class Pokemon():
                 current_move['accuracy'] = move_dict[move_name][3]
                 current_move['current_pp'] = move_dict[move_name][4]
                 current_move['max_pp'] = move_dict[move_name][4]
+
             except Exception:
                 # If current move name is not in dictionary, that move is set to None and is no longer displayed.
                 self.moves[move_num]['name'] = None
@@ -121,26 +116,7 @@ def type_effectiveness_check(attacker, move, defender):
     """Return the damage multiplier for how super effective the move is. type_chart is a matrix showing how each type matches up between each
     other. X-axis is the defending type, y-axis is the attacking type. Top left corner is (0, 0). Each type corresponds to a number on the 
     x and y axis."""
-    type_key = {'Normal' : 0, 'Fire' : 1, 'Water' : 2, 'Grass' : 3, 'Electric' : 4, 'Ice' : 5, 'Fighting' : 6, 'Poison' : 7, 'Ground' : 8,
-                'Flying' : 9, 'Pyschic' : 10, 'Bug' : 11, 'Rock' : 12, 'Ghost' : 13, 'Dragon' : 14, 'Dark' : 15, 'Steel' : 16, 'Fairy' : 17}
-    type_chart = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5, 0, 1, 1, 0.5, 1],
-                    [1, 0.5, 0.5, 2, 1, 2, 1, 1, 1, 1, 1, 2, 0.5, 1, 0.5, 1, 2, 1],
-                    [1, 2, 0.5, 0.5, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 0.5, 1, 1, 1],
-                    [1, 0.5, 2, 0.5, 1, 1, 1, 0.5, 2, 0.5, 1, 0.5, 2, 1, 0.5, 1, 0.5, 1],
-                    [1, 1, 2, 0.5, 0.5, 1, 1, 1, 0, 2, 1, 1, 1, 1, 0.5, 1, 1, 1],
-                    [1, 0.5, 0.5, 2, 1, 0.5, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 0.5, 1],
-                    [2, 1, 1, 1, 1, 2, 1, 0.5, 1, 0.5, 0.5, 0.5, 2, 0, 1, 2, 2, 0.5],
-                    [1, 1, 1, 2, 1, 1, 1, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 1, 1, 0, 2],
-                    [1, 2, 1, 0.5, 2, 1, 1, 2, 1, 0, 1, 0.5, 2, 1, 1, 1, 2, 1],
-                    [1, 1, 1, 2, 0.5, 1, 2, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 0.5, 1],
-                    [1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 0.5, 1, 1, 1, 1, 0, 0.5, 1],
-                    [1, 0.5, 1, 2, 1, 1, 0.5, 0.5, 1, 0.5, 2, 1, 1, 0.5, 1, 2, 0.5, 0.5],
-                    [1, 2, 1, 1, 1, 2, 0.5, 1, 0.5, 2, 1, 2, 1, 1, 1, 1, 0.5, 1],
-                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 1],
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0.5, 0],
-                    [1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 2, 1, 1, 2, 1, 0.5, 1, 0.5],
-                    [1, 0.5, 0.5, 1, 0.5, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0.5, 2],
-                    [1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1]]
+
 
     atk_id = type_key.get(attacker.moves[move]['type'])
     def1_id = type_key.get(defender.typing['type1'])
@@ -166,9 +142,16 @@ def sleep_check():
 def frozen_check():
     pass
 
+def pp_check():
+    pass
+
+def random()
+    pass
+
 def attack(attacker, move, defender):
     """Determines if a move hits and how much damage is dealt."""
 #  TO DO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
+    
     print(f'{attacker.name} used {attacker.moves[move]["name"]}!')
 
     if accuracy_check(attacker, move, defender) == True:
@@ -186,7 +169,7 @@ def attack(attacker, move, defender):
 
         damage = (((((2 * attacker.level / 5) + 2) * attacker.moves[move]['power'] * (attack_stat/defense_stat)) / 50) + 2) * crit * stab * typ * burn
 
-        defender.stats['current_hp'] = defender.stats['current_hp'] - damage
+        defender.stats['current_hp'] -= damage
 
         if typ > 1:
             print('It\'s super effective!')
@@ -195,13 +178,15 @@ def attack(attacker, move, defender):
         # TO DO: Type immunity text.
 
     else:
-    # TO DO: Grammar for if pokemon name ends with 's'.
-        print(f'{attacker.name}\'s attack missed!')
+        if attacker.name.endswith('s') == True:
+            print(f'{attacker.name}\' attack missed!')
+        else:
+            print(f'{attacker.name}\'s attack missed!')
 
     attacker.moves[move]['current_pp'] -= 1
 
     print(f'{defender.name}\'s HP: {defender.stats["current_hp"]}/{defender.stats["max_hp"]}')
-    print(f'{attacker.name}\'s PP for {attacker.moves[move]}: {attacker.moves[move]["current_hp"]}/{attacker.moves[move]["max_pp"]}')
+    print(f'{attacker.name}\'s PP for {attacker.moves[move]["name"]}: {attacker.moves[move]["current_pp"]}/{attacker.moves[move]["max_pp"]}')
     print()
 
 garchomp = Pokemon('Garchomp', 'Dragon', 'Ground', 100, 108, 130, 95, 80, 85, 102, 'Earthquake', 'Dragon Claw', 'Fire Fang', 'Swords Dance')
