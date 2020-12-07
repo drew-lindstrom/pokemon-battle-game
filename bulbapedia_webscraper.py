@@ -30,12 +30,16 @@ def get_weight():
     return [weight_re.findall(weight.text) for weight in weights]
 
 def get_base_stats():
-    stats_table = soup.find('a', title="Statistic").find_parent('table')
-    stats = stats_table.find_all('div style="float:right"', {'sytle': lambda x: x != 'float:left'})
-    print(stats)
-    return [stat.text for stat in stats]
+    hp = soup.find('tr', style='background: #FF5959; text-align:center').find('div', style='float:right').string
+    attack = soup.find('tr', style='background: #F5AC78; text-align:center').find('div', style='float:right').string
+    defense = soup.find('tr', style='background: #FAE078; text-align:center').find('div', style='float:right').string
+    sp_attack = soup.find('tr', style='background: #9DB7F5; text-align:center').find('div', style='float:right').string
+    sp_def = soup.find('tr', style='background: #A7DB8D; text-align:center').find('div', style='float:right').string
+    speed = soup.find('tr', style='background: #FA92B2; text-align:center').find('div', style='float:right').string
+
+    print(hp, attack, defense, sp_attack, sp_def, speed)
 
 print(get_type())
 print(get_abilities())
 print(get_weight())
-print(get_base_stats())
+get_base_stats()
