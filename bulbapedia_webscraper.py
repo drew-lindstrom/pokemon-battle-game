@@ -41,19 +41,17 @@ def get_next_pokemon(soup):
     next_pokemon = soup.find(id='mw-content-text').find(style='text-align: left').a['href']
     return next_pokemon
 
-def get_data(pokemon_dict, current_URL):
-    page = requests.get(current_URL)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
-    next_URL = 'https://bulbpaedia.bulbagarden.net' + get_next_pokemon(soup)
-    return next_URL
-
 current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Bulbasaur_(Pok%C3%A9mon)'
-for x in range(10):
+
+# TO DO: Make a way for it to stop at the last pokemon and not loop.
+# Maybe use a named tuple instead?
+for x in range(898):
     try:
-        print(f'Pokemon number: {x}')
-        temp, current_URL = get_data(pokemon_dict, current_URL)
+        page = requests.get(current_URL)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
+        print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
+        current_URL = 'https://bulbapedia.bulbagarden.net' + get_next_pokemon(soup)
+
     except:
         continue
-print(current_URL)
-print(pokemon_dict)
