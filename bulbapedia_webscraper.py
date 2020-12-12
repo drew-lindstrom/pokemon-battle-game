@@ -1,13 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
+from unicodedata import normalize
 import re
 
 weight_re = re.compile(r'\d+.\d+')
 pokemon_dict = {}
 
-def get_name(soup):
-    name = soup.find(id='mw-content-text').find(class_='roundy').find('b').text
-    return name
+def get_names(soup):
+
+    html_block = soup.find(id='mw-content-text').find('table', class_='roundy', style='background:#FFF;')
+    names_html = html_block.find_all(class_=('image'))
+    return [name['title'] for name in names_html]
 
 def get_type(soup):
     # get_abilities() and get_weight() are set to sort through all six possible entiries, this function right now only
@@ -17,9 +20,10 @@ def get_type(soup):
     return [typ.find('span').text for typ in types]
 
 def get_abilities(soup):
-    abilities_table = soup.find('a', title='Ability').parent.find_next('table')
-    abilities = abilities_table.find_all('td', {'style': lambda x: x != 'display: none'})
-    return [None if ability.find('span').text is 'Unknown' else ability.find('span').text for ability in abilities]
+
+    html_block = soup.find('a', title='Ability').parent.find_next('table')
+    abilities_html = html_block.find_all('td', {'style': lambda x: x != 'display: none'})
+    return [ability.find('span').text for ability in abilities_html]
 
 def get_weight(soup):
     weights_table = soup.find('a', title='Weight').parent.find_next('table')
@@ -41,11 +45,13 @@ def get_next_pokemon(soup):
     next_pokemon = soup.find(id='mw-content-text').find(style='text-align: left').a['href']
     return next_pokemon
 
-current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Charmander_(Pok%C3%A9mon)'
+current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Charizard_(Pokémon)'
 page = requests.get(current_URL)
 soup = BeautifulSoup(page.content, 'html.parser')
-pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
-print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
+print(get_names(soup))
+print(get_abilities(soup))
+# pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
+# print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
 
 # TO DO: Make a way for it to stop at the last pokemon and not loop.
 # Maybe use a named tuple instead?
