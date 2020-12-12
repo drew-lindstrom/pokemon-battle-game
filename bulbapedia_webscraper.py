@@ -19,7 +19,7 @@ def get_type(soup):
 def get_abilities(soup):
     abilities_table = soup.find('a', title='Ability').parent.find_next('table')
     abilities = abilities_table.find_all('td', {'style': lambda x: x != 'display: none'})
-    return [ability.find('span').text for ability in abilities]
+    return [None if ability.find('span').text is 'Unknown' else ability.find('span').text for ability in abilities]
 
 def get_weight(soup):
     weights_table = soup.find('a', title='Weight').parent.find_next('table')
@@ -41,17 +41,21 @@ def get_next_pokemon(soup):
     next_pokemon = soup.find(id='mw-content-text').find(style='text-align: left').a['href']
     return next_pokemon
 
-current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Bulbasaur_(Pok%C3%A9mon)'
+current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Charmander_(Pok%C3%A9mon)'
+page = requests.get(current_URL)
+soup = BeautifulSoup(page.content, 'html.parser')
+pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
+print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
 
 # TO DO: Make a way for it to stop at the last pokemon and not loop.
 # Maybe use a named tuple instead?
-for x in range(898):
-    try:
-        page = requests.get(current_URL)
-        soup = BeautifulSoup(page.content, 'html.parser')
-        pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
-        print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
-        current_URL = 'https://bulbapedia.bulbagarden.net' + get_next_pokemon(soup)
+# for x in range(898):
+#     try:
+#         page = requests.get(current_URL)
+#         soup = BeautifulSoup(page.content, 'html.parser')
+#         pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
+#         print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
+#         current_URL = 'https://bulbapedia.bulbagarden.net' + get_next_pokemon(soup)
 
-    except:
-        continue
+#     except:
+#         continue
