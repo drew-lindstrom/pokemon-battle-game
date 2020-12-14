@@ -16,11 +16,14 @@ def get_names(soup):
     return [name['title'] for name in names_html]
 
 def get_types(soup):
+    type_list = []
 
     html_block = soup.find('a', title='Type').parent.find_next('table').find('tr')
     types_html = html_block.find_all('td', {'style': lambda x: x != 'display: none;'}, recursive=False)
-    print(types_html[0].find('b').text)
-    return [type_.find('b').text for type_ in types_html]
+    for type_ in types_html:
+        type_list.append(type_.find('tr').find('b').text)
+        type_list.append(type_.find('tr').find('b').find_next('b').text)
+    return type_list
 
 def get_abilities(soup):
 
@@ -28,11 +31,15 @@ def get_abilities(soup):
     abilities_html = html_block.find_all('td', {'style': lambda x: x != 'display: none'}).td
     return [ability.find('span').text for ability in abilities_html]
 
-def get_weight(soup):
+def get_weights(soup):
 
     weights_table = soup.find('a', title='Weight').parent.find_next('table')
     weights = weights_table.find_all('tr', {'style': lambda x: x != 'display:none;'})
-    return [weight_re.findall(weight.text) for weight in weights]
+    for weight in weights:
+        text = weight.find('td'.text)
+        try:
+            
+    return [weight.find('td').text ]
 
 def get_base_stats(soup):
     # There might be issues when a Pokemon has multiple forms with different stats.
@@ -52,7 +59,7 @@ def get_next_pokemon(soup):
 current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Charizard_(Pokémon)'
 page = requests.get(current_URL)
 soup = BeautifulSoup(page.content, 'html.parser')
-print(get_types(soup))
+print(get_weights(soup))
 # pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
 # print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
 
