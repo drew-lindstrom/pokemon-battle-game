@@ -3,29 +3,33 @@ from bs4 import BeautifulSoup
 from unicodedata import normalize
 import re
 
+
 weight_re = re.compile(r'\d+.\d+')
 pokemon_dict = {}
 
 def get_names(soup):
-
+    """Retreives the name of the pokemon and additional forms (regional variants, mega, gigantamax, etc.) from the current page."""
+    # TO DO: Charizard returns two Gigantamax Charizard. Need to get rid of duplicates. Mega Charizard has hex decimal characters.
+    # TO DO: Remove Gigantamax names from list. Gigantamax pokemon don't have unique types or abilities.
     html_block = soup.find(id='mw-content-text').find('table', class_='roundy', style='background:#FFF;')
     names_html = html_block.find_all(class_=('image'))
     return [name['title'] for name in names_html]
 
-def get_type(soup):
-    # get_abilities() and get_weight() are set to sort through all six possible entiries, this function right now only
-    # looks for the first type pairing and will need to be updated for alternate forms
-    types_table = soup.find('a', title='Type').parent.find_next('table', style='margin:auto; background:none;')
-    types = types_table.find_all('td', {'style': lambda x: x != ('display: none; width:50%;' or 'display: none;')})
-    return [typ.find('span').text for typ in types]
+def get_types(soup):
+
+    html_block = soup.find('a', title='Type').parent.find_next('table').find('tr')
+    types_html = html_block.find_all('td', {'style': lambda x: x != 'display: none;'}, recursive=False)
+    print(types_html[0].find('b').text)
+    return [type_.find('b').text for type_ in types_html]
 
 def get_abilities(soup):
 
     html_block = soup.find('a', title='Ability').parent.find_next('table')
-    abilities_html = html_block.find_all('td', {'style': lambda x: x != 'display: none'})
+    abilities_html = html_block.find_all('td', {'style': lambda x: x != 'display: none'}).td
     return [ability.find('span').text for ability in abilities_html]
 
 def get_weight(soup):
+
     weights_table = soup.find('a', title='Weight').parent.find_next('table')
     weights = weights_table.find_all('tr', {'style': lambda x: x != 'display:none;'})
     return [weight_re.findall(weight.text) for weight in weights]
@@ -48,8 +52,7 @@ def get_next_pokemon(soup):
 current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Charizard_(Pokémon)'
 page = requests.get(current_URL)
 soup = BeautifulSoup(page.content, 'html.parser')
-print(get_names(soup))
-print(get_abilities(soup))
+print(get_types(soup))
 # pokemon_dict[get_name(soup)] = get_type(soup), get_abilities(soup), get_weight(soup), get_base_stats(soup)
 # print(f'{get_name(soup)}: {pokemon_dict[get_name(soup)]}')
 
