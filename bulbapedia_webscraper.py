@@ -4,72 +4,83 @@ from unicodedata import normalize
 import requests
 from bs4 import BeautifulSoup
 
-pokemon_dict = {}
-
 
 def get_names(soup):
-    """Retreives the name of the pokemon and additional forms (regional variants, mega, gigantamax, etc.) from the current page."""
+    """Retreives the name of the pokemon and additional forms (regional variants, megas, etc.) from the current page.
+    Gigantamax pokemon are excluded because they don't have altered stats, abilities, or types."""
     # TO DO: Charizard returns two Gigantamax Charizard. Need to get rid of duplicates. Mega Charizard has hex decimal characters.
-    # TO DO: Remove Gigantamax names from list. Gigantamax pokemon don't have unique types or abilities.
 
     names_list = []
 
     html_block = soup.find(id='mw-content-text').find('table',
                                                       class_='roundy', style='background:#FFF;')
     names_html = html_block.find_all(class_=('image'))
+
     for name in names_html:
-        # Gigantamax pokemon don't have altered stats, abilites, or types so they are excluded.
         if name['title'].startswith('Gigantamax'):
             pass
         else:
             names_list.append(name['title'])
+
     return names_list
 
 
 def get_types(soup):
     # TO DO: What happens with just one type?
+
     type_list = []
 
     html_block = soup.find(
         'a', title='Type').parent.find_next('table').find('tr')
     types_html = html_block.find_all(
         'td', {'style': lambda x: x != 'display: none;'}, recursive=False)
+
     for type_ in types_html:
         type_list.append([type_.find('small').text, type_.find('tr').find(
             'b').text, type_.find('tr').find('b').find_next('b').text])
-    print(type_list)
+
     return type_list
 
 
 def get_abilities(soup):
-    # TO DO: Check to make sure abilities match up with different forms. Slowbro comes to mind.
-    abilities_list = []
+
+    abilities_dict = {}
 
     html_block = soup.find('a', title='Ability').parent.find_next('table')
     abilities_html = html_block.find_all(
         'td', {'style': lambda x: x != 'display: none'})
 
     for ability_html in abilities_html:
-        name_and_abilities = []
-
-        name = ability_html.find('small').text
-        name_and_abilities.append(name)
+        form_name = ability_html.find('small').text
+        match = re.search('Hidden Ability', form_name)
+        # HTML divides abilities by each form of a pokemon if alternate forms exist. The HTML considers hidden abilities
+        # as their own form but is always listed after the forms that can have said hidden ability.
+        if match:
+            pass
+        else:
+            abilities_dict[form_name] = []
 
         abilities = ability_html.find_all('a')
 
         for ability in abilities:
-            name_and_abilities.append(ability.find('span').text)
-        abilities_list.append(name_and_abilities)
-        name_and_abilities = []
-    return abilities_list
+            ability_name = ability.find('span').text
+            if match:
+                for previous_form in abilities_dict:
+                    abilities_dict[previous_form].append(ability_name)
+            else:
+                abilities_dict[form_name].append(ability_name)
+
+    return abilities_dict
 
 
 def get_weights(soup):
+
     weight_list = []
 
     html_block = soup.find('a', title='Weight').parent.find_next('table')
     weights = html_block.find_all(
         'tr', {'style': lambda x: x != 'display:none;'})
+
     for weight in weights:
         text = weight.find('td').text
         try:
@@ -80,6 +91,7 @@ def get_weights(soup):
                 weight_list.append(re_result[0])
         except:
             continue
+
     return weight_list
 
 
@@ -109,10 +121,14 @@ def get_base_stats(soup):
 
 
 def get_next_pokemon(soup):
+
     next_pokemon = soup.find(
         id='mw-content-text').find(style='text-align: left').a['href']
+
     return next_pokemon
 
+
+pokemon_dict = {}
 
 current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Slowbro_(Pokémon)'
 page = requests.get(current_URL)
