@@ -126,18 +126,28 @@ def get_weights(soup):
 def get_base_stats(soup):
 
     stats_dict = {}
+    names_list = []
+    name_counter = 0
 
+    name_html = soup.find('a', href='/wiki/Pok%C3%A9mon_category').find_parent('tr').find_parent(
+        'tr').find_next_sibling('tr')
+    name_html = name_html.find_all('a', class_='image')
+    print(name_html)
+    for name in name_html:
+        names_list.append(name.title)
+        print(name.title)
     html_blocks = soup.find_all('a', href='/wiki/Statistic', title='Statistic')
 
     for html_block in html_blocks:
 
         html_block = html_block.parent.parent.parent
 
-        try:
-            name = html_block.find_previous_sibling('h5').find('span').text
-        except Exception:
-            name = soup.find(
-                'a', href='/wiki/Pok%C3%A9mon_category').parent.find('b').text
+        # try:
+        #     # name = html_block.find_previous_parent('h5').find('span').text
+        #     name = html_block.find_previous_parent('table').find('span').text
+        #     print(name)
+        # except Exception:
+
         hp = html_block.find(
             'tr', style='background: #FF5959; text-align:center').find('div', style='float:right').string
         attack = html_block.find(
@@ -150,7 +160,9 @@ def get_base_stats(soup):
             'tr', style='background: #A7DB8D; text-align:center').find('div', style='float:right').string
         speed = html_block.find(
             'tr', style='background: #FA92B2; text-align:center').find('div', style='float:right').string
-        stats_dict[name] = (hp, attack, defense, sp_attack, sp_def, speed)
+        stats_dict[names_list[name_counter]] = (
+            hp, attack, defense, sp_attack, sp_def, speed)
+        name_counter += 1
 
     return stats_dict
 
