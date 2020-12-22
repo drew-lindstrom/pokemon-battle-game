@@ -11,6 +11,7 @@ def get_names(soup):
     # TO DO: Charizard returns two Gigantamax Charizard. Need to get rid of duplicates. Mega Charizard has hex decimal characters.
 
     names_list = []
+    names_list_no_dups = []
 
     html_block = soup.find(id='mw-content-text').find('table',
                                                       class_='roundy', style='background:#FFF;')
@@ -22,13 +23,16 @@ def get_names(soup):
         else:
             names_list.append(name['title'])
 
-    return names_list
+    for x in names_list:
+        if x not in names_list_no_dups:
+            names_list_no_dups.append(x)
+
+    return names_list_no_dups
 
 
 def get_types(soup):
-    # TO DO: What happens with just one type?
 
-    type_list = []
+    types_dict = {}
 
     html_block = soup.find(
         'a', title='Type').parent.find_next('table').find('tr')
@@ -36,10 +40,24 @@ def get_types(soup):
         'td', {'style': lambda x: x != 'display: none;'}, recursive=False)
 
     for type_ in types_html:
-        type_list.append([type_.find('small').text, type_.find('tr').find(
-            'b').text, type_.find('tr').find('b').find_next('b').text])
+        try:
+            name = type_.find('small').text
+        except Exception:
+            name = soup.find(
+                'a', href='/wiki/Pok%C3%A9mon_category').parent.find('b').text
 
-    return type_list
+        type1 = type_.find('tr').find('b').text
+        type2 = type_.find('tr').find('b').find_next('b').text
+
+        types_dict[name] = [type1]
+
+        match = re.search('Unknown', type2)
+        if match:
+            types_dict[name].append(None)
+        else:
+            types_dict[name].append(type2)
+
+    return types_dict
 
 
 def get_abilities(soup):
@@ -51,14 +69,18 @@ def get_abilities(soup):
         'td', {'style': lambda x: x != 'display: none'})
 
     for ability_html in abilities_html:
-        form_name = ability_html.find('small').text
-        match = re.search('Hidden Ability', form_name)
+        try:
+            name = ability_html.find('small').text
+        except Exception:
+            name = soup.find(
+                'a', href='/wiki/Pok%C3%A9mon_category').parent.find('b').text
+        match = re.search('Hidden Ability', name)
         # HTML divides abilities by each form of a pokemon if alternate forms exist. The HTML considers hidden abilities
         # as their own form but is always listed after the forms that can have said hidden ability.
         if match:
             pass
         else:
-            abilities_dict[form_name] = []
+            abilities_dict[name] = []
 
         abilities = ability_html.find_all('a')
 
@@ -68,41 +90,54 @@ def get_abilities(soup):
                 for previous_form in abilities_dict:
                     abilities_dict[previous_form].append(ability_name)
             else:
-                abilities_dict[form_name].append(ability_name)
+                abilities_dict[name].append(ability_name)
 
     return abilities_dict
 
 
 def get_weights(soup):
 
-    weight_list = []
+    weights_dict = {}
 
     html_block = soup.find('a', title='Weight').parent.find_next('table')
     weights = html_block.find_all(
         'tr', {'style': lambda x: x != 'display:none;'})
 
     for weight in weights:
-        text = weight.find('td').text
         try:
-            re_result = re.findall('[0-9]+.[0-9]+', text)
+            name = weight.find_next_sibling('tr').find('td').text
+        except:
+            name = soup.find(
+                'a', href='/wiki/Pok%C3%A9mon_category').parent.find('b').text
+
+        w = weight.find('td').text
+        try:
+            re_result = re.findall('[0-9]+.[0-9]+', w)
             if len(re_result) == 0:
                 continue
             else:
-                weight_list.append(re_result[0])
+                weights_dict[name] = [re_result[0]]
         except:
             continue
 
-    return weight_list
+    return weights_dict
 
 
 def get_base_stats(soup):
 
-    stats_list = []
+    stats_dict = {}
 
     html_blocks = soup.find_all('a', href='/wiki/Statistic', title='Statistic')
 
     for html_block in html_blocks:
+
         html_block = html_block.parent.parent.parent
+
+        try:
+            name = html_block.find_previous_sibling('h5').find('span').text
+        except Exception:
+            name = soup.find(
+                'a', href='/wiki/Pok%C3%A9mon_category').parent.find('b').text
         hp = html_block.find(
             'tr', style='background: #FF5959; text-align:center').find('div', style='float:right').string
         attack = html_block.find(
@@ -115,9 +150,9 @@ def get_base_stats(soup):
             'tr', style='background: #A7DB8D; text-align:center').find('div', style='float:right').string
         speed = html_block.find(
             'tr', style='background: #FA92B2; text-align:center').find('div', style='float:right').string
-        stats_list.append((hp, attack, defense, sp_attack, sp_def, speed))
+        stats_dict[name] = (hp, attack, defense, sp_attack, sp_def, speed)
 
-    return stats_list
+    return stats_dict
 
 
 def get_next_pokemon(soup):
@@ -130,15 +165,23 @@ def get_next_pokemon(soup):
 
 pokemon_dict = {}
 
-current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Slowbro_(Pokémon)'
-page = requests.get(current_URL)
-soup = BeautifulSoup(page.content, 'html.parser')
+current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Bulbasaur_(Pokémon)'
 
-counter = 0
-type_counter = 0
-names_list = get_names(soup)
+for x in range(898):
+    # try:
+    page = requests.get(current_URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
 
-print(get_abilities(soup))
+    names = get_names(soup)
+    for name in names:
+        pokemon_dict[name] = get_types(soup).get(name), get_abilities(soup).get(
+            name), get_weights(soup).get(name), get_base_stats(soup).get(name)
+        print(name, pokemon_dict[name])
+    current_URL = 'https://bulbapedia.bulbagarden.net' + get_next_pokemon(soup)
+
+    # except:
+    #     continue
+
 # for name in names_list:
 
 #     types_list = get_types(soup)
