@@ -20,6 +20,8 @@ def get_names(soup):
     for name in names_html:
         if name['title'].startswith('Gigantamax'):
             pass
+        elif name['title'] == 'Mega&nbsp;Charizard&nbsp;Y':
+            names_list.append('Mega Charizard Y')
         else:
             names_list.append(name['title'])
 
@@ -123,30 +125,21 @@ def get_weights(soup):
     return weights_dict
 
 
-def get_base_stats(soup):
+def get_base_stats(soup, names):
 
     stats_dict = {}
-    names_list = []
-    name_counter = 0
 
-    name_html = soup.find('a', href='/wiki/Pok%C3%A9mon_category').find_parent('tr').find_parent(
-        'tr').find_next_sibling('tr')
-    name_html = name_html.find_all('a', class_='image')
-    print(name_html)
-    for name in name_html:
-        names_list.append(name.title)
-        print(name.title)
+    # name_list = soup.find('a', href='/wiki/Pok%C3%A9mon_category').find_parent('tr').find_parent(
+    #     'tr').find_next_sibling('tr').find_all('a', class_='image').find('title').text
     html_blocks = soup.find_all('a', href='/wiki/Statistic', title='Statistic')
 
     for html_block in html_blocks:
-
         html_block = html_block.parent.parent.parent
 
-        # try:
-        #     # name = html_block.find_previous_parent('h5').find('span').text
-        #     name = html_block.find_previous_parent('table').find('span').text
-        #     print(name)
-        # except Exception:
+        if len(names) == 1:
+            name = names[0]
+        elif len(names) > 1:
+            name = html_block.find_previous_sibling('h5').find('span').text
 
         hp = html_block.find(
             'tr', style='background: #FF5959; text-align:center').find('div', style='float:right').string
@@ -160,9 +153,7 @@ def get_base_stats(soup):
             'tr', style='background: #A7DB8D; text-align:center').find('div', style='float:right').string
         speed = html_block.find(
             'tr', style='background: #FA92B2; text-align:center').find('div', style='float:right').string
-        stats_dict[names_list[name_counter]] = (
-            hp, attack, defense, sp_attack, sp_def, speed)
-        name_counter += 1
+        stats_dict[name] = (hp, attack, defense, sp_attack, sp_def, speed)
 
     return stats_dict
 
@@ -187,7 +178,7 @@ for x in range(898):
     names = get_names(soup)
     for name in names:
         pokemon_dict[name] = get_types(soup).get(name), get_abilities(soup).get(
-            name), get_weights(soup).get(name), get_base_stats(soup).get(name)
+            name), get_weights(soup).get(name), get_base_stats(soup, names).get(name)
         print(name, pokemon_dict[name])
     current_URL = 'https://bulbapedia.bulbagarden.net' + get_next_pokemon(soup)
 
