@@ -20,7 +20,7 @@ def get_names(soup):
     for name in names_html:
         if name['title'].startswith('Gigantamax'):
             pass
-        elif name['title'] == 'Mega&nbsp;Charizard&nbsp;Y':
+        if name['title'] == 'Mega&nbsp;Charizard&nbsp;Y':
             names_list.append('Mega Charizard Y')
         else:
             names_list.append(name['title'])
@@ -125,20 +125,26 @@ def get_weights(soup):
     return weights_dict
 
 
-def get_base_stats(soup, names):
+def get_base_stats(soup, names_list):
 
     stats_dict = {}
 
-    # name_list = soup.find('a', href='/wiki/Pok%C3%A9mon_category').find_parent('tr').find_parent(
-    #     'tr').find_next_sibling('tr').find_all('a', class_='image').find('title').text
     html_blocks = soup.find_all('a', href='/wiki/Statistic', title='Statistic')
 
     for html_block in html_blocks:
         html_block = html_block.parent.parent.parent
 
-        if len(names) == 1:
-            name = names[0]
-        elif len(names) > 1:
+        # Pokemon with only mulpitple forms and therefore multiple stat tables have their respective form name above each table.
+        # Pokemon with only one form don't have their name above their stat table. To make sure each form gets the correct stats,
+        # if the names list is greater than length 1, it will grab the names above each stat table.
+        if len(names_list) == 1:
+            name = names_list[0]
+            old_stats_test = html_block.find_previous_sibling(
+                'h5').find('span').text
+            if re.match("Generation [A-Z]+? to [A-Z]+?", old_stats_test):
+                print("Hello")
+
+        elif len(names_list) > 1:
             name = html_block.find_previous_sibling('h5').find('span').text
 
         hp = html_block.find(
@@ -168,9 +174,9 @@ def get_next_pokemon(soup):
 
 pokemon_dict = {}
 
-current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Bulbasaur_(Pokémon)'
+current_URL = 'https://bulbapedia.bulbagarden.net/wiki/Nidoking_(Pokémon)'
 
-for x in range(898):
+for x in range(1):
     # try:
     page = requests.get(current_URL)
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -223,3 +229,8 @@ for x in range(898):
 
 #     except:
 #         continue
+
+
+#  https://pokemondb.net/pokedex/all
+#  https://www.smogon.com/dex/sm/pokemon/
+#  https://www.smogon.com/dex/ss/pokemon/
