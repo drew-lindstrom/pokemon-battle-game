@@ -17,16 +17,16 @@ class Pokemon():
         self.stats = {'current_hp': 0, 'max_hp': 0, 'attack': 0, 'defense': 0, 'sp_attack': 0,
                       'sp_defense': 0, 'speed': 0}
         self.stat_mods = [1, 1, 1, 1, 1, 1, 1]
-
+        self.status = None
         # HP stat calculation is wrong for some reason.
         self.stats['max_hp'] = int(((2*int(self.base_stats[0])+self.IVs[0]+int(
-            math.sqrt(self.EVs[0])/4))*self.level)/100)+self.level+10
+            self.EVs[0]/4))*self.level)/100)+self.level+10
         self.stats['current_hp'] = self.stats['max_hp']
 
         stats_list = [0, 0, 0, 0, 0]
         for n in range(5):
             stats_list[n] = int((int(((2*int(self.base_stats[n+1])+self.IVs[n+1]+int(
-                math.sqrt(self.EVs[n+1])/4))*self.level)/100)+5)*natures_dict[self.nature][n])
+                self.EVs[n+1]/4))*self.level)/100)+5)*natures_dict[self.nature][n])
 
         self.stats["attack"] = stats_list[0]
         self.stats["defense"] = stats_list[1]
@@ -50,5 +50,5 @@ class Pokemon():
 
 
 abomasnow = Pokemon('Abomasnow', 100, 'Male', None,
-                    None, None, (31, 31, 31, 31, 31, 31), (255, 0, 0, 0, 0, 0), 'Adamant')
+                    None, None, (31, 31, 31, 31, 31, 31), (252, 0, 0, 0, 0, 0), 'Adamant')
 Pokemon.show_stats(abomasnow)
