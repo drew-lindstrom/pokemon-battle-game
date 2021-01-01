@@ -13,14 +13,10 @@ class Move():
 
     def show_stats(self):
 
-        print('Move: ', self.name)
+        print(f'Move: {self.name}')
         print(f'Type: {self.type}')
         print(f'Category: {self.category}')
         print(f'Power: {self.power}')
         print(f'Accuracy: {self.accuracy}')
         print(f'PP: {self.pp}/{self.max_pp}')
         print()
-
-
-mach_punch = Move('Mach Punch')
-Move.show_stats(mach_punch)
