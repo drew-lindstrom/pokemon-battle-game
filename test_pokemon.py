@@ -1,8 +1,8 @@
-import unittest
+import pytest
 from pokemon import Pokemon
 
 
-class TestPokemon(unittest.TestCase):
+class TestPokemon:
     def test_init_stats(self):
         testPokemon = Pokemon(
             "Slowbro",
@@ -15,14 +15,10 @@ class TestPokemon(unittest.TestCase):
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        self.assertEqual(testPokemon.hp, 394)
-        self.assertEqual(testPokemon.max_hp, 394)
-        self.assertEqual(testPokemon.attack, 186)
-        self.assertEqual(testPokemon.defense, 350)
-        self.assertEqual(testPokemon.sp_attack, 236)
-        self.assertEqual(testPokemon.sp_defense, 197)
-        self.assertEqual(testPokemon.speed, 86)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert testPokemon.hp == 394
+        assert testPokemon.max_hp == 394
+        assert testPokemon.attack == 186
+        assert testPokemon.defense == 350
+        assert testPokemon.sp_attack == 236
+        assert testPokemon.sp_defense == 197
+        assert testPokemon.speed == 86
