@@ -1,7 +1,9 @@
 from game_data import moves_dict
 
+# TODO: Adjust max PP
 
-class Move():
+
+class Move:
     def __init__(self, name):
         self.name = name
         self.type = moves_dict[name][0]
@@ -13,10 +15,30 @@ class Move():
 
     def show_stats(self):
 
-        print(f'Move: {self.name}')
-        print(f'Type: {self.type}')
-        print(f'Category: {self.category}')
-        print(f'Power: {self.power}')
-        print(f'Accuracy: {self.accuracy}')
-        print(f'PP: {self.pp}/{self.max_pp}')
+        print(f"Move: {self.name}")
+        print(f"Type: {self.type}")
+        print(f"Category: {self.category}")
+        print(f"Power: {self.power}")
+        print(f"Accuracy: {self.accuracy}")
+        print(f"PP: {self.pp}/{self.max_pp}")
         print()
+
+
+def frost_breath():
+    # check for battle armor
+    pass
+
+
+def storm_throw():
+    # check for battle armor
+    pass
+
+
+def wicked_blow():
+    # check for battle armor
+    pass
+
+
+def surging_strikes():
+    # check for battle armor
+    pass

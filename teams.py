@@ -1,3 +1,6 @@
+from pokemon import Pokemon
+from team import Team
+
 slowbro = Pokemon(
     "Slowbro",
     100,

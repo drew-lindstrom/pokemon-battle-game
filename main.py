@@ -1,6 +1,7 @@
 from battle import attack
 from pokemon import Pokemon
 from team import Team
+from teams import player1, player2
 
 
 def print_current_pokemon(pokemon1, pokemon2):
@@ -21,14 +22,14 @@ def get_choice(pokemon):
         print()
         for n in range(len(pokemon.moves)):
             print(
-                f"({n}) {pokemon.moves[n].name} - {pokemon.moves[n].pp}/{pokemon.moves[n].max_pp} PP,",
-                end=" ",
+                f"({n+1}) {pokemon.moves[n].name} - {pokemon.moves[n].pp}/{pokemon.moves[n].max_pp} PP"
             )
         print("(5) Switch Pokemon")
-        print("(6) for move details.")
+        print("(6) Move Details")
         print()
 
-        choice = input()
+        choice = str(int(input()) - 1)
+        print()
     return choice
 
 
@@ -36,21 +37,27 @@ def get_switch_choice(team):
     choice_list = []
     choice = ""
 
-    print(f"Switch {pokemon} with...?")
+    print(f"Switch {team.current_pokemon.name} with...?")
 
-    for n, pokemon in enumerate(team):
-        print(f"({n}) {pokemon.name} - {pokemon.name.hp}/{pokemon.name.max_hp} HP,")
-        choice_list.append(n)
+    for n in range(len(team)):
+        if n == 0:
+            continue
+        print(
+            f"({n}) {team[n].name} - {team[n].hp}/{team[n].max_hp} HP, Status: {team[n].status}"
+        )
+        choice_list.append(str(n))
 
     while choice not in choice_list:
         choice = input()
+        print()
 
-    team.switch(n)
+    team.switch(choice)
+    return None
 
 
 def turn_order_check(player1, player2):
     try:
-        if player1.team[0].adj_speed > player2.team[0].adj_speed:
+        if player1.team_list[0].adj_speed > player2.team_list[0].adj_speed:
             return [player1, player2]
         # If the speed check is a tie, usually its random who goes first, but for the sake of consistency, the opponent will always go first.
         else:
@@ -59,52 +66,36 @@ def turn_order_check(player1, player2):
         return None
 
 
-slowbro = Pokemon(
-    "Slowbro",
-    100,
-    "Male",
-    ("Scald", "Slack Off", "Future Sight", "Teleport"),
-    None,
-    None,
-    (31, 31, 31, 31, 31, 31),
-    (252, 0, 252, 0, 4, 0),
-    "Relaxed",
-)
-tyranitar = Pokemon(
-    "Tyranitar",
-    100,
-    "Male",
-    ("Crunch", "Stealth Rock", "Toxic", "Earthquake"),
-    None,
-    None,
-    (31, 31, 31, 31, 31, 31),
-    (252, 0, 0, 0, 216, 40),
-    "Careful",
-)
+def clear_screen():
+    for n in range(17):
+        print()
 
-player1 = Team([slowbro])
-player2 = Team([tyranitar])
 
 while True:
+    clear_screen()
     turn_order = turn_order_check(player1, player2)
     switch_order = []
     attack_order = []
     attack_choice = []
 
-    print_current_pokemon(player1.team[0], player2.team[0])
+    print_current_pokemon(player1.team_list[0], player2.team_list[0])
 
     for x in range(len(turn_order)):
-        choice = get_choice(turn_order[x].team[0])
+        choice = get_choice(turn_order[x].team_list[0])
+        clear_screen()
         if choice == "5":
             switch_order.append(turn_order[x])
+            clear_screen()
         else:
             attack_order.append(turn_order[x])
             attack_choice.append(int(choice))
+            clear_screen()
     for x in range(len(switch_order)):
         get_switch_choice(switch_order[x])
+        clear_screen()
 
     for x in range(len(attack_order)):
         if attack_order[x] == player1:
-            attack(player1.team[0], attack_choice[x], player2.team[0])
+            attack(player1.team_list[0], attack_choice[x], player2.team_list[0])
         else:
-            attack(player2.team[0], attack_choice[x], player1.team[0])
+            attack(player2.team_list[0], attack_choice[x], player1.team_list[0])

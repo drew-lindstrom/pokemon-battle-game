@@ -19,6 +19,7 @@ class Team:
             self.team_list[n].show_stats()
 
     def switch(self, n):
+        n = int(n)
         if self.team_list[n].status == "Fainted":
             print(f"{self.team_list[n].name} has already fainted!")
         else:

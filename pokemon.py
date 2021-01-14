@@ -30,6 +30,7 @@ class Pokemon:
         self.sp_attack = self.init_stat(3)
         self.sp_defense = self.init_stat(4)
         self.speed = self.init_stat(5)
+        self.adj_speed = self.speed
 
     def init_stat(self, n):
         stats_formula = int(
