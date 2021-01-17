@@ -1,7 +1,6 @@
 from game_data import natures_dict, pokemon_dict, moves_dict
 from move import Move
 import math
-import pytest
 
 
 class Pokemon:
@@ -18,23 +17,19 @@ class Pokemon:
         self.IVs = IVs
         self.EVs = EVs
         self.nature = nature
-        self.base_stats = pokemon_dict[name][1]
+        self.hp = None
         # attack, defense, sp attack, sp defense, speed, accuracy, evasion
         # need to update to use 1s instead
         self.stat_mods = [0, 0, 0, 0, 0, 0, 0]
         self.status = None
-        self.max_hp = self.init_stat(0)
-        self.hp = self.max_hp
-        self.attack = self.init_stat(1)
-        self.defense = self.init_stat(2)
-        self.sp_attack = self.init_stat(3)
-        self.sp_defense = self.init_stat(4)
-        self.speed = self.init_stat(5)
-        self.adj_speed = self.speed
 
     def init_stat(self, n):
         stats_formula = int(
-            (2 * int(self.base_stats[n]) + self.IVs[n] + int(self.EVs[n] / 4))
+            (
+                2 * int(pokemon_dict[self.name][1][n])
+                + self.IVs[n]
+                + int(self.EVs[n] / 4)
+            )
             * self.level
             / 100
         )
@@ -44,8 +39,45 @@ class Pokemon:
             stat = int((stats_formula + 5) * natures_dict[self.nature][n - 1])
         return stat
 
+    @property
+    def max_hp(self):
+        return self.init_stat(0)
+
+    @property
+    def hp(self):
+        return self._hp
+
+    @hp.setter
+    def hp(self, n):
+        if n == None or n > self.max_hp:
+            self.hp = self.max_hp
+        elif n <= 0:
+            self._hp = 0
+        else:
+            self._hp = n
+
+    @property
+    def attack(self):
+        return self.init_stat(1)
+
+    @property
+    def defense(self):
+        return self.init_stat(2)
+
+    @property
+    def sp_attack(self):
+        return self.init_stat(3)
+
+    @property
+    def sp_defense(self):
+        return self.init_stat(4)
+
+    @property
+    def speed(self):
+        return self.init_stat(5)
+
     def show_stats(self):
-        """Prints the stats of the Pokemon with modifiers applied."""  # TO DO: Add modifiers
+        """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers
         print(f"Pokemon: {self.name}")
         print(f"Type: {self.typing}")
         print(f"Level: {self.level}")
@@ -63,3 +95,12 @@ class Pokemon:
 
     def update_stats(self):
         pass
+
+    def heal(self, n):
+        if self.hp <= 0:
+            print(f"{self.name} has fainted and can't be healed.")
+            pass
+        self.hp = self.hp + int(self.max_hp * n)
+
+
+# Heal Method
