@@ -9,6 +9,10 @@ class Move:
         self.category = moves_dict[name][1]
         self.pp = None
 
+        # Before attack effect?
+        # After attack effect? (applying burn)
+        # End of turn effect? (after both players go, like destiny bond or leech seed)
+
     @property
     def power(self):
         power = moves_dict[self.name][2]
@@ -35,9 +39,9 @@ class Move:
         return self._pp
 
     @pp.setter
-    def pp(self, n=None):
+    def pp(self, n):
         if n == None or n > self.max_pp:
-            self._pp = self.max_pp
+            self.pp = self.max_pp
         elif n <= 0:
             self._pp = 0
         else:
@@ -62,16 +66,6 @@ class Move:
             print(f"{self.name} is out of PP!")
             return False
         return True
-
-
-earthquake = Move("Earthquake")
-print(earthquake.pp)
-earthquake.pp = -5
-print(earthquake.pp)
-earthquake.pp = 99
-print(earthquake.pp)
-earthquake.pp = 7
-print(earthquake.pp)
 
 
 def frost_breath():
