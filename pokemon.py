@@ -97,10 +97,9 @@ class Pokemon:
         pass
 
     def heal(self, n):
+        """Heal pokemon by n percentage of it's max hp. Won't work on fainted Pokemon. HP won't exceed max hp.
+        Ex: Slowbro's HP = 150 -> slowbro.heal(0.5) -> Slowbro's HP = 150 + 50% of max hp"""
         if self.hp <= 0:
             print(f"{self.name} has fainted and can't be healed.")
             pass
         self.hp = self.hp + int(self.max_hp * n)
-
-
-# Heal Method
