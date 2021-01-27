@@ -38,7 +38,7 @@ class Team:
                 print(f"Can't switch out {self.current_pokemon}...")
 
 
-def loss_check(team):
+def game_over_check(team):
     """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
     Returns False if all Pokemon on team are fainted.
     pokemon.hp (int) -> bool"""

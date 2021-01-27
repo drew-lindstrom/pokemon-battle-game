@@ -1,4 +1,4 @@
-from team import Team, loss_check
+from team import Team, game_over_check
 from pokemon import Pokemon
 import pytest
 
@@ -35,7 +35,7 @@ class TestTeam:
         test_player.switch(1)
         assert test_player.current_pokemon.name == "Tyranitar"
 
-    def test_loss_check(self):
+    def test_game_over_check(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -60,8 +60,8 @@ class TestTeam:
         )
 
         test_player = Team([slowbro, tyranitar])
-        assert loss_check(test_player) == 1
+        assert game_over_check(test_player) == 1
         test_player[1].hp = 0
-        assert loss_check(test_player) == 1
+        assert game_over_check(test_player) == 1
         test_player[0].hp = 0
-        assert loss_check(test_player) == 0
+        assert game_over_check(test_player) == 0
