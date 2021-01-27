@@ -1,0 +1,18 @@
+TODO List
+- Test struggle in an actual game
+- Verify game over check works
+- Implement stat modifiers
+- Add some common items
+
+Status effects:
+- Poison
+- Badly Poison
+- Burn
+- Paralysis
+- Sleep
+- Frozen
+- Confusion
+- Infatuation
+- Taunted
+- Stuck
+- Encored
