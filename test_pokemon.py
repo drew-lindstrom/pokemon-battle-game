@@ -44,3 +44,25 @@ class TestPokemon:
         test_pokemon.hp = 0
         test_pokemon.heal(0)
         assert test_pokemon.hp == 0
+
+    def test_struggle_check(self):
+        test_pokemon = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert test_pokemon.struggle_check() == False
+        test_pokemon.moves[0].pp = 0
+        assert test_pokemon.struggle_check() == False
+        test_pokemon.moves[1].pp = 0
+        assert test_pokemon.struggle_check() == False
+        test_pokemon.moves[2].pp = 0
+        assert test_pokemon.struggle_check() == False
+        test_pokemon.moves[3].pp = 0
+        assert test_pokemon.struggle_check() == True

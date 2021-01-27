@@ -103,3 +103,11 @@ class Pokemon:
             print(f"{self.name} has fainted and can't be healed.")
             pass
         self.hp = self.hp + int(self.max_hp * n)
+
+    def struggle_check(self):
+        """Checks the pp of all of the attacking Pokemon's moves. If all moves have zero pp, struggle is used to attack instead."""
+        struggle_bool = True
+        for n in range(len(self.moves)):
+            if self.moves[n].pp > 0:
+                struggle_bool = False
+        return struggle_bool
