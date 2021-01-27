@@ -1,0 +1,211 @@
+Gen 7 turn sequence
+https://bulbapedia.bulbagarden.net/wiki/User:FIQ/Turn_sequence
+
+Entry effect order
+Poke Ball animations, cries, weight-based landing sounds
+Shiny star, contest ribbon effects
+Head turning (only with sufficient affection, in in-game battles where affection applies, and only at turn 1)
+Unnerve ability announces and takes effect
+Heal from Healing Wish, Lunar Dance, Z-Memento, or Z-Parting Shot if applicable
+Entry hazards
+Abilities with entry effects can announce, except Neutralizing Gas/Unnerve (earlier) and form-changing abilities (later) Intimidate, Pressure, Download, Trace, Frisk, Anticipation, Forewarn, Mold Breaker, Teravolt, Turboblaze, Imposter, Slow Start, Comatose, Drought, Drizzle, Sand Stream, Snow Warning, Desolate Land, Primordial Sea, Delta Stream, Air Lock, Cloud Nine, Fairy Aura, Dark Aura, Aura Break, Electric Surge, Misty Surge, Psychic Surge, Grassy Surge
+Air Balloon is announced, Berries/Berry Juice/White Herb/Mental Herb/terrain seeds can be consumed if applicable
+Forecast, Flower Gift, Shields Down, and Schooling abilities can announce themselves if applicable, and cause form changes
+Primal Reversion occurs
+Speed processing order
+Start with the Pokemon's raw, untouched speed stat
+if boost rank (R) > 0, multiply speed by (2+R), truncate to 16 bits, divide by 2 and round down
+otherwise, multiply speed by 2, truncate to 16 bits, divide by (2-R) and round down
+set the default speed modifier to 4096
+if ability is activated Swift Swim, Chlorophyll, Slush Rush, Sand Rush, Surge Surfer, or Unburden, multiply modifier by 8192/4096
+if ability is activated Quick Feet, multiply modifier by 6144/4096
+if ability is Slow Start and has not expired yet, multiply modifier by 2048/4096
+if item is Quick Powder and species is Ditto (not transformed), multiply modifier by 8192/4096
+if item is Choice Scarf, multiply modifier by 6144/4096
+if item is Iron Ball, Macho Brace, or a Power EV item, multiply modifier by 2048/4096
+if Tailwind is in effect on this side, multiply modifier by 8192/4096
+if pledge swamp is in effect on this side, multiply modifier by 1024/4096
+multiply speed (last used in step 3) by modifier, divide by 4096, and round to nearest but ties round DOWN
+if paralyzed and not Quick Feet, multiply speed by 2048/4096 (G7) or 1024/4096 (G5-6), and round down
+if speed > 10000, set speed to 10000
+if Trick Room is active, set speed to (10000 - speed)
+if speed > 8191, set speed to (speed - 8192)
+
+Turn processing order
+Quick Claw/Custap Berry announce their effects if applicable
+If wild battle, display "Got away safely!"/"Can't escape!" message; if trainer battle, forfeit and fade out
+Handle switches
+Handle rotation
+Item usage (in-game only)
+Mega Evolution, Ultra Burst
+Focus Punch, Beak Blast, Shell Trap charging effects
+Move usage in order
+End of turn effects
+Move clearance
+check for sleep/freeze (unless using a move that can execute despite that status)
+check for disobedience
+check for Truant loafing turn
+if move is Focus Punch, check for prior damage this turn
+check for flinch
+check for confusion self-damage
+check for full paralysis
+check for attraction
+check if there was no PP left for the move
+if move is Z powered, display Z dance, and if move is status, APPLY Z effect
+if not Z powered, check if move is Disabled
+if not Z powered, check if move is blocked by Heal Block
+check if move is blocked by Gravity (applies even to Z moves)
+if not Z powered, check if sound move is blocked by Throat Chop
+(G7) check for move failure due to being Choice-locked into a different move
+if not Z powered, check if status move is blocked by Taunt
+if not Z powered, check if move is sealed by Imprison
+if user has a Choice item, LOCK into the chosen move
+if move can call another move (Metronome/Assist/etc.), REPLACE the running move and repeat steps 12-14
+if ability is Stance Change, CHANGE form if appropriate (in G6, move this before step 1)
+check for move type changing due to Aerilate/Pixilate/Refrigerate/Normalize/Galvanize/Liquid Voice
+set move type for Hidden Power/Judgment/Multi-Attack/Natural Gift/Revelation Dance/Techno Blast/Weather Ball/Z-Weather Ball
+check for move type changing due to Electrify/Ion Deluge/Plasma Fists
+check for target redirection by Lightning Rod/Storm Drain
+check for target redirection by Follow Me/Rage Powder/Spotlight/Z-Destiny Bond/Z-Grudge
+SUBTRACT the appropriate amount of PP from the move (if the move called another move at step 19, use the original move for PP subtraction)
+check for move condition failures, part 1
+Sucker Punch/Me First: target doesn't have an eligible move pending
+Burn Up: user is not Fire type
+Fake Out/First Impression/Mat Block: user has already performed an action
+protection moves: automatically fail if there are no other pending moves this turn, otherwise check for failure chance if repeated
+(G7) Destiny Bond: move is repeated and previous use was successful
+Fling/Natural Gift: Embargo or Magic Room are in effect, or ineligible held item
+Stockpile: existing Stockpile count is 3
+Swallow/Spit Up: existing Stockpile count is 0
+Bide: no energy to unleash
+Counter/Mirror Coat/Metal Burst: target hasn't hit with an eligible damaging move this turn
+Encore: target hasn't used a move, or has no PP left on the move, or move is exempt from the effect
+Hyperspace Fury/(G7) Dark Void: ineligible user
+Rest: user has full HP, or is already asleep (through Sleep Talk, or user's Comatose)
+Rest: user has Insomnia/Vital Spirit (this check happens after the previous one)
+Snore/Sleep Talk: user isn't asleep
+Future Sight/Doom Desire: target slot already has the future attack effect
+if move allows self-defrost, UNTHAW the user
+check if move is blocked by Primordial Sea/Desolate Land
+check for Fire move failure and backfire due to Powder
+if move is Future Sight/Doom Desire, CREATE the effect and EXIT (does not count as failing the move)
+if move is part 1 of an eligible Pledge combo, fail the current move and TRIGGER teammate to pick up the conclusion (they start over from step 1)
+check if move is blocked by Damp
+if ability is Protean and user can change type with it, CHANGE type to match with move
+if move requires charging, APPLY Defense boost if Skull Bash, and unless it's Solar Beam/Solar Blade in sun, or Power Herb can be consumed, SUSPEND the move until next turn (does not count as failing)
+check for move failure due to lack of target (includes Helping Hand/Ally Switch in singles)
+check if move is STOLEN by a pending Snatch (go back to step 12 for the Pokemon who snatched it)
+if move is Explosion/Self-Destruct/Mind Blown, LOSE 100/100/50% of own max HP respectively, but don't fail the move from user fainting
+check for move condition failures, part 2
+Rest: Uproar is in effect
+recovery moves other than Rest: user has full HP
+Substitute/Belly Drum: not enough HP to make one
+Conversion/Camouflage: user is already the type it would change to
+Conversion 2: no prior move, or all resistances to the move's type (if any) are already in user's own types
+Sky Drop: target is a teammate
+check for move failure due to target in Fly/Dig/Dive/Bounce/Sky Drop/Phantom Force/Shadow Force
+check if priority move is blocked by Dazzling/Queenly Majesty
+check if priority move is blocked by Psychic Terrain
+if move is Sky Drop, check for failure due to target too heavy (200kg)
+check if move is blocked by Quick Guard/Wide Guard/Crafty Shield (if Z powered attack, only 75% reduction)
+check if move is blocked by Protect/Detect/King's Shield/Spiky Shield/Baneful Bunker (if Z powered attack, only 75% reduction)
+check if move is reflected by Magic Coat
+if move is Telekinesis, check for failure vs. Diglett/Dugtrio/Sandygast/Palossand/Gengar-Mega, Smacked Down, or Ingrained target
+check if move is reflected by Magic Bounce
+check if move is blocked by Mat Block (if Z powered attack, only 75% reduction)
+check for ability-based immunities, part 1
+Sap Sipper: Grass type moves
+Flash Fire: Fire type moves
+Dry Skin, Storm Drain, Water Absorb: Water type moves
+Lightning Rod, Motor Drive, Volt Absorb: Electric type moves
+Soundproof: sound moves
+Telepathy: damaging moves from a teammate
+Wonder Guard: move is a type that isn't super effective
+if non-status move or Thunder Wave, and target does not hold Ring Target, check for type chart immunity (G6: move this check to step 41)
+check for Levitate immunity (G6: move this check to step 42)
+check for Magnet Rise/Telekinesis/Air Balloon immunity
+check for Overcoat immunity
+check for Safety Goggles immunity
+check for type-based move condition immunities
+powder moves: Grass type
+burning moves: Fire type
+poisoning moves: Poison/Steel type (unless user has Corrosion)
+paralysis moves: Electric type
+(G7) Sheer Cold: Ice type
+Mean Look/Spider Web/Block: Ghost type
+Sky Drop on the way down: Flying type
+check for other move condition immunities
+Synchronoise: non-matching type
+Dream Eater/Nightmare: target is awake
+Attract: gender failure
+Endeavor: target has less HP than user
+Fissure/Horn Drill/Guillotine/Sheer Cold: target has higher level than user
+check for ability-based immunities, part 2
+Sturdy: OHKO moves
+Sticky Hold: Trick/Switcheroo
+Bulletproof: bullet/bomb moves
+Oblivious: Attract/Captivate/Taunt
+if move is Captivate, check for gender immunity
+check for generic move failure due to redundancy
+status affliction when target already has one
+attempted creation of weather/field effect/pseudo-status that already exists
+stat changing moves that can't go any higher or lower
+Trick/Switcheroo/Bestow with no item, or unmovable item
+Instruct/Disable/Sketch vs. no move, or ineligible move (note that Encore is checked earlier)
+Electrify/Quash/After You when target already made a move this turn
+Healing Wish/Lunar Dance with no one to switch to
+various other moves whose effects would naturally do nothing etc.
+check if move is blocked by Safeguard
+check if move is blocked by Electric Terrain/Misty Terrain
+check if move is blocked by Sweet Veil or Comatose/Shields Down/Insomnia/Vital Spirit/Leaf Guard
+check for move accuracy
+check if move is blocked by target's Substitute
+check if move is blocked by Mist
+check for ability-based immunities, part 3
+Clear Body/White Smoke/Full Metal Body: all stat drop moves
+Hyper Cutter: attack drop moves
+Big Pecks: defense drop moves
+Keen Eye: accuracy drop moves
+Aroma Veil: Attract, Disable, Encore, Heal Block, Taunt, Torment
+Flower Veil: all stat drop moves, all status inflicting moves
+Water Veil, Water Bubble: burn moves
+Immunity: poisoning moves
+Limber: paralysis moves
+Own Tempo: confusion moves
+Suction Cups: Roar, Whirlwind
+if move is Roar or Whirlwind, check for failure due to Ingrain
+if move's priority was elevated due to Prankster, check for Dark type immunity
+if move is Brick Break/Psychic Fangs/Spectral Thief/Pay Day, APPLY its side effect now
+perform move
+
+Move performance
+calculate damage (, presumably status effects like Nuzzle)
+stat changes, HP drain, Core Enforcer effect
+target's Rage, Enigma Berry, Beak Blast
+Incinerate, Clear Smog
+Grudge
+Aftermath, Innards Out
+Synchronize
+Iron Barbs, Rough Skin, Effect Spore, Poison Point, Static, Flame Body, Cute Charm, Mummy, Gooey, Tangling Hair, Cursed Body, Illusion, Stamina, Water Compaction, Justified, Rattled, Weak Armor, Rocky Helmet
+Disguise
+if a multi-hit move, go back to step 1 for the remaining hits
+faint animation
+Destiny Bond
+recoil damage, Rapid Spin, Fell Stinger
+Knock Off, Thief, Covet
+Dragon Tail, Circle Throw
+Smack Down, Thousand Arrows, Thousand Waves, partial trapping moves
+Magician, Moxie, Beast Boost
+if Sheer Force applied to the move, skip to step 29 (U-Turn's switch is not a secondary effect)
+Color Change, Berserk
+Kee Berry, Maranga Berry
+Red Card, Eject Button
+pledge combo effect setup
+Relic Song/Battle Bond form changes
+Life Orb, Shell Bell
+Emergency Exit, Wimp Out
+U-turn, Volt Switch
+Pickpocket
+White Herb
+if move is Natural Gift, consume the berry
+Dancer
