@@ -104,6 +104,14 @@ class Pokemon:
             pass
         self.hp = self.hp + int(self.max_hp * n)
 
+    def damage(self, n):
+        """Damages pokemon by n percentage of it's max hp. HP won't fall below 0.
+        Ex: Slowbro's HP = 150 -> slowbro.damage(0.5) -> Slowbro's HP = 150 - 50% of max hp"""
+        self.hp = self.hp - int(self.max_hp * n)
+
+        if self.hp <= 0:
+            self.hp = 0
+
     def struggle_check(self):
         """Checks the pp of all of the attacking Pokemon's moves. If all moves have zero pp, struggle is used to attack instead."""
         struggle_bool = True

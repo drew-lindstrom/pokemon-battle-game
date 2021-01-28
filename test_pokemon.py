@@ -45,6 +45,25 @@ class TestPokemon:
         test_pokemon.heal(0)
         assert test_pokemon.hp == 0
 
+    def test_damage(self):
+        test_pokemon = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        test_pokemon.damage(0.5)
+        assert test_pokemon.hp == 197
+        # TODO: What happens if resulting HP needs to round?
+        test_pokemon.hp = 35
+        test_pokemon.damage(0.5)
+        assert test_pokemon.hp == 0
+
     def test_struggle_check(self):
         test_pokemon = Pokemon(
             "Slowbro",
