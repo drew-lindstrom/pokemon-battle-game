@@ -20,13 +20,10 @@ class Weather:
 
 
 def sandstorm_damage(weather, pokemon):
-    if pokemon.typing[0] in ("Rock", "Steel", "Ground") or pokemon.typing[1] in (
-        "Rock",
-        "Steel",
-        "Ground",
-    ):
-        return False
-    elif pokemon.ability in (
+    for typing in pokemon.typing:
+        if typing in ("Rock", "Steel", "Ground"):
+            return False
+    if pokemon.ability in (
         "Sand Force",
         "Sand Rush",
         "Sand Veil",
