@@ -36,6 +36,11 @@ class Weather:
             self.current_weather = "Clear Skies"
 
 
+# TODO: weather counterdowner
+# TODO: What happens if pokemon uses Sandstorm while sandstorm is already up, does the count reset?
+# TODO: Remove weather funciton
+
+
 def weather_damage(weather, pokemon):
     """If weather is currently Sandstorm or Hail, damages all pokemon on the field at end of turn
     unless pokemon is of specific type, ability, or holding Safety Goggles."""
