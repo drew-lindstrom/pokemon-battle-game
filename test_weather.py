@@ -32,52 +32,25 @@ class Test_Weather:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        tyranitar = Pokemon(
-            "Tyranitar",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-        torterra = Pokemon(
-            "Torterra",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-        metagross = Pokemon(
-            "Metagross",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-        pikachu = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            "Safety Goggles",
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
         assert sandstorm_damage(weather, slowbro) == True
-        assert sandstorm_damage(weather, tyranitar) == False
-        assert sandstorm_damage(weather, torterra) == False
-        assert sandstorm_damage(weather, metagross) == False
-        assert sandstorm_damage(weather, pikachu) == False
+        slowbro.ability = "Sand Force"
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.ability = "Sand Rush"
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.ability = "Sand Veil"
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.ability = "Magic Guard"
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.ability = "Overcoat"
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.ability = None
+        assert sandstorm_damage(weather, slowbro) == True
+        slowbro.typing = ["Ground", "Grass"]
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.typing = ["Steel"]
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.typing = ["Water", "Rock"]
+        assert sandstorm_damage(weather, slowbro) == False
+        slowbro.typing = ["Water", "Psychic"]
+        slowbro.item = "Safety Goggles"
+        assert sandstorm_damage(weather, slowbro) == False
