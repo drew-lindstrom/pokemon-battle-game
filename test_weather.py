@@ -1,5 +1,5 @@
 from pokemon import Pokemon
-from weather import Weather, sandstorm_damage, sandstorm_sp_def_boost
+from weather import Weather, weather_damage, sandstorm_sp_def_boost
 import pytest
 
 
@@ -44,7 +44,7 @@ class Test_Weather:
         weather.clear_weather()
         assert weather.current_weather == "Clear Skies"
 
-    def test_sandstorm_damage(self):
+    def test_weather_damage(self):
         weather = Weather("Sandstorm", 5)
         slowbro = Pokemon(
             "Slowbro",
@@ -57,28 +57,34 @@ class Test_Weather:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        assert sandstorm_damage(weather, slowbro) == True
+        assert weather_damage(weather, slowbro) == True
         slowbro.ability = "Sand Force"
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.ability = "Sand Rush"
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.ability = "Sand Veil"
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.ability = "Magic Guard"
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.ability = "Overcoat"
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.ability = None
-        assert sandstorm_damage(weather, slowbro) == True
+        assert weather_damage(weather, slowbro) == True
         slowbro.typing = ["Ground", "Grass"]
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.typing = ["Steel"]
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.typing = ["Water", "Rock"]
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
         slowbro.typing = ["Water", "Psychic"]
         slowbro.item = "Safety Goggles"
-        assert sandstorm_damage(weather, slowbro) == False
+        assert weather_damage(weather, slowbro) == False
+
+        weather = Weather("Hail", 5)
+        slowbro.typing = ["Grass", "Ice"]
+        assert weather_damage(weather, slowbro) == False
+        weather = Weather("Rain", 5)
+        assert weather_damage(weather, slowbro) == False
 
     def test_sandstorm_sp_def_boost(self):
         weather = Weather("Sandstorm", 5)

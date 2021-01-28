@@ -46,8 +46,11 @@ class Weather:
             self.current_weather = "Clear Skies"
 
 
-def sandstorm_damage(weather, pokemon):
-    """Damages all pokemon on the field at end of turn unless specific type, ability, or hold Safety Goggles."""
+def weather_damage(weather, pokemon):
+    """If weather is currently Sandstorm or Hail, damages all pokemon on the field at end of turn
+    unless pokemon is of specific type, ability, or holding Safety Goggles."""
+    if weather.current_weather not in ("Sandstorm", "Hail"):
+        return False
     if weather.current_weather == "Sandstorm":
         for typing in pokemon.typing:
             if typing in ("Rock", "Steel", "Ground"):
@@ -56,16 +59,21 @@ def sandstorm_damage(weather, pokemon):
             "Sand Force",
             "Sand Rush",
             "Sand Veil",
-            "Magic Guard",
-            "Overcoat",
         ):
             return False
-        elif pokemon.item == "Safety Goggles":
-            return False
-        else:
-            pokemon.damage(1 / 16)
-            print(f"{pokemon.name} was buffeted by the sandstorm!")
-            return True
+    if weather.current_weather == "Hail":
+        for typing in pokemon.typing:
+            if typing == "Ice":
+                return False
+            if pokemon.ability in ("Ice Body", "Snow Cloak"):
+                return False
+    if pokemon.ability in ("Magic Guard", "Overcoat"):
+        return False
+    if pokemon.item == "Safety Goggles":
+        return False
+    pokemon.damage(1 / 16)
+    print(f"{pokemon.name} was buffeted by the {weather.current_weather.lower()}!")
+    return True
 
 
 def sandstorm_sp_def_boost(weather, pokemon):
