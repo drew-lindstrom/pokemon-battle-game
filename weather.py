@@ -6,20 +6,48 @@ class Weather:
         self.current_weather = weather
         self.weather_counter = counter
 
-    def set_weather(self, weather, counter):
+    def set_weather(self, weather, pokemon):
+        """Sets current_weather to the specified weather and weather_counter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
         self.current_weather = weather
-        self.weather_counter = counter
-        if self.current_weather == "Sandstorm":
+        if weather == "Sandstorm":
+            self.current_weather = "Sandstorm"
             print("A sandstorm kicked up!")
+        if weather == "Rain":
+            self.current_weather = "Rain"
+            print("It started to rain!")
+        if weather == "Harsh Sunlight":
+            self.current_weather = "Harsh Sunlight"
+            print("The sunlight turned harsh!")
+        if weather == "Hail":
+            self.current_weather = "Hail"
+            print("It started to hail!")
+        if (
+            (pokemon.item == "Smooth Rock" and weather == "Sandstorm")
+            or (pokemon.item == "Damp Rock" and weather == "Rain")
+            or (pokemon.item == "Heat Rock" and weather == "Harsh Sunlight")
+            or (pokemon.item == "Icy Rock" and weather == "Hail")
+        ):
+            self.weather_counter = 8
+        else:
+            self.weather_counter = 5
 
     def clear_weather(self):
+        """Checks the weather counter at the end of the turn and resets current_weather to 'Clear Skies' if 0."""
+        # TODO does making weather reset at 0 cause the weather to last for 6/9 turns?
         if self.weather_counter == 0:
             if self.current_weather == "Sandstorm":
                 print("The sandstorm subsided.")
+            if self.current_weather == "Rain":
+                print("The rain subsided.")
+            if self.current_weather == "Harsh Sunlight":
+                print("The harsh sunlight ended.")
+            if self.current_weather == "Hail":
+                print("The hail subsided.")
             self.current_weather = "Clear Skies"
 
 
 def sandstorm_damage(weather, pokemon):
+    """Damages all pokemon on the field at end of turn unless specific type, ability, or hold Safety Goggles."""
     for typing in pokemon.typing:
         if typing in ("Rock", "Steel", "Ground"):
             return False
