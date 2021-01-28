@@ -48,28 +48,34 @@ class Weather:
 
 def sandstorm_damage(weather, pokemon):
     """Damages all pokemon on the field at end of turn unless specific type, ability, or hold Safety Goggles."""
-    for typing in pokemon.typing:
-        if typing in ("Rock", "Steel", "Ground"):
+    if weather.current_weather == "Sandstorm":
+        for typing in pokemon.typing:
+            if typing in ("Rock", "Steel", "Ground"):
+                return False
+        if pokemon.ability in (
+            "Sand Force",
+            "Sand Rush",
+            "Sand Veil",
+            "Magic Guard",
+            "Overcoat",
+        ):
             return False
-    if pokemon.ability in (
-        "Sand Force",
-        "Sand Rush",
-        "Sand Veil",
-        "Magic Guard",
-        "Overcoat",
-    ):
-        return False
-    elif pokemon.item == "Safety Goggles":
-        return False
-    else:
-        pokemon.damage(1 / 16)
-        return True
+        elif pokemon.item == "Safety Goggles":
+            return False
+        else:
+            pokemon.damage(1 / 16)
+            print(f"{pokemon.name} was buffeted by the sandstorm!")
+            return True
 
+
+def sandstorm_sp_def_boost(weather, pokemon):
+    """Increases special defense of Rock type pokemon while weather is Sandstorm."""
+    if weather.current_weather == "Sandstorm" and (
+        (pokemon.typing[0] == "Rock") or (pokemon.typing[1] == "Rock")
+    ):
+        return 1.5
+    return 1
     # Sandstorm To Do:
     #  Effect Text
     #  Ability activation
     #  Special defense boost for rock types
-    #  Changes Weather Ball to a rock-type move and doubles its power
-    #  Halves power of solar beam and solar blade
-    #  Causes Shore Up to recover 2/3 of max HP instead of 1/2
-    #  Causes Moonlight, Synthesis, and Morning Sun to recover 1/4 of max HP

@@ -1,5 +1,5 @@
 from pokemon import Pokemon
-from weather import Weather, sandstorm_damage
+from weather import Weather, sandstorm_damage, sandstorm_sp_def_boost
 import pytest
 
 
@@ -79,3 +79,22 @@ class Test_Weather:
         slowbro.typing = ["Water", "Psychic"]
         slowbro.item = "Safety Goggles"
         assert sandstorm_damage(weather, slowbro) == False
+
+    def test_sandstorm_sp_def_boost(self):
+        weather = Weather("Sandstorm", 5)
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert sandstorm_sp_def_boost(weather, slowbro) == 1
+        slowbro.typing = ["Rock", "Fire"]
+        assert sandstorm_sp_def_boost(weather, slowbro) == 1.5
+        slowbro.typing = ["Dark", "Rock"]
+        assert sandstorm_sp_def_boost(weather, slowbro) == 1.5
