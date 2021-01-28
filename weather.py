@@ -35,14 +35,7 @@ class Weather:
         """Checks the weather counter at the end of the turn and resets current_weather to 'Clear Skies' if 0."""
         # TODO does making weather reset at 0 cause the weather to last for 6/9 turns?
         if self.weather_counter == 0:
-            if self.current_weather == "Sandstorm":
-                print("The sandstorm subsided.")
-            if self.current_weather == "Rain":
-                print("The rain subsided.")
-            if self.current_weather == "Harsh Sunlight":
-                print("The harsh sunlight ended.")
-            if self.current_weather == "Hail":
-                print("The hail subsided.")
+            print(f"The {self.current_weather.lower()} subsided.")
             self.current_weather = "Clear Skies"
 
 
@@ -83,7 +76,22 @@ def sandstorm_sp_def_boost(weather, pokemon):
     ):
         return 1.5
     return 1
-    # Sandstorm To Do:
-    #  Effect Text
-    #  Ability activation
-    #  Special defense boost for rock types
+
+
+def weather_move_damage_mod(weather, pokemon, n):
+    """Boosts power of fire type moves by 50% and lowers power of water type moves by 50% if weather is Harsh Sunlight.
+    Boosts power of water type moves by 50% and lower power of fire types moves by 50% if weather is Rain."""
+    if weather.current_weather == "Harsh Sunlight":
+        if pokemon.moves[n].type == "Fire":
+            return 1.5
+        elif pokemon.moves[n].type == "Water":
+            return 0.5
+
+    elif weather.current_weather == "Rain":
+        if pokemon.moves[n].type == "Water":
+            return 1.5
+        elif pokemon.moves[n].type == "Fire":
+            return 0.5
+
+    else:
+        return 1

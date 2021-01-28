@@ -1,5 +1,10 @@
 from pokemon import Pokemon
-from weather import Weather, weather_damage, sandstorm_sp_def_boost
+from weather import (
+    Weather,
+    weather_damage,
+    sandstorm_sp_def_boost,
+    weather_move_damage_mod,
+)
 import pytest
 
 
@@ -104,3 +109,22 @@ class Test_Weather:
         assert sandstorm_sp_def_boost(weather, slowbro) == 1.5
         slowbro.typing = ["Dark", "Rock"]
         assert sandstorm_sp_def_boost(weather, slowbro) == 1.5
+
+    def test_weather_move_damage_mod(self):
+        weather = Weather("Harsh Sunlight", 5)
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Fire Blast", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert weather_move_damage_mod(weather, slowbro, 0) == 0.5
+        assert weather_move_damage_mod(weather, slowbro, 1) == 1.5
+        weather.current_weather = "Rain"
+        assert weather_move_damage_mod(weather, slowbro, 0) == 1.5
+        assert weather_move_damage_mod(weather, slowbro, 1) == 0.5
