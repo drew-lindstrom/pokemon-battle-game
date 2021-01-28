@@ -1,11 +1,15 @@
 from pokemon import Pokemon
 
-current_weather = "Clear Skies"
-weather_counter = None
 
+class Weather:
+    def __init__(self):
+        self.current_weather = "Clear Skies"
+        self.weather_counter = None
 
-def set_weather(weather, counter):
-    global current_weather
-    global weather_counter
-    current_weather = weather
-    weather_counter = counter
+    def set_weather(self, weather, counter):
+        self.current_weather = weather
+        self.weather_counter = counter
+
+    def clear_weather(self):
+        if self.weather_counter == 0:
+            self.current_weather = "Clear Skies"
