@@ -7,6 +7,10 @@ class Team:
         for n in range(len(pokemon)):
             self.team_list.append(pokemon[n])
         self.current_pokemon = self.team_list[0]
+        self.light_screen = False
+        self.light_screen_counter = 0
+        self.reflect = False
+        self.reflect_counter = 0
 
     def __len__(self):
         return len(self.team_list)
