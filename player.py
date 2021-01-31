@@ -64,6 +64,18 @@ def set_reflect(player):
             player.reflect_counter = 5
 
 
+def reset_light_screen(player):
+    """Sets the user's light_screen attribute to False if timer is at 0."""
+    if player.light_screen_counter == 0:
+        player.light_screen = False
+
+
+def reset_reflect(player):
+    """Sets the user's reflect attribute to False if timer is at 0."""
+    if player.reflect_counter == 0:
+        player.reflect = False
+
+
 def game_over_check(player):
     """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
     Returns False if all Pokemon on team are fainted.

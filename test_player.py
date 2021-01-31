@@ -1,4 +1,11 @@
-from player import Player, game_over_check, set_light_screen, set_reflect
+from player import (
+    Player,
+    game_over_check,
+    set_light_screen,
+    set_reflect,
+    reset_light_screen,
+    reset_reflect,
+)
 from pokemon import Pokemon
 import pytest
 
@@ -66,7 +73,7 @@ class TestPlayer:
         test_player[0].hp = 0
         assert game_over_check(test_player) == 0
 
-    def test_set_light_screen(self):
+    def test_set_light_screen_and_reset_light_screen(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -83,12 +90,14 @@ class TestPlayer:
         set_light_screen(test_player)
         assert test_player.light_screen == True
         assert test_player.light_screen_counter == 5
-        test_player.light_screen = False
+        test_player.light_screen_counter = 0
+        reset_light_screen(test_player)
+        assert test_player.light_screen == False
         slowbro.item = "Light Clay"
         set_light_screen(test_player)
         assert test_player.light_screen_counter == 8
 
-    def test_set_reflect(self):
+    def test_set_reflect_and_reset_reflect(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -105,7 +114,9 @@ class TestPlayer:
         set_reflect(test_player)
         assert test_player.reflect == True
         assert test_player.reflect_counter == 5
-        test_player.reflect = False
+        test_player.reflect_counter = 0
+        reset_reflect(test_player)
+        assert test_player.reflect == False
         slowbro.item = "Light Clay"
         set_reflect(test_player)
         assert test_player.reflect_counter == 8
