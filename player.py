@@ -11,6 +11,10 @@ class Player:
         self.light_screen_counter = 0
         self.reflect = False
         self.reflect_counter = 0
+        self.stealth_rocks = False
+        self.sticky_web = False
+        self.spikes = 0
+        self.tspikes = 0
 
     def __len__(self):
         return len(self.team_list)
@@ -40,6 +44,20 @@ class Player:
                 print()
             except Exception:
                 print(f"Can't switch out {self.current_pokemon}...")
+        # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
+
+
+def game_over_check(player):
+    """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
+    Returns False if all Pokemon on team are fainted.
+    pokemon.hp (int) -> bool"""
+    non_fainted_pokemon_bool = 0
+
+    for pokemon in player.team_list:
+        if pokemon.hp > 0:
+            non_fainted_pokemon_bool = 1
+
+    return non_fainted_pokemon_bool
 
 
 def set_light_screen(player):
@@ -76,14 +94,22 @@ def reset_reflect(player):
         player.reflect = False
 
 
-def game_over_check(player):
-    """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
-    Returns False if all Pokemon on team are fainted.
-    pokemon.hp (int) -> bool"""
-    non_fainted_pokemon_bool = 0
+def set_spike(player):
+    """Adds one spike to the player's spike count. Spike count max out at 3."""
+    if player.spikes < 3:
+        player.spikes += 1
 
-    for pokemon in player.team_list:
-        if pokemon.hp > 0:
-            non_fainted_pokemon_bool = 1
 
-    return non_fainted_pokemon_bool
+def set_tspike(player):
+    """Adds one toxic spike to the player's tspike count. Toxic spike count maxes out at 2."""
+    if player.tspikes < 2:
+        player.tspikes += 1
+
+
+def clear_hazards(player):
+    """Clears the hazards on the player's side of the field."""
+    # Rapid spin clears all entry hazards.
+    player.stealth_rocks = False
+    player.sticky_web = False
+    player.spikes = 0
+    player.tspikes = 0

@@ -5,6 +5,9 @@ from player import (
     set_reflect,
     reset_light_screen,
     reset_reflect,
+    set_spike,
+    set_tspike,
+    clear_hazards,
 )
 from pokemon import Pokemon
 import pytest
@@ -120,3 +123,72 @@ class TestPlayer:
         slowbro.item = "Light Clay"
         set_reflect(test_player)
         assert test_player.reflect_counter == 8
+
+    def test_set_spike(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        test_player = Player([slowbro])
+
+        set_spike(test_player)
+        assert test_player.spikes == 1
+        set_spike(test_player)
+        assert test_player.spikes == 2
+        set_spike(test_player)
+        set_spike(test_player)
+        assert test_player.spikes == 3
+
+    def test_set_tspike(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+
+        test_player = Player([slowbro])
+
+        set_tspike(test_player)
+        assert test_player.tspikes == 1
+        set_tspike(test_player)
+        assert test_player.tspikes == 2
+        set_tspike(test_player)
+        assert test_player.tspikes == 2
+
+    def test_clear_hazards(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+
+        test_player = Player([slowbro])
+
+        test_player.spikes = 2
+        test_player.tspikes = 2
+        test_player.stealth_rocks = True
+        test_player.sticky_web = True
+        clear_hazards(test_player)
+        assert test_player.spikes == 0
+        assert test_player.tspikes == 0
+        assert test_player.stealth_rocks == False
+        assert test_player.stealth_rocks == False
