@@ -1,7 +1,7 @@
 from pokemon import Pokemon
 
 
-class Team:
+class Player:
     def __init__(self, pokemon):
         self.team_list = []
         for n in range(len(pokemon)):
@@ -42,13 +42,35 @@ class Team:
                 print(f"Can't switch out {self.current_pokemon}...")
 
 
-def game_over_check(team):
+def set_light_screen(player):
+    """Sets reflect on user's team for 5 turns (8 turns if pokemon is holding light clay)."""
+    # TODO: Does this set it for 5 or 6 turns?
+    if player.light_screen == False:
+        player.light_screen = True
+        if player.current_pokemon.item == "Light Clay":
+            player.light_screen_counter = 8
+        else:
+            player.light_screen_counter = 5
+
+
+def set_reflect(player):
+    """Sets reflect on user's team for 5 turns (8 turns if user is holding light clay)."""
+    # TODO: Does this set it for 5 or 6 turns?
+    if player.reflect == False:
+        player.reflect = True
+        if player.current_pokemon.item == "Light Clay":
+            player.reflect_counter = 8
+        else:
+            player.reflect_counter = 5
+
+
+def game_over_check(player):
     """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
     Returns False if all Pokemon on team are fainted.
     pokemon.hp (int) -> bool"""
     non_fainted_pokemon_bool = 0
 
-    for pokemon in team:
+    for pokemon in player.team_list:
         if pokemon.hp > 0:
             non_fainted_pokemon_bool = 1
 
