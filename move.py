@@ -1,4 +1,5 @@
 from game_data import moves_dict
+from player import set_stealth_rocks
 from copy import deepcopy
 
 
@@ -66,6 +67,10 @@ class Move:
             print(f"{self.name} is out of PP!")
             return False
         return True
+
+
+def stealth_rock(attacker, defender):
+    set_stealth_rocks(defender)
 
 
 def frost_breath():

@@ -9,6 +9,8 @@ from player import (
     set_spike,
     set_tspike,
     set_sticky_web,
+    apply_entry_hazards,
+    apply_stealth_rocks_damage,
     clear_hazards,
 )
 from pokemon import Pokemon
@@ -203,6 +205,76 @@ class TestPlayer:
 
         set_sticky_web(test_player)
         assert test_player.sticky_web == True
+
+    def test_apply_stealth_rocks_damage(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+        charizard = Pokemon(
+            "Charizard",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+        fearow = Pokemon(
+            "Fearow",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+
+        aggron = Pokemon(
+            "Aggron",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+
+        steelix = Pokemon(
+            "Steelix",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+        test_player = Player([slowbro, aggron, steelix, fearow, charizard])
+        test_player.switch(1)
+        assert test_player.current_pokemon.hp == 263
+        test_player.switch(1)
+        assert test_player.current_pokemon.hp == 289
+        test_player.switch(2)
+        assert test_player.current_pokemon.hp == 281
+        test_player.switch(3)
+        assert test_player.current_pokemon.hp == 203
+        test_player.switch(4)
+        assert test_player.current_pokemon.hp == 148
 
     def test_clear_hazards(self):
         slowbro = Pokemon(

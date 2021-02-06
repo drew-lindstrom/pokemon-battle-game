@@ -1,4 +1,5 @@
 from pokemon import Pokemon
+from game_data import type_key, type_chart
 
 
 class Player:
@@ -12,9 +13,9 @@ class Player:
         self.reflect = False
         self.reflect_counter = 0
         self.stealth_rocks = False
-        self.sticky_web = False
         self.spikes = 0
         self.tspikes = 0
+        self.sticky_web = False
 
     def __len__(self):
         return len(self.team_list)
@@ -42,8 +43,9 @@ class Player:
                     f"{self.current_pokemon.name} switched with {self.team_list[n].name}."
                 )
                 print()
+                apply_entry_hazards(self.current_pokemon)
             except Exception:
-                print(f"Can't switch out {self.current_pokemon}...")
+                print(f"Can't switch out {self.current_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
 
@@ -114,6 +116,34 @@ def set_tspike(player):
 def set_sticky_web(player):
     """Adds sticky web to the target player's side."""
     player.sticky_web = True
+
+
+def apply_entry_hazards(target):
+    """Applies the appropriate entry hazards effects after a pokemon switches in.
+    Calls funciton to clear toxic spikes if target if a grounded poison type."""
+    if target.item != "Heavy Duty Boots":
+        apply_stealth_rocks_damage(target)
+    else:
+        print("error")
+        # if player.current_pokemon.grounded == True:
+        # apply_spikes_damage(player.current_pokemon)
+        # tspikes_clear_check(player.current_pokemon)
+        # apply_tspikes_effect(player.current_pokemon)
+        # apply_sticky_web_effect(player.current_pokemon)
+
+
+def apply_stealth_rocks_damage(target):
+    """Applies stealth rock damage to the target depending on target's weakness to Rock."""
+    atk_id = type_key.get("Rock")
+    def1_id = type_key.get(target.typing[0])
+    mult_1 = type_chart[atk_id][def1_id]
+    try:
+        def2_id = type_key.get(target.typing[1])
+        mult_2 = type_chart[atk_id][def2_id]
+    except:
+        mult_2 = 1
+
+    target.damage(0.125 * mult_1 * mult_2)
 
 
 def clear_hazards(player):

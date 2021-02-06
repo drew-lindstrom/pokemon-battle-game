@@ -4,7 +4,9 @@ import math
 
 
 class Pokemon:
-    def __init__(self, name, level, gender, moves, ability, item, IVs, EVs, nature):
+    def __init__(
+        self, name, level, gender, moves, ability, item, IVs, EVs, nature, grounded=True
+    ):
         self.name = name
         self.level = level
         self.gender = gender
@@ -107,7 +109,7 @@ class Pokemon:
     def damage(self, n):
         """Damages pokemon by n percentage of it's max hp. HP won't fall below 0.
         Ex: Slowbro's HP = 150 -> slowbro.damage(0.5) -> Slowbro's HP = 150 - 50% of max hp"""
-        self.hp = self.hp - int(self.max_hp * n)
+        self.hp = int(self.hp - self.max_hp * n)
 
         if self.hp <= 0:
             self.hp = 0
