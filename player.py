@@ -94,6 +94,11 @@ def reset_reflect(player):
         player.reflect = False
 
 
+def set_stealth_rocks(player):
+    """Adds stealth rocks to the target player's side."""
+    player.stealth_rocks = True
+
+
 def set_spike(player):
     """Adds one spike to the player's spike count. Spike count max out at 3."""
     if player.spikes < 3:
@@ -104,6 +109,11 @@ def set_tspike(player):
     """Adds one toxic spike to the player's tspike count. Toxic spike count maxes out at 2."""
     if player.tspikes < 2:
         player.tspikes += 1
+
+
+def set_sticky_web(player):
+    """Adds sticky web to the target player's side."""
+    player.sticky_web = True
 
 
 def clear_hazards(player):

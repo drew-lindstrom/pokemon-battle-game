@@ -5,8 +5,10 @@ from player import (
     set_reflect,
     reset_light_screen,
     reset_reflect,
+    set_stealth_rocks,
     set_spike,
     set_tspike,
+    set_sticky_web,
     clear_hazards,
 )
 from pokemon import Pokemon
@@ -124,6 +126,23 @@ class TestPlayer:
         set_reflect(test_player)
         assert test_player.reflect_counter == 8
 
+    def test_set_stealth_rocks(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        test_player = Player([slowbro])
+
+        set_stealth_rocks(test_player)
+        assert test_player.stealth_rocks == True
+
     def test_set_spike(self):
         slowbro = Pokemon(
             "Slowbro",
@@ -167,6 +186,23 @@ class TestPlayer:
         assert test_player.tspikes == 2
         set_tspike(test_player)
         assert test_player.tspikes == 2
+
+    def test_set_sticky_web(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        test_player = Player([slowbro])
+
+        set_sticky_web(test_player)
+        assert test_player.sticky_web == True
 
     def test_clear_hazards(self):
         slowbro = Pokemon(
