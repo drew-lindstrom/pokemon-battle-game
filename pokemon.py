@@ -20,9 +20,6 @@ class Pokemon:
         self.EVs = EVs
         self.nature = nature
         self.hp = None
-        # attack, defense, sp attack, sp defense, speed, accuracy, evasion
-        # need to update to use 1s instead
-        self.stat_mods = [0, 0, 0, 0, 0, 0, 0]
         self.status = None
 
     def init_stat(self, n):
@@ -78,6 +75,18 @@ class Pokemon:
     def speed(self):
         return self.init_stat(5)
 
+    @property
+    def stat_mods(self):
+        return self.stat_mods[0, 0, 0, 0, 0, 0, 0]
+
+    @stat_mods.setter
+    def stat_mods(self, index, n):
+        self.stat_mods[index] += n
+        if self.stat_mods[index] > 6:
+            self.stat_mods[index] = 6
+        if self.stat_mods[index] < -6:
+            self.stat_mods[index] = -6
+
     def show_stats(self):
         """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers
         print(f"Pokemon: {self.name}")
@@ -95,8 +104,9 @@ class Pokemon:
         for n in range(4):
             Move.show_stats(self.moves[n])
 
-    def update_stats(self):
-        pass
+    # def calc_stat_boost(self, stat):
+    #     stat_index = (('Attack', 0), ('Defense', 1), ('Speci')
+    #     if stat == 'Attack':
 
     def heal(self, n):
         """Heal pokemon by n percentage of it's max hp. Won't work on fainted Pokemon. HP won't exceed max hp.
