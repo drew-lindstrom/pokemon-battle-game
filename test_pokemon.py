@@ -23,6 +23,21 @@ class TestPokemon:
         assert test_pokemon.sp_defense == 197
         assert test_pokemon.speed == 86
 
+    def test_calc_multiplier(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        slowbro.stage_multiplier[2] = 6
+        assert slowbro.calc_multiplier("sp_attack") == slowbro.sp_attack * 4
+
     def test_heal(self):
         test_pokemon = Pokemon(
             "Slowbro",

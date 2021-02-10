@@ -76,16 +76,17 @@ class Pokemon:
         return self.init_stat(5)
 
     @property
-    def stat_mods(self):
-        return self.stat_mods[0, 0, 0, 0, 0, 0, 0]
+    def stage_multiplier(self):
+        self.stage_multiplier = [0, 0, 0, 0, 0, 0]
+        return self.stage_multiplier
 
-    @stat_mods.setter
-    def stat_mods(self, index, n):
-        self.stat_mods[index] += n
-        if self.stat_mods[index] > 6:
-            self.stat_mods[index] = 6
-        if self.stat_mods[index] < -6:
-            self.stat_mods[index] = -6
+    @stage_multiplier.setter
+    def stage_multiplier(self, index, n):
+        self.stage_multiplier[index] += n
+        if self.stage_multiplier[index] > 6:
+            self.stage_multiplier[index] = 6
+        if self.stage_multiplier[index] < -6:
+            self.stage_multiplier[index] = -6
 
     def show_stats(self):
         """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers
@@ -104,9 +105,24 @@ class Pokemon:
         for n in range(4):
             Move.show_stats(self.moves[n])
 
-    # def calc_stat_boost(self, stat):
-    #     stat_index = (('Attack', 0), ('Defense', 1), ('Speci')
-    #     if stat == 'Attack':
+    def calc_multiplier(self, stat):
+        """Calculates the modified stat of a Pokemomn if any stat modifiers are present.
+        For example, a Pokemon with +6 attack modifier would have their attack stat multiplied by 4."""
+        # TODO: Integrate with accuracy_check and evasion_check
+        stat_table = {
+            "attack": 0,
+            "defense": 1,
+            "sp_attack": 2,
+            "sp_defense": 3,
+            "speed": 4,
+            "evasion": 5,
+            "accuracy": 6,
+        }
+        stat_index = stat_table[stat]
+        if self.stat_mods[stat_index] > 0:
+            return (2 + self.stat_mods[stat_index]) / 2
+        elif self.stat_mods[stat_index] < 0:
+            return 2 / (self.stat_mods[stat_index] + 2)
 
     def heal(self, n):
         """Heal pokemon by n percentage of it's max hp. Won't work on fainted Pokemon. HP won't exceed max hp.
