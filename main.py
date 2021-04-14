@@ -10,29 +10,24 @@ if attack == "Stealth Rocks":
     set_stealth_rocks(player)
 
 
-def get_turn_order(
-    p1_cur_pokemon, p1_attack, p1_switch, p2_cur_pokemon, p2_attack, p2_switch
-):
+def get_turn_order(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
     """Gets the turn order for the current turn of the game.
     Turn order is determined by the speeds of the current pokemon on the field.
     With the exception of the effects from certian moves, items, or abilities,
     the faster pokemon always switches or attacks before the slower pokemon.
     Switching to a different pokemon always occurs before a pokemon attacks (unless the opposing pokemon uses the move Pursuit)."""
 
-    if p1_attack == "Pursuit" and p2_switch is not None:
-        return [p1_attack, p2_switch]
-    elif p2_attack == "Pursuit" and p1_switch is not None:
-        return [p2_attack, p1_attack]
+    if p1_choice[1] == "Pursuit" and p2_choice[1] == "Switch":
+        return [p1_choice, p2_choice]
+    elif p2_choice[1] == "Pursuit" and p1_choice[1] == "Switch":
+        return [p2_choice, p1_choice]
 
-    if p1_switch is not None and p2_switch is None:
-        return [p1_switch, p2_attack]
-    elif p2_switch is not None and p1_switch is None:
-        return [p2_switch, p1_switch]
+    if p1_choice[1] == "Switch" and p2_choice[1] != "Switch":
+        return [p1_choice, p2_choice]
+    elif p2_choice[1] == "Switch" and p1_choice[1] != "Switch":
+        return [p2_choice, p1_choice]
 
-    if p1_attack is not None and p2_attack is not None:
-        return check_speed(p1_cur_pokemon, p1_attack, p2_cur_pokemon, p2_attack)
-    else:
-        return check_speed(p1_cur_pokemon, p1_switch, p2_cur_pokemon, p2_switch)
+    return check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice)
 
 
 def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
@@ -65,21 +60,31 @@ def main():
     while True:
         ui.print_pokemon_on_field(p1.cur_pokemon, p2.cur_pokemon)
 
-        p1_attack, p1_switch = ui.get_choice(p1)
-        p2_attack, p2_switch = ui.get_choice(p2)
+        p1_choice = ui.get_choice(p1)
+        p2_choice = ui.get_choice(p2)
 
         turn_order = get_turn_order(
-            p1.cur_pokemon, p1_attack, p1_switch, p2.cur_pokemon, p2_attack, p2_switch
+            p1.cur_pokemon, p1_choice, p2.cur_pokemon, p2_choice
         )
 
         for choice in turn_order:
-            if p1_switch:
-                
-            if p2_switch:
-                
-            if p1_attack:
-            
-            if p2_attack:
+            player, move_name, n = choice
+            if move_name == "Switch":
+                player.switch[n]
+            else:
+                attack(player.cur_pokemon, move_name, n)
+
+        if p1.game_over_check() and p2.game_over_check():
+            print("Its a Draw!")
+            break
+
+        elif p1.game_over_check():
+            print("Player 2 Wins!")
+            break
+
+        elif p2.game_over_check():
+            print("Player 1 Wins!")
+            break
 
 
 if __name__ == "__main__":

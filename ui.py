@@ -18,19 +18,16 @@ def get_choice(team):
         print()
 
         if choice >= 1 and choice <= 4:
-            attack_choice = get_attack(team.cur_pokemon, choice)
-            switch_choice = None
+            # TODO: PP Check
+            return (team, team.cur_pokemon.moves[choice - 1].name, choice - 1)
 
         elif choice == 5:
-            attack_choice = None
-            switch_choice = get_switch(team)
+            return get_switch(team)
 
         elif choice == 6:
             team.cur_pokemon.show_stats()
             choice = None
             continue
-
-    return attack_choice, switch_choice
 
 
 def print_options(team):
@@ -44,11 +41,6 @@ def print_options(team):
     print("(5) Switch Pokemon")
     print("(6) Details")
     print()
-
-
-def get_attack(pokemon):
-    # TODO: PP Check
-    return pokemon.moves[choice - 1].name
 
 
 def get_switch(team):
@@ -69,7 +61,7 @@ def get_switch(team):
         switch_choice = input()
         print()
 
-    return switch_choice
+    return (team, "Switch", n)
 
 
 def clear_screen():
