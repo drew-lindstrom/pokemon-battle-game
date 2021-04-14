@@ -1,110 +1,86 @@
-from battle import attack
+from player import Player
 from pokemon import Pokemon
-from team import Team
-from teams import player1, player2
+from move import Move
+import entry_hazards
+import terrain
+import weather
+import ui
+
+if attack == "Stealth Rocks":
+    set_stealth_rocks(player)
 
 
-def print_pokemon_on_field(pokemon1, pokemon2):
-    print(
-        f"{pokemon1.name} - HP: {pokemon1.hp}/{pokemon1.max_hp}, Status: {pokemon1.status}"
-    )
-    print(
-        f"{pokemon2.name} - HP: {pokemon2.hp}/{pokemon2.max_hp}, Status: {pokemon2.status}"
-    )
-    print()
+def get_turn_order(
+    p1_cur_pokemon, p1_attack, p1_switch, p2_cur_pokemon, p2_attack, p2_switch
+):
+    """Gets the turn order for the current turn of the game.
+    Turn order is determined by the speeds of the current pokemon on the field.
+    With the exception of the effects from certian moves, items, or abilities,
+    the faster pokemon always switches or attacks before the slower pokemon.
+    Switching to a different pokemon always occurs before a pokemon attacks (unless the opposing pokemon uses the move Pursuit)."""
+
+    if p1_attack == "Pursuit" and p2_switch is not None:
+        return [p1_attack, p2_switch]
+    elif p2_attack == "Pursuit" and p1_switch is not None:
+        return [p2_attack, p1_attack]
+
+    if p1_switch is not None and p2_switch is None:
+        return [p1_switch, p2_attack]
+    elif p2_switch is not None and p1_switch is None:
+        return [p2_switch, p1_switch]
+
+    if p1_attack is not None and p2_attack is not None:
+        return check_speed(p1_cur_pokemon, p1_attack, p2_cur_pokemon, p2_attack)
+    else:
+        return check_speed(p1_cur_pokemon, p1_switch, p2_cur_pokemon, p2_switch)
 
 
-def get_choice(team):
-    choice = None
-    current_pokemon = team.current_pokemon
+def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
 
-    while choice not in range(10):
-        print(f"What will {current_pokemon.name} do?")
-        print()
-        for n in range(len(current_pokemon.moves)):
-            print(
-                f"({n+1}) {current_pokemon.moves[n].name} - {current_pokemon.moves[n].pp}/{current_pokemon.moves[n].max_pp} PP"
-            )
-        print()
-        print("(5) Switch Pokemon")
-        print("(6) Details")
-        print()
+    """Checks the speed of both pokemon on field to determine who moves first.
+    Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
 
-        choice = int(input()) - 1
-        print()
+    # TODO: Speed stat modifiers
+    p1_speed = p1_cur_pokemon.speed
+    p2_speed = p2_cur_pokemon.speed
 
-        if choice == 4:
-            choice = get_switch_choice(team)
-        elif choice == 5:
-            current_pokemon.show_stats()
-            choice = None
-        else:
-            if current_pokemon.moves[n].check_pp() == False:
-                choice = None
-    return int(choice)
+    if p1_cur_pokemon.status == "Paralyzed":
+        p1_speed *= 0.5
+
+    if p2_cur_pokemon.status == "Paralyzed":
+        p2_speed *= 0.5
+
+    if p1_speed > p2_speed:
+        return [p1_choice, p2_choice]
+    # If the speed check is a tie, its usually random who goes first, but for the sake of AI consistency, the opponent will always go first.
+    else:
+        return [p2_choice, p1_choice]
 
 
-def get_switch_choice(team):
-    choice_list = []
-    choice = ""
+def main():
 
-    print(f"Switch {team.current_pokemon.name} with...?")
+    """Main function of the program. Takes players' input for attacks, checks for win condition,
+    and calls appropriate functions to apply damage and various effects."""
 
-    for n in range(len(team)):
-        if n == 0:
-            continue
-        print(
-            f"({n}) {team[n].name} - {team[n].hp}/{team[n].max_hp} HP, Status: {team[n].status}"
+    while True:
+        ui.print_pokemon_on_field(p1.cur_pokemon, p2.cur_pokemon)
+
+        p1_attack, p1_switch = ui.get_choice(p1)
+        p2_attack, p2_switch = ui.get_choice(p2)
+
+        turn_order = get_turn_order(
+            p1.cur_pokemon, p1_attack, p1_switch, p2.cur_pokemon, p2_attack, p2_switch
         )
-        choice_list.append(str(n))
 
-    while choice not in choice_list:
-        choice = input()
-        print()
-
-    choice = int(choice) + 5
-    return choice
-
-
-def find_turn_order(player1, player2):
-    try:
-        if player1.current_pokemon.speed > player2.current_pokemon.speed:
-            return [player1, player2]
-        # If the speed check is a tie, its usually random who goes first, but for the sake of AI consistency, the opponent will always go first.
-        else:
-            return [player2, player1]
-    except:
-        return None
+        for choice in turn_order:
+            if p1_switch:
+                
+            if p2_switch:
+                
+            if p1_attack:
+            
+            if p2_attack:
 
 
-def clear_screen():
-    for n in range(17):
-        print()
-
-
-clear_screen()
-
-while True:
-    turn_order = find_turn_order(player1, player2)
-    switch_list = []
-    attack_list = []
-
-    print_pokemon_on_field(player1.current_pokemon, player2.current_pokemon)
-
-    for x in range(len(turn_order)):
-        choice = get_choice(turn_order[x])
-        clear_screen()
-        if choice >= 5:
-            switch_list.append([turn_order[x], choice - 5])
-
-        elif choice in range(4):
-            attack_list.append([turn_order[x], choice])
-
-    for x in range(len(switch_list)):
-        switch_list[x][0].switch(switch_list[x][1])
-
-    for x in range(len(attack_list)):
-        if attack_list[x][0] == player1:
-            attack(player1.current_pokemon, attack_list[x][1], player2.current_pokemon)
-        else:
-            attack(player2.current_pokemon, attack_list[x][1], player1.current_pokemon)
+if __name__ == "__main__":
+    main()
