@@ -7,7 +7,7 @@ class Player:
         self.team = []
         for n in range(len(pokemon)):
             self.team.append(pokemon[n])
-        self.current_pokemon = self.team[0]
+        self.cur_pokemon = self.team[0]
         self.light_screen = False
         self.light_screen_counter = 0
         self.reflect = False
@@ -51,71 +51,12 @@ class Player:
 
 def game_over_check(player):
     """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
-    Returns False if all Pokemon on team are fainted.
-    pokemon.hp (int) -> bool"""
-    non_fainted_pokemon_bool = 0
+    Returns False if all Pokemon on team are fainted."""
 
     for pokemon in player.team:
         if pokemon.hp > 0:
-            non_fainted_pokemon_bool = 1
-
-    return non_fainted_pokemon_bool
-
-
-def set_light_screen(player):
-    """Sets reflect on user's team for 5 turns (8 turns if pokemon is holding light clay)."""
-    # TODO: Does this set it for 5 or 6 turns?
-    if player.light_screen == False:
-        player.light_screen = True
-        if player.current_pokemon.item == "Light Clay":
-            player.light_screen_counter = 8
-        else:
-            player.light_screen_counter = 5
-
-
-def set_reflect(player):
-    """Sets reflect on user's team for 5 turns (8 turns if user is holding light clay)."""
-    # TODO: Does this set it for 5 or 6 turns?
-    if player.reflect == False:
-        player.reflect = True
-        if player.current_pokemon.item == "Light Clay":
-            player.reflect_counter = 8
-        else:
-            player.reflect_counter = 5
-
-
-def reset_light_screen(player):
-    """Sets the user's light_screen attribute to False if timer is at 0."""
-    if player.light_screen_counter == 0:
-        player.light_screen = False
-
-
-def reset_reflect(player):
-    """Sets the user's reflect attribute to False if timer is at 0."""
-    if player.reflect_counter == 0:
-        player.reflect = False
-
-
-def set_stealth_rocks(player):
-    """Adds stealth rocks to the target player's side."""
-    player.stealth_rocks = True
-
-
-def set_spike(player):
-    """Adds one spike to the player's spike count. Spike count max out at 3."""
-    if player.spikes < 3:
-        player.spikes += 1
-
-
-def set_tspike(player):
-    """Adds one toxic spike to the player's tspike count. Toxic spike count maxes out at 2."""
-    if player.tspikes < 2:
-        player.tspikes += 1
-
-
-def set_sticky_web(player):
-    """Adds sticky web to the target player's side."""
-    player.sticky_web = True
+            return False
+    return True
 
 
 def apply_entry_hazards(target):
