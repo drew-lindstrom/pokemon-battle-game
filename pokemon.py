@@ -11,7 +11,11 @@ class Pokemon:
         self.level = level
         self.gender = gender
         self.typing = pokemon_dict[name][0]
+
         self.moves = [None, None, None, None]
+        self.prev_move = None
+        self.move_lock = -1
+
         for n in range(4):
             self.moves[n] = Move(moves[n])
         self.ability = ability
@@ -19,7 +23,8 @@ class Pokemon:
         self.IVs = IVs
         self.EVs = EVs
         self.nature = nature
-        self.hp = None
+        self._hp = None
+        self.stage_multiplier = [0, 0, 0, 0, 0, 0]
         self.status = None
 
     def init_stat(self, n):
@@ -77,16 +82,15 @@ class Pokemon:
 
     @property
     def stage_multiplier(self):
-        self.stage_multiplier = [0, 0, 0, 0, 0, 0]
-        return self.stage_multiplier
+        return self._stage_multiplier
 
-    @stage_multiplier.setter
-    def stage_multiplier(self, index, n):
-        self.stage_multiplier[index] += n
-        if self.stage_multiplier[index] > 6:
-            self.stage_multiplier[index] = 6
-        if self.stage_multiplier[index] < -6:
-            self.stage_multiplier[index] = -6
+    def update_stage_multiplier(self, index, n):
+
+        self.stage_mult[index] += n
+        if self.stage_mult[index] > 6:
+            self.stage_mult[index] = 6
+        if self.stage_mult[index] < -6:
+            self.stage_mult[index] = -6
 
     def show_stats(self):
         """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers

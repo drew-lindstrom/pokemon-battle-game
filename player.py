@@ -4,10 +4,10 @@ from game_data import type_key, type_chart
 
 class Player:
     def __init__(self, pokemon):
-        self.team_list = []
+        self.team = []
         for n in range(len(pokemon)):
-            self.team_list.append(pokemon[n])
-        self.current_pokemon = self.team_list[0]
+            self.team.append(pokemon[n])
+        self.current_pokemon = self.team[0]
         self.light_screen = False
         self.light_screen_counter = 0
         self.reflect = False
@@ -18,32 +18,32 @@ class Player:
         self.sticky_web = False
 
     def __len__(self):
-        return len(self.team_list)
+        return len(self.team)
 
     def __getitem__(self, index):
-        return self.team_list[index]
+        return self.team[index]
 
     def show_team(self):
-        for n in range(len(self.team_list)):
-            self.team_list[n].show_stats()
+        for n in range(len(self.team)):
+            self.team[n].show_stats()
 
     def switch(self, n):
         """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
         Ex: Player team order is [Tyranitar, Slowbro] -> player_team.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
         n = int(n)
-        if self.team_list[n].hp == 0:
-            print(f"{self.team_list[n].name} has already fainted!")
+        if self.team[n].hp == 0:
+            print(f"{self.team[n].name} has already fainted!")
         else:
             try:
-                self.current_pokemon, self.team_list[n] = (
-                    self.team_list[n],
+                self.current_pokemon, self.team[n] = (
+                    self.team[n],
                     self.current_pokemon,
                 )
-                print(
-                    f"{self.current_pokemon.name} switched with {self.team_list[n].name}."
-                )
+                print(f"{self.current_pokemon.name} switched with {self.team[n].name}.")
                 print()
                 apply_entry_hazards(self.current_pokemon)
+                team[n].move_lock = -1
+                team[n].prev_move = None
             except Exception:
                 print(f"Can't switch out {self.current_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
@@ -55,7 +55,7 @@ def game_over_check(player):
     pokemon.hp (int) -> bool"""
     non_fainted_pokemon_bool = 0
 
-    for pokemon in player.team_list:
+    for pokemon in player.team:
         if pokemon.hp > 0:
             non_fainted_pokemon_bool = 1
 

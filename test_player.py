@@ -41,10 +41,13 @@ class TestPlayer:
             (252, 0, 0, 0, 216, 40),
             "Careful",
         )
-
+        slowbro.move_lock = 1
+        slowbro.prev_move = "Scald"
         test_player = Player([slowbro, tyranitar])
         test_player.switch(1)
         assert test_player.current_pokemon.name == "Tyranitar"
+        assert slowbro.move_lock == -1
+        assert slowbro.prev_move == None
         test_player[1].hp = 0
         test_player.switch(1)
         assert test_player.current_pokemon.name == "Tyranitar"
