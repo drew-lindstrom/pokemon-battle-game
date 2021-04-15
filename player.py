@@ -31,32 +31,32 @@ class Player:
         """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
         Ex: Player team order is [Tyranitar, Slowbro] -> player_team.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
         n = int(n)
-        if self.team[n].hp == 0:
+        if self.team[n].stat["hp"] == 0:
             print(f"{self.team[n].name} has already fainted!")
         else:
             try:
-                self.current_pokemon, self.team[n] = (
-                    self.team[n],
-                    self.current_pokemon,
+                self.team[0], self.team[n] = (
+                    self.teamn[n],
+                    self.team[0],
                 )
+                self.cur_pokemon = self.team[0]
                 print(f"{self.current_pokemon.name} switched with {self.team[n].name}.")
                 print()
                 apply_entry_hazards(self.current_pokemon)
                 team[n].move_lock = -1
                 team[n].prev_move = None
             except Exception:
-                print(f"Can't switch out {self.current_pokemon.name}...")
+                print(f"Can't switch out {self.cur_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
+    def game_over_check(player):
+        """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
+        Returns False if all Pokemon on team are fainted."""
 
-def game_over_check(player):
-    """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
-    Returns False if all Pokemon on team are fainted."""
-
-    for pokemon in player.team:
-        if pokemon.hp > 0:
-            return False
-    return True
+        for pokemon in self.team:
+            if pokemon.stat["hp"] > 0:
+                return False
+        return True
 
 
 def apply_entry_hazards(target):

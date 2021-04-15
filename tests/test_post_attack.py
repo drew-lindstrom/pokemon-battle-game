@@ -1,10 +1,10 @@
-from post_attack import leftovers_check
+from post_attack import apply_leftovers
 from pokemon import Pokemon
 import pytest
 
 
 class TestPostAttack:
-    def test_leftovers_check(self):
+    def test_apply_leftovers(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -16,9 +16,9 @@ class TestPostAttack:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        slowbro.hp = 360
-        leftovers_check(slowbro)
-        assert slowbro.hp == 384
+        slowbro.stat["hp"] = 360
+        apply_leftovers(slowbro)
+        assert slowbro.stat["hp"] == 384
         slowbro.hp = 380
-        leftovers_check(slowbro)
-        assert slowbro.hp == 394
+        apply_leftovers(slowbro)
+        assert slowbro.stat["hp"] == 394

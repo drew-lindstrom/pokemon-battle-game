@@ -15,15 +15,15 @@ class TestPokemon:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        assert test_pokemon.hp == 394
-        assert test_pokemon.max_hp == 394
-        assert test_pokemon.attack == 186
-        assert test_pokemon.defense == 350
-        assert test_pokemon.sp_attack == 236
-        assert test_pokemon.sp_defense == 197
-        assert test_pokemon.speed == 86
+        assert test_pokemon.stat["hp"] == 394
+        assert test_pokemon.stat["max_hp"] == 394
+        assert test_pokemon.stat["attack"] == 186
+        assert test_pokemon.stat["defense"] == 350
+        assert test_pokemon.stat["sp_attack"] == 236
+        assert test_pokemon.stat["sp_defense"] == 197
+        assert test_pokemon.stat["speed"] == 86
 
-    def test_calc_multiplier(self):
+    def test_calc_modified_stat(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -35,8 +35,16 @@ class TestPokemon:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        slowbro.stage_multiplier[2] = 6
-        assert slowbro.calc_multiplier("sp_attack") == slowbro.sp_attack * 4
+        slowbro.stat_mod["sp_attack"] = 6
+        slowbro.stat_mod["attack"] = -6
+        slowbro.stat_mod["accuracy"] = 4
+        slowbro.stat_mod["evasion"] = -4
+        assert slowbro.calc_modified_stat("sp_attack") == int(
+            slowbro.stat["sp_attack"] * 4
+        )
+        assert slowbro.calc_modified_stat("attack") == int(slowbro.stat["attack"] / 4)
+        assert slowbro.calc_modified_stat("accuracy") == int(7 / 3 * 100)
+        assert slowbro.calc_modified_stat("evasion") == int(3 / 7 * 100)
 
     def test_heal(self):
         test_pokemon = Pokemon(
@@ -50,15 +58,15 @@ class TestPokemon:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        test_pokemon.hp = 150
+        test_pokemon.stat["hp"] = 150
         test_pokemon.heal(0.5)
-        assert test_pokemon.hp == 347
-        test_pokemon.hp = 393
+        assert test_pokemon.stat["hp"] == 347
+        test_pokemon.stat["hp"] = 393
         test_pokemon.heal(0.5)
-        assert test_pokemon.hp == 394
-        test_pokemon.hp = 0
+        assert test_pokemon.stat["hp"] == 394
+        test_pokemon.stat["hp"] = 0
         test_pokemon.heal(0)
-        assert test_pokemon.hp == 0
+        assert test_pokemon.stat["hp"] == 0
 
     def test_damage(self):
         test_pokemon = Pokemon(
@@ -73,10 +81,10 @@ class TestPokemon:
             "Relaxed",
         )
         test_pokemon.damage(0.5)
-        assert test_pokemon.hp == 197
-        test_pokemon.hp = 35
+        assert test_pokemon.stat["hp"] == 197
+        test_pokemon.stat["hp"] = 35
         test_pokemon.damage(0.5)
-        assert test_pokemon.hp == 0
+        assert test_pokemon.stat["hp"] == 0
 
     def test_struggle_check(self):
         test_pokemon = Pokemon(

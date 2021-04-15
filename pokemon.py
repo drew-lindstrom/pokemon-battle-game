@@ -13,84 +13,86 @@ class Pokemon:
         self.typing = pokemon_dict[name][0]
 
         self.moves = [None, None, None, None]
+
         self.prev_move = None
         self.move_lock = -1
 
         for n in range(4):
             self.moves[n] = Move(moves[n])
+
         self.ability = ability
         self.item = item
         self.IVs = IVs
         self.EVs = EVs
         self.nature = nature
         self._hp = None
-        self.stage_multiplier = [0, 0, 0, 0, 0, 0]
+        self.stat = {
+            "max_hp": 0,
+            "hp": 0,
+            "attack": 0,
+            "defense": 0,
+            "sp_attack": 0,
+            "sp_defense": 0,
+            "speed": 0,
+        }
+        self.init_stat()
+
+        self.stat_mod = {
+            "attack": 0,
+            "defense": 0,
+            "sp_attack": 0,
+            "sp_defense": 0,
+            "speed": 0,
+            "accuracy": 0,
+            "evasion": 0,
+        }
         self.status = None
 
-    def init_stat(self, n):
-        stats_formula = int(
-            (
-                2 * int(pokemon_dict[self.name][1][n])
-                + self.IVs[n]
-                + int(self.EVs[n] / 4)
+    def init_stat(self):
+        """Initializes the hp, max_hp, attack, defense, special attack, special defense, and speed stat for the given pokemon based on the pokemon's
+        IVs, EVs, and nature."""
+
+        def stats_formula(n):
+            return int(
+                (
+                    2 * int(pokemon_dict[self.name][1][n])
+                    + self.IVs[n]
+                    + int(self.EVs[n] / 4)
+                )
+                * self.level
+                / 100
             )
-            * self.level
-            / 100
-        )
-        if n == 0:
-            stat = int(stats_formula + self.level + 10)
-        else:
-            stat = int((stats_formula + 5) * natures_dict[self.nature][n - 1])
-        return stat
 
-    @property
-    def max_hp(self):
-        return self.init_stat(0)
+        for stat_name in self.stat:
+            if stat_name is "hp" or stat_name is "max_hp":
+                n = 0
+                self.stat[stat_name] = int(stats_formula(n) + self.level + 10)
+            else:
+                stat_dictionary = {
+                    "attack": 1,
+                    "defense": 2,
+                    "sp_attack": 3,
+                    "sp_defense": 4,
+                    "speed": 5,
+                }
+                n = stat_dictionary[stat_name]
+                self.stat[stat_name] = int(
+                    (stats_formula(n) + 5) * natures_dict[self.nature][n - 1]
+                )
 
-    @property
-    def hp(self):
-        return self._hp
+    def update_stat_modifier(self, stat, n):
+        """Updates a given stat modifier by n. Stat modifieres can not be greater than 6 or less than -6."""
+        self.stat_mod[stat] += n
+        if self.stat_mod[stat] > 6:
+            self.stat_mod[stat] = 6
+        if self.stat_mod[stat] < -6:
+            self.stat_mod[stat] = -6
 
-    @hp.setter
-    def hp(self, n):
-        if n == None or n > self.max_hp:
-            self.hp = self.max_hp
-        elif n <= 0:
-            self._hp = 0
-        else:
-            self._hp = n
-
-    @property
-    def attack(self):
-        return self.init_stat(1)
-
-    @property
-    def defense(self):
-        return self.init_stat(2)
-
-    @property
-    def sp_attack(self):
-        return self.init_stat(3)
-
-    @property
-    def sp_defense(self):
-        return self.init_stat(4)
-
-    @property
-    def speed(self):
-        return self.init_stat(5)
-
-    @property
-    def stage_multiplier(self):
-        return self._stage_multiplier
-
-    def update_stage_multiplier(self, index, n):
-
-        self.stage_mult[index] += n
-        if self.stage_mult[index] > 6:
-            self.stage_mult[index] = 6
-        if self.stage_mult[index] < -6:
-            self.stage_mult[index] = -6
+    def reset_stat_modifier(self):
+        """Resets all stat modifiers of a given pokemon back to 0.
+        Switching a pokemon out always resets stat modifiers. Certian moves also remove all stat modifiers."""
+        for stat in self.stat_mod:
+            stat_mod[stat] = 0
 
     def show_stats(self):
         """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers
@@ -109,40 +111,43 @@ class Pokemon:
         for n in range(4):
             Move.show_stats(self.moves[n])
 
-    def calc_multiplier(self, stat):
+    def calc_modified_stat(self, stat_name):
         """Calculates the modified stat of a Pokemomn if any stat modifiers are present.
-        For example, a Pokemon with +6 attack modifier would have their attack stat multiplied by 4."""
-        # TODO: Integrate with accuracy_check and evasion_check
-        stat_table = {
-            "attack": 0,
-            "defense": 1,
-            "sp_attack": 2,
-            "sp_defense": 3,
-            "speed": 4,
-            "evasion": 5,
-            "accuracy": 6,
-        }
-        stat_index = stat_table[stat]
-        if self.stat_mods[stat_index] > 0:
-            return (2 + self.stat_mods[stat_index]) / 2
-        elif self.stat_mods[stat_index] < 0:
-            return 2 / (self.stat_mods[stat_index] + 2)
+        Accuracy and evasion are modified at a different scale (n = 3) than the other stats (n = 2). HP and max_hp do not have stat modifiers.
+        Accuracy and evasion modifiers are also multipied by 100 while the other stats are multiplied by their respective base stats
+        because accuracy/evasion is the chace out of 100% for an attack to hit/for a pokmeon to dodge a hit.
+        Ex: A Pokemon with +6 attack modifier would have their attack stat multiplied by 4 (or (2 + 6)/2)."""
+
+        def calc_modified_stat_helper(stat_name, n):
+
+            if stat_name == "accuracy" or stat_name == "evasion":
+                modified_stat = 100
+            else:
+                modified_stat = self.stat[stat_name]
+
+            if self.stat_mod[stat_name] > 0:
+                return int(modified_stat * ((n + self.stat_mod[stat_name]) / n))
+            elif self.stat_mod[stat_name] < 0:
+                return int(modified_stat * (n / (abs(self.stat_mod[stat_name]) + n)))
+
+        if stat_name == "accuracy" or stat_name == "evasion":
+            return calc_modified_stat_helper(stat_name, 3)
+        return calc_modified_stat_helper(stat_name, 2)
 
     def heal(self, n):
         """Heal pokemon by n percentage of it's max hp. Won't work on fainted Pokemon. HP won't exceed max hp.
         Ex: Slowbro's HP = 150 -> slowbro.heal(0.5) -> Slowbro's HP = 150 + 50% of max hp"""
-        if self.hp <= 0:
+        if self.stat["hp"] <= 0:
             print(f"{self.name} has fainted and can't be healed.")
-            pass
-        self.hp = self.hp + int(self.max_hp * n)
+            return
+        self.stat["hp"] = min(
+            self.stat["hp"] + int(self.stat["max_hp"] * n), self.stat["max_hp"]
+        )
 
     def damage(self, n):
         """Damages pokemon by n percentage of it's max hp. HP won't fall below 0.
         Ex: Slowbro's HP = 150 -> slowbro.damage(0.5) -> Slowbro's HP = 150 - 50% of max hp"""
-        self.hp = int(self.hp - self.max_hp * n)
-
-        if self.hp <= 0:
-            self.hp = 0
+        self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
 
     def struggle_check(self):
         """Checks the pp of all of the attacking Pokemon's moves. If all moves have zero pp, struggle is used to attack instead."""
