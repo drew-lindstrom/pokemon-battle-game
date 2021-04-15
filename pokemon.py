@@ -92,7 +92,7 @@ class Pokemon:
         """Resets all stat modifiers of a given pokemon back to 0.
         Switching a pokemon out always resets stat modifiers. Certian moves also remove all stat modifiers."""
         for stat in self.stat_mod:
-            stat_mod[stat] = 0
+            self.stat_mod[stat] = 0
 
     def show_stats(self):
         """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers

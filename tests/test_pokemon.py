@@ -23,6 +23,47 @@ class TestPokemon:
         assert test_pokemon.stat["sp_defense"] == 197
         assert test_pokemon.stat["speed"] == 86
 
+    def test_update_stat_modifier(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        p.update_stat_modifier("attack", 4)
+        assert p.stat_mod["attack"] == 4
+        p.update_stat_modifier("attack", 4)
+        assert p.stat_mod["attack"] == 6
+        p.update_stat_modifier("attack", -7)
+        assert p.stat_mod["attack"] == -1
+        p.update_stat_modifier("attack", -7)
+        assert p.stat_mod["attack"] == -6
+
+    def test_reset_stat_modifier(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+
+        p.stat_mod["attack"] == 5
+        p.stat_mod["defense"] == -4
+        p.reset_stat_modifier()
+        assert p.stat_mod["attack"] == 0
+        assert p.stat_mod["defense"] == 0
+        assert p.stat_mod["speed"] == 0
+
     def test_calc_modified_stat(self):
         slowbro = Pokemon(
             "Slowbro",
