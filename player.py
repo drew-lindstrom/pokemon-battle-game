@@ -46,6 +46,7 @@ class Player:
                 # apply_entry_hazards(self.current_pokemon)
                 self.team[n].move_lock = -1
                 self.team[n].prev_move = None
+                self.team[n].reset_stat_modifier()
             except Exception:
                 print(f"Can't switch out {self.cur_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.

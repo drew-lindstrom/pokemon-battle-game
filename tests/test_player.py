@@ -29,11 +29,13 @@ class TestPlayer:
         )
         slowbro.move_lock = 1
         slowbro.prev_move = "Scald"
+        slowbro.stat_mod["attack"] = 6
         test_player = Player([slowbro, tyranitar])
         test_player.switch(1)
         assert test_player.cur_pokemon.name == "Tyranitar"
         assert slowbro.move_lock == -1
         assert slowbro.prev_move == None
+        assert slowbro.stat_mod["attack"] == 0
         test_player[1].stat["hp"] = 0
         test_player.switch(1)
         assert test_player.cur_pokemon.name == "Tyranitar"
