@@ -63,11 +63,11 @@ class TestPlayer:
         )
 
         test_player = Player([slowbro, tyranitar])
-        assert game_over_check(test_player) == 1
+        assert test_player.game_over_check() == False
         test_player[1].stat["hp"] = 0
-        assert game_over_check(test_player) == 1
+        assert test_player.game_over_check() == False
         test_player[0].stat["hp"] = 0
-        assert game_over_check(test_player) == 0
+        assert test_player.game_over_check() == True
 
     # def test_set_light_screen_and_reset_light_screen(self):
     #     slowbro = Pokemon(

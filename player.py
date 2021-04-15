@@ -36,20 +36,20 @@ class Player:
         else:
             try:
                 self.team[0], self.team[n] = (
-                    self.teamn[n],
+                    self.team[n],
                     self.team[0],
                 )
+                print(f"{self.cur_pokemon.name} switched with {self.team[n].name}.")
                 self.cur_pokemon = self.team[0]
-                print(f"{self.current_pokemon.name} switched with {self.team[n].name}.")
                 print()
-                apply_entry_hazards(self.current_pokemon)
-                team[n].move_lock = -1
-                team[n].prev_move = None
+                # apply_entry_hazards(self.current_pokemon)
+                self.team[n].move_lock = -1
+                self.team[n].prev_move = None
             except Exception:
                 print(f"Can't switch out {self.cur_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
-    def game_over_check(player):
+    def game_over_check(self):
         """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
         Returns False if all Pokemon on team are fainted."""
 
