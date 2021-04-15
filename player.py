@@ -24,6 +24,7 @@ class Player:
         return self.team[index]
 
     def show_team(self):
+        """Shows stats of the pokemon on the player's team."""
         for n in range(len(self.team)):
             self.team[n].show_stats()
 
