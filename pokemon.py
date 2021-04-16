@@ -129,6 +129,8 @@ class Pokemon:
                 return int(modified_stat * ((n + self.stat_mod[stat_name]) / n))
             elif self.stat_mod[stat_name] < 0:
                 return int(modified_stat * (n / (abs(self.stat_mod[stat_name]) + n)))
+            else:
+                return int(modified_stat)
 
         if stat_name == "accuracy" or stat_name == "evasion":
             return calc_modified_stat_helper(stat_name, 3)
