@@ -76,22 +76,29 @@ def main():
 
         for choice in turn_order:
             player, move_name, n = choice
+            if player == "p1":
+                target = "p2"
+            else:
+                target = "p1"
+
             if move_name == "Switch":
                 player.switch[n]
             else:
-                attack(player.cur_pokemon, move_name, n)
+                attack(player.cur_pokemon, move_name, n, target)
 
-        if p1.game_over_check() and p2.game_over_check():
-            print("Its a Draw!")
-            break
+        for choice in turn_order:
+            player = choice[0]
+            if player.check_game_over():
+                if player == p1:
+                    print("Player 2 Wins!")
+                    break
+                elif player == p2:
+                    print("Player 1 Wins!")
+                    break
 
-        elif p1.game_over_check():
-            print("Player 2 Wins!")
-            break
-
-        elif p2.game_over_check():
-            print("Player 1 Wins!")
-            break
+            if player.cur_pokemon.status == "Fainted":
+                player.get_switch()
+                player.switch[n]
 
 
 if __name__ == "__main__":
