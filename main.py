@@ -55,9 +55,10 @@ def check_priority(attack):
     """Calls priority_moves dictionary to see if the given attack has a priority number, if not returns 0.
     Attacks with a priority higher number will go before the opponent's attack regardless of speed.
     Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
-    if priority_moves[attack]:
+    try:
         return priority_moves[attack]
-    return 0
+    except Exception:
+        return 0
 
 
 def main():
