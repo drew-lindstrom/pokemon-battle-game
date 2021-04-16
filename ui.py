@@ -18,8 +18,11 @@ def get_choice(team):
         print()
 
         if choice >= 1 and choice <= 4:
-            # TODO: PP Check
-            return (team, team.cur_pokemon.moves[choice - 1].name, choice - 1)
+            if team.cur_pokemon.moves[choice - 1].pp > 0:
+                return (team, team.cur_pokemon.moves[choice - 1].name, choice - 1)
+            else:
+                print("{team.cur_pokemon.moves[choice-1].name} is out of PP.")
+                choice = None
 
         elif choice == 5:
             return get_switch(team)
