@@ -10,11 +10,6 @@ def next_turn(pokemon_1, action_1, pokemon_2, action_2):
     pass
 
 
-def priority_check():
-    """Checks to see which Pokemon attacks first. Checks both Pokemon's speed stat as well as if priority moves are being used."""
-    pass
-
-
 def crit_check():
     """Rolls to determine if a move lands a critical hit. Critical hits boost damage by 1.5 ignore the attacker's negative stat stages,
     the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil. Burn is not ignored."""
