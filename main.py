@@ -21,15 +21,15 @@ def get_turn_order(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
     elif p2_choice[1] == "Switch" and p1_choice[1] != "Switch":
         return [p2_choice, p1_choice]
 
-    priority_p1 = check_priority(p1_choice)
-    priority_p2 = check_priority(p2_choice)
+    priority_p1 = check_priority(p1_choice[1])
+    priority_p2 = check_priority(p2_choice[1])
 
     if priority_p1 == priority_p2:
         return check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice)
     elif priority_p1 > priority_p2:
         return [p1_choice, p2_choice]
     else:
-        return [p2_choice, p2_choice]
+        return [p2_choice, p1_choice]
 
 
 def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
