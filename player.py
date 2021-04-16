@@ -51,7 +51,7 @@ class Player:
                 print(f"Can't switch out {self.cur_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
-    def game_over_check(self):
+    def check_game_over(self):
         """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
         Returns False if all Pokemon on team are fainted."""
 
