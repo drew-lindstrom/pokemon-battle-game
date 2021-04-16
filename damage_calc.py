@@ -50,6 +50,10 @@ def accuracy_check(attacker, n, defender):
         return False
 
 
+def evasion_check(attacker, n, defender):
+    pass
+
+
 def weather_check():
     pass
 
