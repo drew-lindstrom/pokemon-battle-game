@@ -35,6 +35,7 @@ def get_turn_order(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
 def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
     """Checks the speed of both pokemon on field to determine who moves first.
     Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
+    # TODO: Update so that p1_speed and p2_speed call on calc_speed()
     p1_speed = p1_cur_pokemon.calc_modified_stat("speed")
     p2_speed = p2_cur_pokemon.calc_modified_stat("speed")
 
