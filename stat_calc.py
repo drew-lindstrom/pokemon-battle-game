@@ -64,7 +64,7 @@ def calc_sp_defense(team, crit):
     return cur_pokemon.calc_modified_stat["defense"] * additional_modifier
 
 
-def calc_speed(team, crit):
+def calc_speed(team, crit=False):
     """Calculates the speed stat of the given pokemon by calculating its modified speed stat and mulitplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
@@ -76,14 +76,14 @@ def calc_speed(team, crit):
     return cur_pokemon.calc_modified_stat["speed"] * additional_modifier
 
 
-def calc_accuracy(team, crit):
+def calc_accuracy(team, crit=False):
     """Calculates the accuracy percentage of the given pokemon by calculating its modified accuaracy and multiplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
     return cur_pokemon.calc_modified_stat["accuracy"] * additional_modifier
 
 
-def calc_evasion(team, crit):
+def calc_evasion(team, crit=False):
     """Calculates the evasion percentage of the give pokemon by calculating its modified evasion and multiplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1

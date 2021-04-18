@@ -2,6 +2,7 @@ from player import Player
 from pokemon import Pokemon
 from move import Move
 from game_data import priority_moves
+from stat_calc import calc_speed
 import ui
 
 
@@ -35,15 +36,8 @@ def get_turn_order(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
 def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
     """Checks the speed of both pokemon on field to determine who moves first.
     Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
-    # TODO: Update so that p1_speed and p2_speed call on calc_speed()
-    p1_speed = p1_cur_pokemon.calc_modified_stat("speed")
-    p2_speed = p2_cur_pokemon.calc_modified_stat("speed")
-
-    if p1_cur_pokemon.status == "Paralyzed":
-        p1_speed *= 0.5
-
-    if p2_cur_pokemon.status == "Paralyzed":
-        p2_speed *= 0.5
+    p1_speed = calc_speed(p1_choice[0])
+    p2_speed = calc_speed(p2_choice[0])
 
     if p1_speed > p2_speed:
         return [p1_choice, p2_choice]
