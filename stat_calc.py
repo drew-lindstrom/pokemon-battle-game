@@ -15,8 +15,8 @@ def calc_attack(team, crit):
         additional_modifier *= 0.5
 
     if crit == True and cur_pokemon.stat_mod["attack"] < 0:
-        return pokemon.stat["attack"] * additional_modifier
-    return pokemon.calc_modified_stat["attack"] * additional_modifier
+        return cur_pokemon.stat["attack"] * additional_modifier
+    return cur_pokemon.calc_modified_stat["attack"] * additional_modifier
 
 
 def calc_defense(team, crit):
@@ -27,24 +27,25 @@ def calc_defense(team, crit):
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
 
-    if player.reflect == True and crit == False:
+    if cur_player.reflect == True and crit == False:
         additional_modifier *= 1.5
 
     if crit == True and cur_pokemon.stat_mod["defense"] > 0:
-        return pokemon.stat["defense"] * additional_modifier
-    return pokemon.calc_modified_stat["defense"] * additional_modifier
+        return cur_pokemon.stat["defense"] * additional_modifier
+    return cur_pokemon.calc_modified_stat["defense"] * additional_modifier
 
 
 def calc_sp_attack(team, crit):
     """Calculates the special attack stat of the given pokemon by calculating its modified sp_attack stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a negative sp_attack stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
+    cur_pokemon = team.cur_pokemon
     additional_modifier = 1
-    if pokemon.item == "Choice Spec":
+    if cur_pokemon.item == "Choice Spec":
         additional_modifier *= 1.5
     if crit == True and cur_pokemon.stat_mod["sp_attack"] < 0:
-        return pokemon.stat["sp_attack"] * additional_modifier
-    return pokemon.calc_modified_stat["sp_attack"] * additional_modifier
+        return cur_pokemon.stat["sp_attack"] * additional_modifier
+    return cur_pokemon.calc_modified_stat["sp_attack"] * additional_modifier
 
 
 def calc_sp_defense(team, crit):
@@ -59,25 +60,31 @@ def calc_sp_defense(team, crit):
         additional_modifier *= 1.5
 
     if crit == True and cur_pokemon.stat_mod["defense"] > 0:
-        return pokemon.stat["defense"] * additional_modifier
-    return pokemon.calc_modified_stat["defense"] * additional_modifier
+        return cur_pokemon.stat["defense"] * additional_modifier
+    return cur_pokemon.calc_modified_stat["defense"] * additional_modifier
 
 
 def calc_speed(team, crit):
     """Calculates the speed stat of the given pokemon by calculating its modified speed stat and mulitplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
-    if pokemon.item == "Choice Scarf":
+    if cur_pokemon.item == "Choice Scarf":
         additional_modifier *= 1.5
-    if pokemon.status == "Paralyzed":
+    if cur_pokemon.status == "Paralyzed":
         additional_modifier *= 0.5
 
-    return pokemon.calc_modified_stat["speed"] * additional_modifier
+    return cur_pokemon.calc_modified_stat["speed"] * additional_modifier
 
 
 def calc_accuracy(team, crit):
-    additional_modifier
+    """Calculates the accuracy percentage of the given pokemon by calculating its modified accuaracy and multiplying it with any additional modifiers."""
+    cur_pokemon = team.cur_pokemon
+    additional_modifier = 1
+    return cur_pokemon.calc_modified_stat["accuracy"] * additional_modifier
 
 
 def calc_evasion(team, crit):
-    pass
+    """Calculates the evasion percentage of the give pokemon by calculating its modified evasion and multiplying it with any additional modifiers."""
+    cur_pokemon = team.cur_pokemon
+    additional_modifier = 1
+    return cur_pokemon.calc_modified_stat["evasion"] * additional_modifier
