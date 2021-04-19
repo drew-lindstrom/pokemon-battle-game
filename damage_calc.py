@@ -10,7 +10,7 @@ def next_turn(pokemon_1, action_1, pokemon_2, action_2):
     pass
 
 
-def crit_check():
+def roll_crit():
     """Rolls to determine if a move lands a critical hit. Critical hits boost damage by 1.5 ignore the attacker's negative stat stages,
     the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil. Burn is not ignored."""
     # TO DO: add special moves/itesms/abilities.
@@ -22,7 +22,7 @@ def crit_check():
         return 1
 
 
-def accuracy_check(attacker, n, defender):
+def roll_accuracy(attacker, n, defender):
     """Rolls to determine if a move lands or misses."""
     num = 3
     den = 3
@@ -45,15 +45,7 @@ def accuracy_check(attacker, n, defender):
         return False
 
 
-def evasion_check(attacker, n, defender):
-    pass
-
-
-def weather_check():
-    pass
-
-
-def stab_check(attacker, n):
+def check_stab(attacker, n):
     """Checks to see if the attacking move is the same type as the attacker. If so, attack power is boosted by 50%."""
     if (
         attacker.typing[0] == attacker.moves[n].type
@@ -64,7 +56,7 @@ def stab_check(attacker, n):
         return 1
 
 
-def type_effectiveness_check(attacker, n, defender):
+def check_type_effectiveness(attacker, n, defender):
     """Return the damage multiplier for how super effective the move is. type_chart is a matrix showing how each type matches up between each
     other. X-axis is the defending type, y-axis is the attacking type. Top left corner is (0, 0). Each type corresponds to a number on the
     x and y axis."""
@@ -81,19 +73,11 @@ def type_effectiveness_check(attacker, n, defender):
     return mult_1 * mult_2
 
 
-def burn_check(attacker, n):
-    """Checks to see if the attacker is currently burned. If so and the attack is physical, damage is reduced by 50%."""
-    if attacker.status == "Burn" and attacker.moves[n].category == "Physical":
-        return 0.5
-    else:
-        return 1
-
-
-def sleep_check():
+def roll_sleep():
     pass
 
 
-def frozen_check():
+def roll_frozen():
     pass
 
 
@@ -103,6 +87,10 @@ def pp_check():
 
 def random():
 
+    pass
+
+
+def calc_modified_base_damage():
     pass
 
 
