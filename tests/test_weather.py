@@ -2,7 +2,7 @@ from pokemon import Pokemon
 from weather import (
     Weather,
     weather_damage,
-    sandstorm_sp_def_boost,
+    check_sandstorm_sp_def_boost,
     weather_move_damage_mod,
 )
 import pytest
@@ -91,7 +91,7 @@ class Test_Weather:
         weather = Weather("Rain", 5)
         assert weather_damage(weather, slowbro) == False
 
-    def test_sandstorm_sp_def_boost(self):
+    def test_check_sandstorm_sp_def_boost(self):
         weather = Weather("Sandstorm", 5)
         slowbro = Pokemon(
             "Slowbro",
@@ -104,11 +104,11 @@ class Test_Weather:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        assert sandstorm_sp_def_boost(weather, slowbro) == 1
+        assert check_sandstorm_sp_def_boost(weather, slowbro) == 1
         slowbro.typing = ["Rock", "Fire"]
-        assert sandstorm_sp_def_boost(weather, slowbro) == 1.5
+        assert check_sandstorm_sp_def_boost(weather, slowbro) == 1.5
         slowbro.typing = ["Dark", "Rock"]
-        assert sandstorm_sp_def_boost(weather, slowbro) == 1.5
+        assert check_sandstorm_sp_def_boost(weather, slowbro) == 1.5
 
     def test_weather_move_damage_mod(self):
         weather = Weather("Harsh Sunlight", 5)
