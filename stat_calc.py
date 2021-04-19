@@ -52,9 +52,9 @@ def calc_sp_defense(team, crit):
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
 
-    if crit == True and cur_pokemon.stat_mod["defense"] > 0:
-        return int(cur_pokemon.stat["defense"] * additional_modifier)
-    return int(cur_pokemon.calc_modified_stat("defense") * additional_modifier)
+    if crit == True and cur_pokemon.stat_mod["sp_defense"] > 0:
+        return int(cur_pokemon.stat["sp_defense"] * additional_modifier)
+    return int(cur_pokemon.calc_modified_stat("sp_defense") * additional_modifier)
 
 
 def calc_speed(team, crit=False):
