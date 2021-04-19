@@ -81,6 +81,58 @@ def roll_frozen():
     pass
 
 
+def roll_paralysis():
+    pass
+
+
+def roll_accuracy():
+    pass
+
+
+def roll_evasion():
+    pass
+
+
+def roll_confusion():
+    pass
+
+
+def check_flinched():
+    pass
+
+
+def check_choice_item():
+    pass
+
+
+def check_encored():
+    pass
+
+
+def check_taunted():
+    pass
+
+
+def check_disabled():
+    pass
+
+
+def check_semi_invulnerable_turn():
+    pass
+
+
+def check_recharging():
+    pass
+
+
+def check_charging_turn():
+    pass
+
+
+def check_tormented():
+    pass
+
+
 def pp_check():
     pass
 
