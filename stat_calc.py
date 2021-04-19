@@ -1,9 +1,9 @@
 from pokemon import Pokemon
 from player import Player
+import weather
 
-# TODO: If critical hit, ignores negative attack modifiers, positive defense modifiers, and defensive boosts from auroa veil, light screen, and reflect
-# TODO: Add in light screen, reflect, and aurora veil
-def calc_attack(team, crit):
+# TODO: Weather boosts.
+def calc_attack(team, crit, weather):
     """Calculates the attack stat of the given pokemon by calculating its modified attack stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a negative attack stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
@@ -20,19 +20,20 @@ def calc_attack(team, crit):
     return int(cur_pokemon.calc_modified_stat("attack") * additional_modifier)
 
 
-def calc_defense(team, crit):
+def calc_defense(team, crit, weather):
     """Calculates the defense stat of the given pokemon by calculating its modified defense stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a positive defense stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
+    additional_modifier *= weather.sandstorm_sp_def_boost(weather, cur_pokemon)
 
     if crit == True and cur_pokemon.stat_mod["defense"] > 0:
         return int(cur_pokemon.stat["defense"] * additional_modifier)
     return int(cur_pokemon.calc_modified_stat("defense") * additional_modifier)
 
 
-def calc_sp_attack(team, crit):
+def calc_sp_attack(team, crit, weather):
     """Calculates the special attack stat of the given pokemon by calculating its modified sp_attack stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a negative sp_attack stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
@@ -45,7 +46,7 @@ def calc_sp_attack(team, crit):
     return int(cur_pokemon.calc_modified_stat("sp_attack") * additional_modifier)
 
 
-def calc_sp_defense(team, crit):
+def calc_sp_defense(team, crit, weather):
     """Calculates the special defense stat of the given pokemon by calculating its modified sp_defense stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a positive sp_defense stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
@@ -57,7 +58,7 @@ def calc_sp_defense(team, crit):
     return int(cur_pokemon.calc_modified_stat("sp_defense") * additional_modifier)
 
 
-def calc_speed(team, crit=False):
+def calc_speed(team, crit=False, weather):
     """Calculates the speed stat of the given pokemon by calculating its modified speed stat and mulitplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
@@ -69,14 +70,14 @@ def calc_speed(team, crit=False):
     return int(cur_pokemon.calc_modified_stat("speed") * additional_modifier)
 
 
-def calc_accuracy(team, crit=False):
+def calc_accuracy(team, crit=False, weather):
     """Calculates the accuracy percentage of the given pokemon by calculating its modified accuaracy and multiplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
     return int(cur_pokemon.calc_modified_stat("accuracy") * additional_modifier)
 
 
-def calc_evasion(team, crit=False):
+def calc_evasion(team, crit=False, weather):
     """Calculates the evasion percentage of the give pokemon by calculating its modified evasion and multiplying it with any additional modifiers."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
