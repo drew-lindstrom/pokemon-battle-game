@@ -71,7 +71,7 @@ def weather_damage(weather, pokemon):
     return True
 
 
-def sandstorm_sp_def_boost(weather, pokemon):
+def check_sandstorm_sp_def_boost(weather, pokemon):
     """Increases special defense of Rock type pokemon while weather is Sandstorm."""
     if weather.current_weather == "Sandstorm" and (
         (pokemon.typing[0] == "Rock") or (pokemon.typing[1] == "Rock")
