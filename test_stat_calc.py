@@ -66,13 +66,51 @@ class TestStatCalc:
         assert calc_attack(team, True) == 139
 
     def test_calc_defense(self):
-        pass
+        p1 = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+        team = Player([p1])
+        assert calc_defense(team, False) == 281
+        assert calc_defense(team, True) == 281
+        p1.stat_mod["defense"] = 6
+        assert calc_defense(team, False) == 1124
+        assert calc_defense(team, True) == 281
+        p1.stat_mod["defense"] = -6
+        assert calc_defense(team, False) == 70
+        assert calc_defense(team, True) == 70
 
     def test_calc_sp_attack(self):
         pass
 
     def test_calc_sp_defense(self):
-        pass
+        p1 = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (0, 0, 0, 0, 0, 0),
+            "Relaxed",
+        )
+        team = Player([p1])
+        assert calc_sp_defense(team, False) == 196
+        assert calc_sp_defense(team, True) == 196
+        p1.stat_mod["sp_defense"] = 6
+        assert calc_sp_defense(team, False) == 784
+        assert calc_sp_defense(team, True) == 196
+        p1.stat_mod["sp_defense"] = -6
+        assert calc_sp_defense(team, False) == 49
+        assert calc_sp_defense(team, True) == 49
 
     def test_calc_speed(self):
         pass
