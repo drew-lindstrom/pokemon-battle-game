@@ -23,13 +23,9 @@ def calc_attack(team, crit):
 def calc_defense(team, crit):
     """Calculates the defense stat of the given pokemon by calculating its modified defense stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a positive defense stat_mod is ignored and calc_modified_stat is not called.
-    Defense boost from reflect is also ignored if present.
     Additional modifiers are still applied."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
-
-    if cur_player.reflect == True and crit == False:
-        additional_modifier *= 1.5
 
     if crit == True and cur_pokemon.stat_mod["defense"] > 0:
         return int(cur_pokemon.stat["defense"] * additional_modifier)
@@ -52,13 +48,9 @@ def calc_sp_attack(team, crit):
 def calc_sp_defense(team, crit):
     """Calculates the special defense stat of the given pokemon by calculating its modified sp_defense stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a positive sp_defense stat_mod is ignored and calc_modified_stat is not called.
-    Defense boost from light screen is also ignored if present.
     Additional modifiers are still applied."""
     cur_pokemon = team.cur_pokemon
     additional_modifier = 1
-
-    if player.light_screen == True and crit == False:
-        additional_modifier *= 1.5
 
     if crit == True and cur_pokemon.stat_mod["defense"] > 0:
         return int(cur_pokemon.stat["defense"] * additional_modifier)
