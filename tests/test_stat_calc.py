@@ -80,16 +80,16 @@ class TestStatCalc:
         )
         team = Player([p1])
 
-        assert calc_defense(team, False, w) == 281
-        assert calc_defense(team, True, w) == 281
+        assert calc_defense(team, False) == 281
+        assert calc_defense(team, True) == 281
 
         p1.stat_mod["defense"] = 6
-        assert calc_defense(team, False, w) == 1124
-        assert calc_defense(team, True, w) == 281
+        assert calc_defense(team, False) == 1124
+        assert calc_defense(team, True) == 281
 
         p1.stat_mod["defense"] = -6
-        assert calc_defense(team, False, w) == 70
-        assert calc_defense(team, True, w) == 70
+        assert calc_defense(team, False) == 70
+        assert calc_defense(team, True) == 70
 
     def test_calc_sp_attack(self):
         p1 = Pokemon(
@@ -141,22 +141,22 @@ class TestStatCalc:
         team = Player([p1])
         w = Weather()
         p1.typing = ["Rock", "Psychic"]
-        assert calc_sp_defense(team, False) == 196
-        assert calc_sp_defense(team, True) == 196
+        assert calc_sp_defense(team, False, w) == 196
+        assert calc_sp_defense(team, True, w) == 196
         w.current_weather = "Sandstorm"
         assert calc_sp_defense(team, False, w) == 294
         assert calc_sp_defense(team, True, w) == 294
         w.current_weather = "Clear Skies"
         p1.stat_mod["sp_defense"] = 6
-        assert calc_sp_defense(team, False) == 784
-        assert calc_sp_defense(team, True) == 196
+        assert calc_sp_defense(team, False, w) == 784
+        assert calc_sp_defense(team, True, w) == 196
         w.current_weather = "Sandstorm"
         assert calc_sp_defense(team, False, w) == 1176
         assert calc_sp_defense(team, True, w) == 294
         w.current_weather = "Clear Skies"
         p1.stat_mod["sp_defense"] = -6
-        assert calc_sp_defense(team, False) == 49
-        assert calc_sp_defense(team, True) == 49
+        assert calc_sp_defense(team, False, w) == 49
+        assert calc_sp_defense(team, True, w) == 49
         w.current_weather = "Sandstorm"
         assert calc_sp_defense(team, False, w) == 73
         assert calc_sp_defense(team, True, w) == 73
