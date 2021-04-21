@@ -47,6 +47,8 @@ class Pokemon:
             "evasion": 0,
         }
         self.status = None
+        self.volatile_statuses = []
+        # TODO: Switching a pokemon clears volatile statuses.
 
     def init_stat(self):
         """Initializes the hp, max_hp, attack, defense, special attack, special defense, and speed stat for the given pokemon based on the pokemon's
