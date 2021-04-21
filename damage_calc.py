@@ -97,6 +97,10 @@ def roll_confusion():
     pass
 
 
+def roll_infatuation():
+    pass
+
+
 def check_flinched():
     pass
 
@@ -146,6 +150,40 @@ def calc_modified_base_damage():
     pass
 
 
+def calc_modified_damage():
+    pass
+
+def check_can_attack():
+    """Checks to make sure if an attacker is able to use a move based on any present status conditions. 
+    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
+    if attacker.status == 'Paralyzed':
+        if roll_paralyzed(attacker):
+            break
+    
+    if attacker.status == "Asleep" and attack != "Sleep Talk":
+        if roll_sleep(attacker):
+            break
+    
+    if attacker.status == "Frozen":
+        moves_that_can_thaw_out = set("Burn Up", "Flame Wheel", "Flare Blitz", "Fusion Flare", "Pyro Ball", "Sacred Fire", "Scald", "Scorching Sands", "Steam Eruption")
+        if attack in moves_that_can_thaw_out:
+            pass
+            #TODO: Create thaw out function.
+        if roll_frozen(attacker):
+            break
+    
+    if 'Confusion' in attacker.volatile_statuses:
+        if roll_confusion(attacker):
+            break
+    
+    if 'Infatuation' in attacker.volatile_statuses:
+        if roll_infatuation(attacker):
+            break
+    
+    if check_flinched(attacker):
+        break
+
+    if 
 def attack(attacker, n, defender):
     """Determines if a move hits and how much damage is dealt."""
     #  TO DO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
