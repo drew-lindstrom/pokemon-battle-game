@@ -47,7 +47,7 @@ class Pokemon:
             "evasion": 0,
         }
         self.status = None
-        self.volatile_statuses = []
+        self.volatile_statuses = {}
         # TODO: Switching a pokemon clears volatile statuses.
 
     def init_stat(self):
