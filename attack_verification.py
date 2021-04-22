@@ -45,21 +45,5 @@ def check_disabled():
         return False
 
 
-def check_semi_invulnerable_turn():
-    pass
-
-
-def check_recharging():
-    pass
-
-
-def check_charging_turn():
-    pass
-
-
-def check_tormented():
-    pass
-
-
 def pp_check():
     pass
