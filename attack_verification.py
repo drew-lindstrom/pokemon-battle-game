@@ -5,6 +5,7 @@ def check_flinched(attacker, move_name):
     if "Flinched" in attacker.volatile_statuses:
         print(f"{attacker.name} flinched!")
         return True
+    return False
 
 
 def check_choice_item():
@@ -14,7 +15,8 @@ def check_choice_item():
         and previous_move != move_name
     ):
         print(f"{attacker.name} can only use {attacker.previous_move}")
-        return False
+        return True
+    return False
 
 
 def check_encored():
@@ -24,7 +26,8 @@ def check_encored():
         and previous_move != move_name
     ):
         print(f"{attacker.name} can only use {attacker.previous_move}")
-        return False
+        return True
+    return False
 
 
 def check_taunted():
@@ -33,7 +36,8 @@ def check_taunted():
         and attacker.moves[n].category == "Status"
     ):
         print(f"{attacker.name} must use at attacking move while taunted.")
-        return False
+        return True
+    return False
 
 
 def check_disabled():
@@ -42,7 +46,8 @@ def check_disabled():
         and attacker.violatile_statuses["Disabled"][1] == move_name
     ):
         print(f"{attacker.name} is not able to use {move_name} while it is disabled.")
-        return False
+        return True
+    return False
 
 
 def pp_check():
