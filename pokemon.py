@@ -172,7 +172,7 @@ class Pokemon:
         """Sets the non-volatile status for the Pokemon. Second index of status list is to count number of turns.
         Badly Poisoned deals more damage every turn. Sleep has a greater chance to be cured every turn."""
         if self.status is None:
-            self.status = ["status_name", 0]
+            self.status = [status_name, 0]
 
     def cure_status(self):
         """Cures the non-volatile status for the Pokemon."""
@@ -181,10 +181,14 @@ class Pokemon:
     def decrement_v_status(self):
         """Decrements the counter for all volatile statuses for the Pokemon at the end of the turn. If a counter reaches 0,
         the status is removed."""
+        temp = []
         for status in self.v_status:
             self.v_status[status][0] -= 1
             if self.v_status[status][0] <= 0:
-                del self.v_status[status]
+                temp.append(status)
+
+        for status in temp:
+            del self.v_status[status]
 
     def reset_v_status(self):
         """Clears the Pokemon's volatile statues when it switches out."""
@@ -201,8 +205,9 @@ class Pokemon:
             or "Magnet Rise" in self.v_status
             or "Telekinesis" in self.v_status
         ):
-            self.grounded = False
-        elif self.item == "Iron Ball" or "Ingrain" in self.v_status:
-            self.grounded = True
+            if self.item == "Iron Ball" or "Ingrained" in self.v_status:
+                self.grounded = True
+            else:
+                self.grounded = False
         else:
             self.grounded = True
