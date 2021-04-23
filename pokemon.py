@@ -55,7 +55,7 @@ class Pokemon:
         # These statuses clear when the pokemon switches out. Some statuses go away after a set number of turns.
         # A pokemon can have any number of volatile statuses.
         self.v_status = {}
-        # TODO: Switching a pokemon clears volatile statuses.
+        self.grounded = True
 
     def init_stat(self):
         """Initializes the hp, max_hp, attack, defense, special attack, special defense, and speed stat for the given pokemon based on the pokemon's
@@ -189,3 +189,20 @@ class Pokemon:
     def reset_v_status(self):
         """Clears the Pokemon's volatile statues when it switches out."""
         self.v_status = {}
+
+    def check_grounded(self):
+        """Checks to see if a pokemon is considered grounded at the start of a turn.
+        Non grounded pokemon are immune to ground type moves and entry hazards with the exception of stealth rocks."""
+        # TODO: Lot of additional conditions for checking grounded.
+        if (
+            "Flying" in self.typing
+            or self.ability == "Levitate"
+            or self.item == "Air Balloon"
+            or "Magnet Rise" in self.v_status
+            or "Telekinesis" in self.v_status
+        ):
+            self.grounded = False
+        elif self.item == "Iron Ball" or "Ingrain" in self.v_status:
+            self.grounded = True
+        else:
+            self.grounded = True
