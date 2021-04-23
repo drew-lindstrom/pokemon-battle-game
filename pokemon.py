@@ -182,8 +182,8 @@ class Pokemon:
         """Decrements the counter for all volatile statuses for the Pokemon at the end of the turn. If a counter reaches 0,
         the status is removed."""
         for status in self.v_status:
-            self.v_status[status][1] -= 1
-            if self.v_status[status][1] <= 0:
+            self.v_status[status][0] -= 1
+            if self.v_status[status][0] <= 0:
                 del self.v_status[status]
 
     def reset_v_status(self):

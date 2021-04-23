@@ -30,12 +30,14 @@ class TestPlayer:
         slowbro.move_lock = 1
         slowbro.prev_move = "Scald"
         slowbro.stat_mod["attack"] = 6
+        slowbro.v_status["Confused"] = [0]
         test_player = Player([slowbro, tyranitar])
         test_player.switch(1)
         assert test_player.cur_pokemon.name == "Tyranitar"
         assert slowbro.move_lock == -1
         assert slowbro.prev_move == None
         assert slowbro.stat_mod["attack"] == 0
+        assert len(slowbro.v_status) == 0
         test_player[1].stat["hp"] = 0
         test_player.switch(1)
         assert test_player.cur_pokemon.name == "Tyranitar"
@@ -65,11 +67,11 @@ class TestPlayer:
         )
 
         test_player = Player([slowbro, tyranitar])
-        assert test_player.game_over_check() == False
+        assert test_player.check_game_over() == False
         test_player[1].stat["hp"] = 0
-        assert test_player.game_over_check() == False
+        assert test_player.check_game_over() == False
         test_player[0].stat["hp"] = 0
-        assert test_player.game_over_check() == True
+        assert test_player.check_game_over() == True
 
     # def test_set_light_screen_and_reset_light_screen(self):
     #     slowbro = Pokemon(
