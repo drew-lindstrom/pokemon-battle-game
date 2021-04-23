@@ -148,3 +148,111 @@ class TestPokemon:
         assert test_pokemon.struggle_check() == False
         test_pokemon.moves[3].pp = 0
         assert test_pokemon.struggle_check() == True
+
+    def test_set_status(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.status == None
+        p.set_status("Paralyzed")
+        assert p.status == ["Paralyzed", 0]
+        p.set_status("Asleep")
+        assert p.status == ["Paralyzed", 0]
+
+    def test_cure_status(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.status == None
+        p.status = ["Paralyzed", 0]
+        p.cure_status()
+        assert p.status == None
+
+    def test_decrement_v_status(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        p.v_status["Flinched"] = [1]
+        p.v_status["Leech Seeded"] = [float("inf")]
+        p.v_status["Confused"] = [2]
+        p.v_status["Infatuated"] = [-4]
+        p.decrement_v_status()
+        assert p.v_status["Leech Seeded"] == [float("inf")]
+        assert p.v_status["Confused"] == [1]
+        assert len(p.v_status) == 2
+
+    def test_reset_v_status(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        p.v_status["Flinched"] = [3]
+        p.v_status["Leech Seeded"] = [float("inf")]
+        p.reset_v_status()
+        assert len(p.v_status) == 0
+
+    def test_check_grounded(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.grounded == True
+        p.ability = "Levitate"
+        p.check_grounded()
+        assert p.grounded == False
+        p.item = "Iron Ball"
+        p.check_grounded()
+        assert p.grounded == True
+        p.item = "Air Balloon"
+        p.ability = None
+        p.check_grounded()
+        assert p.grounded == False
+        p.v_status["Ingrained"] = [3]
+        p.check_grounded()
+        assert p.grounded == True
+        del p.v_status["Ingrained"]
+        p.v_status["Magnet Rise"] = [4]
+        p.check_grounded()
+        assert p.grounded == False
+        del p.v_status["Magnet Rise"]
+        p.v_status["Telekinesis"] = [3]
+        p.check_grounded()
+        assert p.grounded == False
