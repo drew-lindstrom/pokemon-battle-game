@@ -169,7 +169,23 @@ class Pokemon:
         return struggle_bool
 
     def set_status(self, status_name):
-        """Sets the non-volatile status for a Pokemon. Second index of status list is to count number of turns.
+        """Sets the non-volatile status for the Pokemon. Second index of status list is to count number of turns.
         Badly Poisoned deals more damage every turn. Sleep has a greater chance to be cured every turn."""
         if self.status is None:
             self.status = ["status_name", 0]
+
+    def cure_status(self):
+        """Cures the non-volatile status for the Pokemon."""
+        self.status = None
+
+    def decrement_v_status(self):
+        """Decrements the counter for all volatile statuses for the Pokemon at the end of the turn. If a counter reaches 0,
+        the status is removed."""
+        for status in self.v_status:
+            self.v_status[status][1] -= 1
+            if self.v_status[status][1] <= 0:
+                del self.v_status[status]
+
+    def reset_v_status(self):
+        """Clears the Pokemon's volatile statues when it switches out."""
+        self.v_status = {}
