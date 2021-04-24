@@ -1,3 +1,5 @@
+import random
+
 natures_dict = {
     "Hardy": (1, 1, 1, 1, 1),
     "Lonely": (1.1, 0.9, 1, 1, 1),
@@ -117,6 +119,7 @@ priority_moves = {
 
 stat_alt_attacks = {
     "Close Combat": ("user", 100, "defense", -1, "sp_defense", -1),
+    "Crunch": ("target", 20, "defense"),
     "Earth Power": ("target", 10, "sp_defense", -1),
     "Flash Cannon": ("target", 10, "sp_defense", -1),
     "Focus Blast": ("target", 10, "sp_defense", -1),
@@ -132,6 +135,12 @@ status_inflicting_attacks = {
     "Pyro Ball": ("target", 10, "Burned"),
     "Thunder Punch": ("target", 10, "Paralyzed"),
     "Toxic": ("target", 100, "Baldy Poisoned"),
+}
+
+v_status_inflicting_attacks = {
+    "Dark Pulse": ("target", 20, ["Flinched", 1]),
+    "Hurricane": ("target", 30, ["Confused", random.randint(2, 5)]),
+    "Iron Head": ("target", 30, ["Flinched", 1]),
 }
 # To do: Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
