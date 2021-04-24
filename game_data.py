@@ -124,6 +124,15 @@ stat_alt_attacks = {
     "Psychic": ("target", 10, "sp_attack", -1),
     "Swords Dance": ("user", 100, "attack", 2),
 }
+
+status_inflicting_attacks = {
+    "Discharge": ("target", 30, "Paralyzed"),
+    "Fire Blast": ("target", 10, "Burned"),
+    "Ice Beam": ("target", 10, "Frozen"),
+    "Pyro Ball": ("target", 10, "Burned"),
+    "Thunder Punch": ("target", 10, "Paralyzed"),
+    "Toxic": ("target", 100, "Baldy Poisoned"),
+}
 # To do: Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
     "Abomasnow": (("Grass", "Ice"), ("90", "92", "75", "92", "85", "60")),
