@@ -114,6 +114,16 @@ priority_moves = {
     "Teleport": -6,
     "Trick Room": -7,
 }
+
+stat_alt_attacks = {
+    "Close Combat": ("user", 100, "defense", -1, "sp_defense", -1),
+    "Earth Power": ("target", 10, "sp_defense", -1),
+    "Flash Cannon": ("target", 10, "sp_defense", -1),
+    "Focus Blast": ("target", 10, "sp_defense", -1),
+    "Moon Blast": ("target", 30, "sp_attack", -1),
+    "Psychic": ("target", 10, "sp_attack", -1),
+    "Swords Dance": ("user", 100, "attack", 2),
+}
 # To do: Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
     "Abomasnow": (("Grass", "Ice"), ("90", "92", "75", "92", "85", "60")),
