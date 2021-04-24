@@ -68,6 +68,8 @@ def calc_speed(team, crit=False, cur_weather="Clear Skies"):
         additional_modifier *= 1.5
     if cur_pokemon.status == "Paralyzed":
         additional_modifier *= 0.5
+    if cur_pokemon.ability == "Sand Rush" and cur_weather == "Sandstorm":
+        additional_modifier *= 2
 
     return int(cur_pokemon.calc_modified_stat("speed") * additional_modifier)
 

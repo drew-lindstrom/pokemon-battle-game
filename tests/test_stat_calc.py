@@ -179,6 +179,10 @@ class TestStatCalc:
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 129
         p1.item = None
+        p1.ability = "Sand Rush"
+        assert calc_speed(team, False) == 86
+        assert calc_speed(team, False, "Sandstorm") == 172
+        p1.ability = None
         p1.status = "Paralyzed"
         assert calc_speed(team, False) == 43
         p1.item = "Choice Scarf"
