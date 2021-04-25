@@ -62,7 +62,7 @@ def roll_sleep():
 
 
 def roll_frozen(user, i=None):
-    if i == None:
+    if i == None or i < 1 or i > 5:
         i = random.randint(1, 5)
 
     if i == 1:

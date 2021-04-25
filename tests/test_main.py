@@ -9,6 +9,21 @@ class TestMain:
         assert main.check_priority("Avalanche") == -4
         assert main.check_priority("Tackle") == 0
 
+    def test_roll_frozen(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert main.roll_frozen(p, 4) == True
+        assert main.roll_frozen(p, 1) == False
+
     def test_check_speed(self):
         p1 = Pokemon(
             "Slowbro",
