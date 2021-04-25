@@ -4,6 +4,7 @@ from move import Move
 from game_data import priority_moves
 from stat_calc import calc_speed
 import ui
+import random
 
 
 def get_turn_order(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
@@ -60,8 +61,14 @@ def roll_sleep():
     pass
 
 
-def roll_frozen():
-    pass
+def roll_frozen(user, i=None):
+    if i == None:
+        i = random.randint(1, 5)
+
+    if i == 1:
+        print(f"{user.name} thawed out!")
+        return False
+    return True
 
 
 def roll_paralysis():
@@ -80,61 +87,61 @@ def roll_confusion():
     pass
 
 
-def roll_infatuation():
-    pass
+# def roll_infatuation():
+#     pass
 
 
-def check_semi_invulnerable_turn():
-    pass
+# def check_semi_invulnerable_turn():
+#     pass
 
 
-def check_recharging():
-    pass
+# def check_recharging():
+#     pass
 
 
-def check_charging_turn():
-    pass
+# def check_charging_turn():
+#     pass
 
 
-def check_can_attack():
-    """Checks to make sure if an attacker is able to use a move based on any present status conditions.
-    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-    if attacker.status == "Paralyzed":
-        if roll_paralyzed(attacker):
-            break
+# def check_can_attack():
+#     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
+#     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
+#     if attacker.status == "Paralyzed":
+#         if roll_paralyzed(attacker):
+#             break
 
-    if attacker.status == "Asleep" and attack != "Sleep Talk":
-        if roll_sleep(attacker):
-            break
+#     if attacker.status == "Asleep" and attack != "Sleep Talk":
+#         if roll_sleep(attacker):
+#             break
 
-    if attacker.status == "Frozen":
-        moves_that_can_thaw_out = set(
-            "Burn Up",
-            "Flame Wheel",
-            "Flare Blitz",
-            "Fusion Flare",
-            "Pyro Ball",
-            "Sacred Fire",
-            "Scald",
-            "Scorching Sands",
-            "Steam Eruption",
-        )
-        if attack in moves_that_can_thaw_out:
-            pass
-            # TODO: Create thaw out function.
-        if roll_frozen(attacker):
-            break
+#     if attacker.status == "Frozen":
+#         moves_that_can_thaw_out = set(
+#             "Burn Up",
+#             "Flame Wheel",
+#             "Flare Blitz",
+#             "Fusion Flare",
+#             "Pyro Ball",
+#             "Sacred Fire",
+#             "Scald",
+#             "Scorching Sands",
+#             "Steam Eruption",
+#         )
+#         if attack in moves_that_can_thaw_out:
+#             pass
+#             # TODO: Create thaw out function.
+#         if roll_frozen(attacker):
+#             break
 
-    if "Confusion" in attacker.volatile_statuses:
-        if roll_confusion(attacker):
-            break
+#     if "Confusion" in attacker.volatile_statuses:
+#         if roll_confusion(attacker):
+#             break
 
-    if "Infatuation" in attacker.volatile_statuses:
-        if roll_infatuation(attacker):
-            break
+#     if "Infatuation" in attacker.volatile_statuses:
+#         if roll_infatuation(attacker):
+#             break
 
-    if check_flinched(attacker):
-        break
+#     if check_flinched(attacker):
+#         break
 
 
 def main():
