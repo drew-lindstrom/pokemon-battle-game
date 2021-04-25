@@ -21,8 +21,26 @@ class TestMain:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
+        p.status = "Frozen"
         assert main.roll_frozen(p, 4) == True
+        assert p.status == "Frozen"
         assert main.roll_frozen(p, 1) == False
+        assert p.status == None
+
+    def test_roll_paralysis(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert main.roll_paralysis(p, 4) == False
+        assert main.roll_paralysis(p, 1) == True
 
     def test_check_speed(self):
         p1 = Pokemon(

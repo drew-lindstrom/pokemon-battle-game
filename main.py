@@ -67,12 +67,19 @@ def roll_frozen(user, i=None):
 
     if i == 1:
         print(f"{user.name} thawed out!")
+        user.status = None
         return False
     return True
 
 
-def roll_paralysis():
-    pass
+def roll_paralysis(user, i=None):
+    if i == None or i < 1 or i > 4:
+        i = random.randint(1, 4)
+
+    if i == 1:
+        print(f"{user.name} is paralyzed and can't move.")
+        return True
+    return False
 
 
 def roll_accuracy():
