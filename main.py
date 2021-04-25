@@ -62,6 +62,8 @@ def roll_sleep():
 
 
 def roll_frozen(user, i=None):
+    """Rolls to determine if a frozen pokemon thaws out during it's attack. Frozen pokemon are not able to attack. 20% chance to thaw out.
+    The pokemon can use it's attack on the turn that it thaws out."""
     if i == None or i < 1 or i > 5:
         i = random.randint(1, 5)
 
@@ -73,6 +75,7 @@ def roll_frozen(user, i=None):
 
 
 def roll_paralysis(user, i=None):
+    """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
     if i == None or i < 1 or i > 4:
         i = random.randint(1, 4)
 
