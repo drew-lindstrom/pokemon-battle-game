@@ -8,8 +8,8 @@ import random
 
 
 def apply_stat_alt_attack(attacker, defender, attack, i=None):
-    """If the current attack is in the stat_alt_attack dictionary, rolls to see if the attack alters a certain stat/stats of the user or target.
-    Function then calls the update_stat_modifier method to alter the approriate stat."""
+    """If the current attack is in the stat_alt_attack dictionary, rolls to see if the attack successfully
+    alters a certain stat/stats of the user or target. Function then calls the update_stat_modifier method to alter the approriate stat."""
     if attack in stat_alt_attacks:
         cur_move = stat_alt_attacks[attack]
         if i is None:
@@ -27,7 +27,19 @@ def apply_stat_alt_attack(attacker, defender, attack, i=None):
 
 
 def apply_status_inflicting_attack(attacker, defender, attack, i=None):
-    pass
+    """If the current attack is in the status_inflicting_attack dictionary, rolls to see if the attack successfully
+    applies the status to the user or target. Function then calls the set_status method to update the pokemon's status."""
+    if attack in status_inflicting_attacks:
+        cur_move = status_inflicting_attacks[attack]
+        if i is None:
+            i = random.randint(1, 100)
+
+        if i <= cur_move[1]:
+            if cur_move[0] == "user":
+                effected_pokemon = attacker
+            else:
+                effected_pokemon = defender
+            effected_pokemon.set_status(cur_move[2])
 
 
 def apply_v_status_inflicting_attack(attacker, defender, attack, i=None):
