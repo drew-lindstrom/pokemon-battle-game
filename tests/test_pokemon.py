@@ -161,7 +161,7 @@ class TestPokemon:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        assert p.status == None
+        assert p.status == [None, 0]
         p.set_status("Paralyzed")
         assert p.status == ["Paralyzed", 0]
         p.set_status("Asleep")
@@ -179,10 +179,10 @@ class TestPokemon:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        assert p.status == None
+        assert p.status == [None, 0]
         p.status = ["Paralyzed", 0]
         p.cure_status()
-        assert p.status == None
+        assert p.status == [None, 0]
 
     def test_decrement_v_status(self):
         p = Pokemon(

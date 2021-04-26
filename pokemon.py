@@ -50,7 +50,7 @@ class Pokemon:
         # With the exception of Frozen and Asleep, an ability, item, or move is required to remove the status.
         # Statuses are persistent even after switching out. A pokemon can only have one non-volatile status at a time
         # and can not be over written if already afflicted with a different status.
-        self.status = None
+        self.status = [None, 0]
         # Volatile statuses (Leech Seeded, Confused, Flinched, etc.).
         # These statuses clear when the pokemon switches out. Some statuses go away after a set number of turns.
         # A pokemon can have any number of volatile statuses.
@@ -171,12 +171,12 @@ class Pokemon:
     def set_status(self, status_name):
         """Sets the non-volatile status for the Pokemon. Second index of status list is to count number of turns.
         Badly Poisoned deals more damage every turn. Sleep has a greater chance to be cured every turn."""
-        if self.status is None:
+        if self.status[0] is None:
             self.status = [status_name, 0]
 
     def cure_status(self):
         """Cures the non-volatile status for the Pokemon."""
-        self.status = None
+        self.status = [None, 0]
 
     def decrement_v_status(self):
         """Decrements the counter for all volatile statuses for the Pokemon at the end of the turn. If a counter reaches 0,

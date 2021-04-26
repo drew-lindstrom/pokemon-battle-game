@@ -21,11 +21,11 @@ class TestMain:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        p.status = "Frozen"
+        p.status[0] = "Frozen"
         assert main.roll_frozen(p, 4) == True
-        assert p.status == "Frozen"
+        assert p.status[0] == "Frozen"
         assert main.roll_frozen(p, 1) == False
-        assert p.status == None
+        assert p.status[0] == None
 
     def test_roll_paralysis(self):
         p = Pokemon(
@@ -68,14 +68,14 @@ class TestMain:
         )
 
         assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status = "Paralyzed"
+        p1.status[0] = "Paralyzed"
         assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status = None
+        p1.status[0] = None
         p1.stat_mod["speed"] = 4
         assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status = "Paralyzed"
+        p1.status[0] = "Paralyzed"
         assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status = None
+        p1.status[0] = None
         p1.stat_mod["speed"] = -4
         assert main.check_speed(p1, 1, p2, 2) == [2, 1]
 
@@ -92,9 +92,9 @@ class TestMain:
         )
         p1.stat_mod["speed"] = 0
         assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status = "Paralyzed"
+        p1.status[0] = "Paralyzed"
         assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status = None
+        p1.status[0] = None
         p1.stat_mod["speed"] = 4
         assert main.check_speed(p1, 1, p2, 2) == [1, 2]
         p1.stat_mod["speed"] = -4

@@ -69,7 +69,7 @@ def roll_frozen(user, i=None):
 
     if i == 1:
         print(f"{user.name} thawed out!")
-        user.status = None
+        user.cure_status()
         return False
     return True
 
@@ -189,7 +189,7 @@ def main():
                     print("Player 1 Wins!")
                     break
 
-            if player.cur_pokemon.status == "Fainted":
+            if player.cur_pokemon.status[0] == "Fainted":
                 player.get_switch()
                 player.switch[n]
 
