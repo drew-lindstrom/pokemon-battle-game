@@ -1,4 +1,37 @@
 from pokemon import Pokemon
+from game_data import (
+    stat_alt_attacks,
+    status_inflicting_attacks,
+    v_status_inflicting_attacks,
+)
+import random
+
+
+def apply_stat_alt_attack(attacker, defender, attack, i=None):
+    """If the current attack is in the stat_alt_attack dictionary, rolls to see if the attack alters a certain stat/stats of the user or target.
+    Function then calls the update_stat_modifier method to alter the approriate stat."""
+    if attack in stat_alt_attacks:
+        cur_move = stat_alt_attacks[attack]
+        if i is None:
+            i = random.randint(1, 100)
+
+        if i <= cur_move[1]:
+            if cur_move[0] == "user":
+                effected_pokemon = attacker
+            else:
+                effected_pokemon = defender
+            pos = 2
+            while pos < len(cur_move):
+                effected_pokemon.update_stat_modifier(cur_move[pos], cur_move[pos + 1])
+                pos += 2
+
+
+def apply_status_inflicting_attack(attacker, defender, attack, i=None):
+    pass
+
+
+def apply_v_status_inflicting_attack(attacker, defender, attack, i=None):
+    pass
 
 
 def apply_leftovers(pokemon):
