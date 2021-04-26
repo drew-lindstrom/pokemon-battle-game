@@ -138,9 +138,9 @@ status_inflicting_attacks = {
 }
 
 v_status_inflicting_attacks = {
-    "Dark Pulse": ("target", 20, ["Flinched", 1]),
-    "Hurricane": ("target", 30, ["Confused", random.randint(2, 5)]),
-    "Iron Head": ("target", 30, ["Flinched", 1]),
+    "Dark Pulse": ("target", 20, "Flinched"),
+    "Hurricane": ("target", 30, "Confused"),
+    "Iron Head": ("target", 30, "Flinched"),
 }
 # To do: Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
