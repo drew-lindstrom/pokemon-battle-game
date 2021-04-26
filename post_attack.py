@@ -43,7 +43,19 @@ def apply_status_inflicting_attack(attacker, defender, attack, i=None):
 
 
 def apply_v_status_inflicting_attack(attacker, defender, attack, i=None):
-    pass
+    """If the current attack is in the v_status_inflicting_attack dictionary, rolls to see if the attack successfully
+    applies the volatile status to the user or target. Function then calls the set_v_status method to update the pokemon's status."""
+    if attack in status_inflicting_attacks:
+        cur_move = status_inflicting_attacks[attack]
+        if i is None:
+            i = random.randint(1, 100)
+
+        if i <= cur_move[1]:
+            if cur_move[0] == "user":
+                effected_pokemon = attacker
+            else:
+                effected_pokemon = defender
+            effected_pokemon.set_v_status(cur_move[2])
 
 
 def apply_leftovers(pokemon):
