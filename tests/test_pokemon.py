@@ -184,6 +184,23 @@ class TestPokemon:
         p.cure_status()
         assert p.status == [None, 0]
 
+    def test_set_v_status(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        p.set_v_status("Flinched")
+        assert "Flinched" in p.v_status
+        p.set_v_status("Confused")
+        assert "Confused" in p.v_status
+
     def test_decrement_v_status(self):
         p = Pokemon(
             "Slowbro",
@@ -256,3 +273,5 @@ class TestPokemon:
         p.v_status["Telekinesis"] = [3]
         p.check_grounded()
         assert p.grounded == False
+
+    # TODO: test set_v_status

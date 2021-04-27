@@ -183,12 +183,12 @@ class Pokemon:
         """Sets the volatile status for the Pokemon. First index of the dictionary key is to count number of turns until status is cured."""
         if status_name == "Flinched":
             if status_name not in self.v_status:
-                v_status["Flinched"] = [1]
+                self.v_status["Flinched"] = [1]
 
         if status_name == "Confused":
             if status_name not in self.v_status:
                 print(f"{self.name} became confused!")
-                v_status["Confused"] = [random.randint(2, 5)]
+                self.v_status["Confused"] = [random.randint(2, 5)]
 
     def decrement_v_status(self):
         """Decrements the counter for all volatile statuses for the Pokemon at the end of the turn. If a counter reaches 0,
