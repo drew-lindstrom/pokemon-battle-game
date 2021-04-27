@@ -156,11 +156,28 @@ class Pokemon:
             self.stat["hp"] + int(self.stat["max_hp"] * n), self.stat["max_hp"]
         )
 
-    def damage(self, n):
-        """Damages pokemon by n percentage of it's max hp. HP won't fall below 0.
-        Ex: Slowbro's HP = 150 -> slowbro.damage(0.5) -> Slowbro's HP = 150 - 50% of max hp"""
+    def apply_damage(self, amount):
+        """Damages pokemon by a specified amount. HP won't fall below 0."""
+        self.stat["hp"] = max(0, int(self.stat["hp"] - amount))
+    
+    def apply_damage_percentage(self, n):
+        """Damages pokemon by a specified percentage. HP won't fall below 0. Effects that indirectly cause damage (like Burn or Poison)
+        are calculated with a specific percetage of the pokemon's max HP."""
         self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
 
+    def apply_recoil(self, n):
+        """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
+        print(f'{self.name} was damaged by recoil!')
+        self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
+
+
+    def check_fainted(self):
+        """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""
+        if self.stat["hp"] <= 0:
+            print(f'{self.name} fainted!')
+            self.status = ["Fainted", 0]
+            
+        
     def struggle_check(self):
         """Checks the pp of all of the attacking Pokemon's moves. If all moves have zero pp, struggle is used to attack instead."""
         struggle_bool = True
@@ -174,6 +191,7 @@ class Pokemon:
         Badly Poisoned deals more damage every turn. Sleep has a greater chance to be cured every turn."""
         if self.status[0] is None:
             self.status = [status_name, 0]
+    def increase_status(self):
 
     def cure_status(self):
         """Cures the non-volatile status for the Pokemon."""
@@ -223,3 +241,4 @@ class Pokemon:
                 self.grounded = False
         else:
             self.grounded = True
+    
