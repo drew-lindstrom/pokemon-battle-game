@@ -109,7 +109,7 @@ class TestPokemon:
         test_pokemon.heal(0)
         assert test_pokemon.stat["hp"] == 0
 
-    def test_damage(self):
+    def test_apply_damage(self):
         test_pokemon = Pokemon(
             "Slowbro",
             100,
@@ -121,11 +121,68 @@ class TestPokemon:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        test_pokemon.damage(0.5)
+        test_pokemon.stat["hp"] = 200
+        test_pokemon.apply_damage(50)
+        assert test_pokemon.stat["hp"] == 150
+        test_pokemon.stat["hp"] = 35
+        test_pokemon.apply_damage(50)
+        assert test_pokemon.stat["hp"] == 0
+
+    def test_apply_damage_percentage(self):
+        test_pokemon = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        test_pokemon.apply_damage_percentage(0.5)
         assert test_pokemon.stat["hp"] == 197
         test_pokemon.stat["hp"] = 35
-        test_pokemon.damage(0.5)
+        test_pokemon.apply_damage_percentage(0.5)
         assert test_pokemon.stat["hp"] == 0
+
+    def test_apply_recoil(self):
+        test_pokemon = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        test_pokemon.apply_recoil(0.5)
+        assert test_pokemon.stat["hp"] == 197
+        test_pokemon.stat["hp"] = 35
+        test_pokemon.apply_recoil(0.5)
+        assert test_pokemon.stat["hp"] == 0
+
+    def test_check_fainted(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.check_fainted() == False
+        p.stat["hp"] = 0
+        assert p.check_fainted() == True
+        assert p.status[0] == "Fainted"
+        p.stat["hp"] = -4
+        assert p.check_fainted() == True
+        assert p.stat["hp"] == 0
 
     def test_struggle_check(self):
         test_pokemon = Pokemon(
@@ -166,7 +223,9 @@ class TestPokemon:
         assert p.status == ["Paralyzed", 0]
         p.set_status("Asleep")
         assert p.status == ["Paralyzed", 0]
-
+        p.status = [None, 0]
+        p.set_status("Badly Poisoned")
+        assert p.status == ["Badly Poisoned", 14]
     def test_cure_status(self):
         p = Pokemon(
             "Slowbro",
@@ -201,7 +260,7 @@ class TestPokemon:
         p.set_v_status("Confused")
         assert "Confused" in p.v_status
 
-    def test_decrement_v_status(self):
+    def test_decrement_statuses(self):
         p = Pokemon(
             "Slowbro",
             100,
@@ -217,12 +276,14 @@ class TestPokemon:
         p.v_status["Leech Seeded"] = [float("inf")]
         p.v_status["Confused"] = [2]
         p.v_status["Infatuated"] = [-4]
+        p.status = ["Badly Poisoned", 14]
         p.decrement_v_status()
         assert p.v_status["Leech Seeded"] == [float("inf")]
         assert p.v_status["Confused"] == [1]
         assert len(p.v_status) == 2
+        assert p.status = ["Badly Poisoned", 13]
 
-    def test_reset_v_status(self):
+    def test_reset_statuses(self):
         p = Pokemon(
             "Slowbro",
             100,
@@ -236,7 +297,9 @@ class TestPokemon:
         )
         p.v_status["Flinched"] = [3]
         p.v_status["Leech Seeded"] = [float("inf")]
+        p.status = ["Badly Poisoned", 5]
         p.reset_v_status()
+        assert p.status = ["Badly Poisoned", 14]
         assert len(p.v_status) == 0
 
     def test_check_grounded(self):
