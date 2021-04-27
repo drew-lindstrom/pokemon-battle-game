@@ -1,8 +1,13 @@
 import pytest
+import ui
+from io import StringIO
+from pokemon import Pokemon
+from player import Player
+
 
 # class TestUI:
-#     def test_get_choice(self):
-#             slowbro = Pokemon(
+#     def test_get_choice(self, monkeypatch):
+#         slowbro = Pokemon(
 #             "Slowbro",
 #             100,
 #             "Male",
@@ -13,8 +18,9 @@ import pytest
 #             (252, 0, 252, 0, 4, 0),
 #             "Relaxed",
 #         )
-#         team = [slowbro]
+#         team = Player([slowbro])
+#         input_ = StringIO("0")
+#         monkeypatch.setattr("builtins.input", input_)
+#         assert ui.get_choice(team) == (team, "Scald", 0)
 
-#         assert get_choice(team)
-
-#     def test_get_switch(self):
+#     # def test_get_switch(self):

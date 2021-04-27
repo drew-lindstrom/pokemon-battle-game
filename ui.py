@@ -1,3 +1,6 @@
+from player import Player
+
+
 def print_pokemon_on_field(pokemon1, pokemon2):
     print(
         f"{pokemon1.name} - HP: {pokemon1.hp}/{pokemon1.max_hp}, Status: {pokemon1.status}"

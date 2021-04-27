@@ -29,6 +29,8 @@ class Terrain:
             self.current_terrain = None
 
 
+cur_terrain = Terrain()
+
 # TODO: Terrain counterdowner
 # TODO: What happens if pokemon uses terrain move with terrain is already present, does the counter reset?
 # TODO: Remove weather function

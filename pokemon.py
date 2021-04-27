@@ -175,6 +175,9 @@ class Pokemon:
         if self.stat["hp"] <= 0:
             print(f"{self.name} fainted!")
             self.status = ["Fainted", 0]
+            self.stat["hp"] = 0
+            return True
+        return False
 
     def struggle_check(self):
         """Checks the pp of all of the attacking Pokemon's moves. If all moves have zero pp, struggle is used to attack instead."""
@@ -188,16 +191,17 @@ class Pokemon:
         """Sets the non-volatile status for the Pokemon. Second index of status list is to count number of turns.
         Badly Poisoned deals more damage every turn. Sleep has a greater chance to be cured every turn."""
         if self.status[0] is None:
-            if status_name is "Badly Poisoned":
+            if status_name == "Badly Poisoned":
                 self.status = [status_name, 14]
-            elif status_name is "Asleep":
+            elif status_name == "Asleep":
                 self.status = [status_name, random.randint(1, 3)]
             else:
                 self.status = [status_name, 0]
 
     def cure_status(self):
         """Cures the non-volatile status for the Pokemon."""
-        self.status = [None, 0]
+        if self.status[0] != None:
+            self.status = [None, 0]
 
     def set_v_status(self, status_name):
         """Sets the volatile status for the Pokemon. First index of the dictionary key is to count number of turns until status is cured."""
@@ -228,8 +232,8 @@ class Pokemon:
 
     def reset_statuses(self):
         """Clears the Pokemon's volatile statues and resets the Badly Poison counter when it switches out."""
-        if self.status[0] is "Badly Poisoned":
-            self.status[1] == 14
+        if self.status[0] == "Badly Poisoned":
+            self.status[1] = 14
         self.v_status = {}
 
     def check_grounded(self):

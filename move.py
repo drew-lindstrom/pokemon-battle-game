@@ -1,8 +1,4 @@
 from game_data import moves_dict
-
-from player import set_stealth_rocks
-
-# from terrain import Terrain, terrain
 from copy import deepcopy
 
 
@@ -70,40 +66,3 @@ class Move:
             print(f"{self.name} is out of PP!")
             return False
         return True
-
-
-def defog(attacker, defender):
-    terrain.clear_terrain()
-
-
-def roost(attacker, defender):
-    attacker.heal(0.5)
-    # TODO: Need to add grounding
-
-
-def slack_off(attacker, defender):
-    attacker.heal(0.5)
-
-
-def stealth_rock(attacker, defender):
-    set_stealth_rocks(defender)
-
-
-def frost_breath():
-    # check for battle armor
-    pass
-
-
-def storm_throw():
-    # check for battle armor
-    pass
-
-
-def wicked_blow():
-    # check for battle armor
-    pass
-
-
-def surging_strikes():
-    # check for battle armor
-    pass

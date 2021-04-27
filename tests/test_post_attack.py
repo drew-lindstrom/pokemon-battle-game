@@ -60,13 +60,13 @@ class TestPostAttack:
 
         apply_bad_poison(p)
         assert p.stat["hp"] == 394
-        p.status = ["Badly Poisoned", 0]
+        p.status = ["Badly Poisoned", 14]
         apply_bad_poison(p)
         assert p.stat["hp"] == 369
-        p.status = ["Badly Poisoned", 1]
+        p.status = ["Badly Poisoned", 13]
         apply_bad_poison(p)
         assert p.stat["hp"] == 319
         p.stat["hp"] = 394
-        p.status = ["Badly Poisoned", 20]
+        p.status = ["Badly Poisoned", 0]
         apply_bad_poison(p)
         assert p.stat["hp"] == 24

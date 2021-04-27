@@ -48,7 +48,7 @@ class Player:
                 self.team[n].move_lock = -1
                 self.team[n].prev_move = None
                 self.team[n].reset_stat_modifier()
-                self.team[n].reset_v_status()
+                self.team[n].reset_statuses()
             except Exception:
                 print(f"Can't switch out {self.cur_pokemon.name}...")
         # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
@@ -88,7 +88,7 @@ def apply_stealth_rocks_damage(target):
     except:
         mult_2 = 1
 
-    target.damage(0.125 * mult_1 * mult_2)
+    target.apply_damage_percentage(0.125 * mult_1 * mult_2)
 
 
 def clear_hazards(player):

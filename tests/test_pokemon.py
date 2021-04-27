@@ -226,6 +226,7 @@ class TestPokemon:
         p.status = [None, 0]
         p.set_status("Badly Poisoned")
         assert p.status == ["Badly Poisoned", 14]
+
     def test_cure_status(self):
         p = Pokemon(
             "Slowbro",
@@ -277,11 +278,11 @@ class TestPokemon:
         p.v_status["Confused"] = [2]
         p.v_status["Infatuated"] = [-4]
         p.status = ["Badly Poisoned", 14]
-        p.decrement_v_status()
+        p.decrement_statuses()
         assert p.v_status["Leech Seeded"] == [float("inf")]
         assert p.v_status["Confused"] == [1]
         assert len(p.v_status) == 2
-        assert p.status = ["Badly Poisoned", 13]
+        assert p.status == ["Badly Poisoned", 13]
 
     def test_reset_statuses(self):
         p = Pokemon(
@@ -298,8 +299,8 @@ class TestPokemon:
         p.v_status["Flinched"] = [3]
         p.v_status["Leech Seeded"] = [float("inf")]
         p.status = ["Badly Poisoned", 5]
-        p.reset_v_status()
-        assert p.status = ["Badly Poisoned", 14]
+        p.reset_statuses()
+        assert p.status == ["Badly Poisoned", 14]
         assert len(p.v_status) == 0
 
     def test_check_grounded(self):
