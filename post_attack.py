@@ -69,7 +69,7 @@ def apply_burn(pokemon):
     """Damages a burned pokemon by 1/16 of its max HP. Fire type pokemon cannot be burned."""
     if pokemon.status[0] == "Burned":
         print(f"{pokemon.name} was damaged by its burn!")
-        pokemon.damage(0.0625)
+        pokemon.apply_damage_percentage(0.0625)
 
 
 def apply_bad_poison(pokemon):
@@ -78,7 +78,4 @@ def apply_bad_poison(pokemon):
     the damage resets to the original 1/16 of max HP."""
     if pokemon.status[0] == "Badly Poisoned":
         print(f"{pokemon.name} was hurt by the poison!")
-        if pokemon.status[1] >= 14:
-            pokemon.damage(0.0625 * 15)
-        else:
-            pokemon.damage(0.0625 * (pokemon.status[1] + 1))
+        pokemon.apply_damage_percentage(0.0625 * (15 - pokemon.status[1]))
