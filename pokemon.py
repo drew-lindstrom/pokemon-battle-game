@@ -159,7 +159,7 @@ class Pokemon:
     def apply_damage(self, amount):
         """Damages pokemon by a specified amount. HP won't fall below 0."""
         self.stat["hp"] = max(0, int(self.stat["hp"] - amount))
-    
+
     def apply_damage_percentage(self, n):
         """Damages pokemon by a specified percentage. HP won't fall below 0. Effects that indirectly cause damage (like Burn or Poison)
         are calculated with a specific percetage of the pokemon's max HP."""
@@ -167,17 +167,15 @@ class Pokemon:
 
     def apply_recoil(self, n):
         """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
-        print(f'{self.name} was damaged by recoil!')
+        print(f"{self.name} was damaged by recoil!")
         self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
-
 
     def check_fainted(self):
         """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""
         if self.stat["hp"] <= 0:
-            print(f'{self.name} fainted!')
+            print(f"{self.name} fainted!")
             self.status = ["Fainted", 0]
-            
-        
+
     def struggle_check(self):
         """Checks the pp of all of the attacking Pokemon's moves. If all moves have zero pp, struggle is used to attack instead."""
         struggle_bool = True
@@ -190,8 +188,12 @@ class Pokemon:
         """Sets the non-volatile status for the Pokemon. Second index of status list is to count number of turns.
         Badly Poisoned deals more damage every turn. Sleep has a greater chance to be cured every turn."""
         if self.status[0] is None:
-            self.status = [status_name, 0]
-    def increase_status(self):
+            if status_name is "Badly Poisoned":
+                self.status = [status_name, 14]
+            elif status_name is "Asleep":
+                self.status = [status_name, random.randint(1, 3)]
+            else:
+                self.status = [status_name, 0]
 
     def cure_status(self):
         """Cures the non-volatile status for the Pokemon."""
@@ -208,9 +210,13 @@ class Pokemon:
                 print(f"{self.name} became confused!")
                 self.v_status["Confused"] = [random.randint(2, 5)]
 
-    def decrement_v_status(self):
-        """Decrements the counter for all volatile statuses for the Pokemon at the end of the turn. If a counter reaches 0,
-        the status is removed."""
+    def decrement_statuses(self):
+        """Decrements the counter for all volatile statuses and the counter for Sleep or Badly Poisoned for the Pokemon
+        at the end of the turn. With the exception of Badly Poisoned, if a counter reaches 0, the status is removed."""
+        if self.status[0] is "Asleep" or "Badly Poisoned":
+            if self.status[1] > 0:
+                self.status[1] -= 1
+
         temp = []
         for status in self.v_status:
             self.v_status[status][0] -= 1
@@ -220,8 +226,10 @@ class Pokemon:
         for status in temp:
             del self.v_status[status]
 
-    def reset_v_status(self):
-        """Clears the Pokemon's volatile statues when it switches out."""
+    def reset_statuses(self):
+        """Clears the Pokemon's volatile statues and resets the Badly Poison counter when it switches out."""
+        if self.status[0] is "Badly Poisoned":
+            self.status[1] == 14
         self.v_status = {}
 
     def check_grounded(self):
@@ -241,4 +249,3 @@ class Pokemon:
                 self.grounded = False
         else:
             self.grounded = True
-    
