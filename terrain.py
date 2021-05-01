@@ -2,31 +2,32 @@ from pokemon import Pokemon
 
 
 class Terrain:
-    def __init__(self, terrain=None, counter=None):
+    def __init__(self, terrain=None, counter=0):
         self.current_terrain = terrain
-        self.terrain_counter = counter
+        self.counter = counter
 
-    def set_terrain(self, terrain, pokemon):
+    def set_terrain(self, terrain_name, pokemon):
         """Sets current_terrain to the specified terrain and terrain_counter to 5 turns (or 8 turns if pokemon is holding Terrain Extender)."""
-        assert terrain in (
-            "Electric Terrain",
-            "Grassy Terrain",
-            "Misty Terrain",
-            "Psychic Terrain",
-        )
-        self.current_terrain = terrain
-        print(f"{terrain} has been activated!")
+        self.current_terrain = terrain_name
+        print(f"{terrain_name} has been activated!")
         if pokemon.item == "Terrain Extender":
-            self.terrain_counter = 8
+            self.terrain_counter = 7
         else:
-            self.terrain_counter = 5
+            self.terrain_counter = 4
+
+    def decrement_terrain(self)
+        """Decrements the terrain counter by one at the end of each turn. If the counter equals 0, clear_terrain() is called."""
+        if self.terrain is not None:
+            if self.counter == 0:
+                print(f"The {self.current_terrain.lower()} subsided.")
+                self.clear_terrain()
+            else:
+                self.counter -= 1
 
     def clear_terrain(self):
-        """Checks the terrain counter at the end of the turn and resets terrain_weather to None if 0."""
-        # TODO does making terrain reset at 0 cause the terrain to last for 6/9 turns?
-        if self.terrain_counter == 0:
-            print(f"The {self.current_terrain} ended.")
-            self.current_terrain = None
+        """Resets terrain to None and resets counter to 0."""
+        self.current_terrain = None
+        self.counter = 0
 
 
 cur_terrain = Terrain()
