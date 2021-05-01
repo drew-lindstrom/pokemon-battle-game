@@ -8,16 +8,17 @@ class Terrain:
 
     def set_terrain(self, terrain_name, pokemon):
         """Sets current_terrain to the specified terrain and terrain_counter to 5 turns (or 8 turns if pokemon is holding Terrain Extender)."""
-        self.current_terrain = terrain_name
-        print(f"{terrain_name} has been activated!")
-        if pokemon.item == "Terrain Extender":
-            self.terrain_counter = 7
-        else:
-            self.terrain_counter = 4
+        if self.current_terrain is None:
+            self.current_terrain = terrain_name
+            print(f"{terrain_name} has been activated!")
+            if pokemon.item == "Terrain Extender":
+                self.counter = 7
+            else:
+                self.counter = 4
 
-    def decrement_terrain(self)
+    def decrement_terrain(self):
         """Decrements the terrain counter by one at the end of each turn. If the counter equals 0, clear_terrain() is called."""
-        if self.terrain is not None:
+        if self.current_terrain is not None:
             if self.counter == 0:
                 print(f"The {self.current_terrain.lower()} subsided.")
                 self.clear_terrain()
@@ -44,7 +45,7 @@ cur_terrain = Terrain()
 # TODO: Psychic terrain immunizes affected pokemon from opponents' moves with increased priority (including moves boosted by Prankster, Gale Wings, and Triage).
 
 
-def terrain_move_damage_mod(terrain, pokemon, n):
+def check_damage_mod_from_terrain(terrain, pokemon, n):
     if (
         (
             terrain.current_terrain == "Electric Terrain"
