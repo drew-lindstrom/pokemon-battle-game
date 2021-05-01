@@ -31,11 +31,17 @@ class Weather:
 
     def decrement_weather(self):
         """Decrements the weather counter by one at the end of each turn. If the counter equals 0, the weather is reset to Clear Skies."""
-        if self.current_weather != "Clear Skies" and self.counter == 0:
-            print(f"The {self.current_weather.lower()} subsided.")
-            self.current_weather = "Clear Skies"
-        else:
-            self.counter -= 1
+        if self.current_weather != "Clear Skies":
+            if self.counter == 0:
+                print(f"The {self.current_weather.lower()} subsided.")
+                self.clear_weather()
+            else:
+                self.counter -= 1
+
+    def clear_weather(self):
+        """Resets the current weather to Clears Skies and sets the counter to None."""
+        self.current_weather = "Clear Skies"
+        self.counter = 0
 
 
 def apply_weather_damage(weather, pokemon):
