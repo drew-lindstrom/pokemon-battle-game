@@ -8,6 +8,17 @@ def activate_grassy_surge(user, terrain):
         terrain.set_terrain("Grassy Terrain")
 
 
+def activate_intimidate(user, target):
+    if user.ability == "Intimidate":
+        print(f"{target.name} was initimated!")
+        target.update_stat_modifier("attack", -1)
+
+
+def activate_regenerator(user):
+    if user.ability == "Regenerator":
+        pass
+
+
 def activate_psychic_surge(user, terrain):
     if user.ability == "Psychic Surge":
         terrain.set_terrain("Psychic Terrain")
