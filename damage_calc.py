@@ -10,6 +10,7 @@ def next_turn(pokemon_1, action_1, pokemon_2, action_2):
     pass
 
 
+# TODO: Add optional i parameter.
 def roll_crit():
     """Rolls to determine if a move lands a critical hit. Critical hits boost damage by 1.5 ignore the attacker's negative stat stages,
     the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil. Burn is not ignored."""
@@ -22,6 +23,7 @@ def roll_crit():
         return 1
 
 
+# TODO: Add optional i parameter.
 def roll_accuracy(attacker, n, defender):
     """Rolls to determine if a move lands or misses."""
     num = 3
@@ -73,74 +75,6 @@ def check_type_effectiveness(attacker, n, defender):
     return mult_1 * mult_2
 
 
-def roll_sleep():
-    pass
-
-
-def roll_frozen():
-    pass
-
-
-def roll_paralysis():
-    pass
-
-
-def roll_accuracy():
-    pass
-
-
-def roll_evasion():
-    pass
-
-
-def roll_confusion():
-    pass
-
-
-def roll_infatuation():
-    pass
-
-
-def check_flinched():
-    pass
-
-
-def check_choice_item():
-    pass
-
-
-def check_encored():
-    pass
-
-
-def check_taunted():
-    pass
-
-
-def check_disabled():
-    pass
-
-
-def check_semi_invulnerable_turn():
-    pass
-
-
-def check_recharging():
-    pass
-
-
-def check_charging_turn():
-    pass
-
-
-def check_tormented():
-    pass
-
-
-def pp_check():
-    pass
-
-
 def random():
 
     pass
@@ -153,37 +87,52 @@ def calc_modified_base_damage():
 def calc_modified_damage():
     pass
 
-def check_can_attack():
-    """Checks to make sure if an attacker is able to use a move based on any present status conditions. 
-    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-    if attacker.status == 'Paralyzed':
-        if roll_paralyzed(attacker):
-            break
-    
-    if attacker.status == "Asleep" and attack != "Sleep Talk":
-        if roll_sleep(attacker):
-            break
-    
-    if attacker.status == "Frozen":
-        moves_that_can_thaw_out = set("Burn Up", "Flame Wheel", "Flare Blitz", "Fusion Flare", "Pyro Ball", "Sacred Fire", "Scald", "Scorching Sands", "Steam Eruption")
-        if attack in moves_that_can_thaw_out:
-            pass
-            #TODO: Create thaw out function.
-        if roll_frozen(attacker):
-            break
-    
-    if 'Confusion' in attacker.volatile_statuses:
-        if roll_confusion(attacker):
-            break
-    
-    if 'Infatuation' in attacker.volatile_statuses:
-        if roll_infatuation(attacker):
-            break
-    
-    if check_flinched(attacker):
-        break
 
-    if 
+def activate_defog(player1, player2):
+    """Using defog clears entry hazards from both sides of the field and lowers the opposing pokemon's evasion by 1."""
+    player1.clear_hazards()
+    player2.clear_hazards()
+    print("The entry hazards were removed from the field!")
+    player2.cur_pokemon.update_stat_modifier("evasion", -1)
+
+
+"""General attack layout:
+Switch:
+Intimidate
+Psychic Surge
+Regenerator
+Sand Stream
+Grassy Surge
+
+Before Damage Calc:
+Sand Rush (should already be implemented)
+Libero
+Unseen Fist
+Rock Blast
+Grassy Glide
+
+
+
+During Damage Calc:
+Flash Fire
+Psyshock
+Eruption
+Knock Off
+
+Post Damage:
+Static
+High Jump Kick
+Defog
+Knock Off
+Wood Hammer
+
+Status effects:
+Toxic
+Defog
+Slack Off
+"""
+
+
 def attack(attacker, n, defender):
     """Determines if a move hits and how much damage is dealt."""
     #  TO DO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
