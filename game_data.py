@@ -143,10 +143,11 @@ v_status_inflicting_attacks = {
     "Iron Head": ("target", 30, "Flinched"),
 }
 
-multi_hit_attacks = set("Rock Blast")
+multi_hit_attacks = {"Rock Blast"}
 
-recoil_attacks = set("High Jump Kick", "Wood Hammer")
-# To do: Darmanitan's different forms are named incorrectly.
+recoil_attacks = {"High Jump Kick", "Wood Hammer"}
+
+# TODO : Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
     "Abomasnow": (("Grass", "Ice"), ("90", "92", "75", "92", "85", "60")),
     "Abra": (("Psychic", None), ("25", "20", "15", "105", "55", "90")),
