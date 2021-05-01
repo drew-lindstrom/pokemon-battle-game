@@ -2,7 +2,7 @@ from pokemon import Pokemon
 
 
 class Weather:
-    def __init__(self, weather_name="Clear Skies", counter=None):
+    def __init__(self, weather_name="Clear Skies", counter=0):
         self.current_weather = weather_name
         self.counter = counter
 
