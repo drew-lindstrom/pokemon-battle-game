@@ -47,13 +47,15 @@ def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
         return [p2_choice, p1_choice]
 
 
-def check_priority(attack):
+def check_priority(attack, terrain):
     """Calls priority_moves dictionary to see if the given attack has a priority number, if not returns 0.
     Attacks with a priority higher number will go before the opponent's attack regardless of speed.
     Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
     try:
         return priority_moves[attack]
     except Exception:
+        if attack == "Grassy Glide" and terrain == "Grassy Terrain":
+            return 1
         return 0
 
 
