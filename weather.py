@@ -4,45 +4,41 @@ from pokemon import Pokemon
 class Weather:
     def __init__(self, weather_name="Clear Skies", counter=None):
         self.current_weather = weather_name
-        self.weather_counter = counter
+        self.counter = counter
 
     def set_weather(self, weather_name, pokemon):
         """Sets current_weather to the specified weather if currently Clear Skies and
         set weather_counter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
         if self.current_weather == "Clear Skies":
-            self.current_weather = weather
-            if weather == "Sandstorm":
+            self.current_weather = weather_name
+            if weather_name == "Sandstorm":
                 print("A sandstorm kicked up!")
-            if weather == "Rain":
+            if weather_name == "Rain":
                 print("It started to rain!")
-            if weather == "Harsh Sunlight":
+            if weather_name == "Harsh Sunlight":
                 print("The sunlight turned harsh!")
-            if weather == "Hail":
+            if weather_name == "Hail":
                 print("It started to hail!")
             if (
-                (pokemon.item == "Smooth Rock" and weather == "Sandstorm")
-                or (pokemon.item == "Damp Rock" and weather == "Rain")
-                or (pokemon.item == "Heat Rock" and weather == "Harsh Sunlight")
-                or (pokemon.item == "Icy Rock" and weather == "Hail")
+                (pokemon.item == "Smooth Rock" and weather_name == "Sandstorm")
+                or (pokemon.item == "Damp Rock" and weather_name == "Rain")
+                or (pokemon.item == "Heat Rock" and weather_name == "Harsh Sunlight")
+                or (pokemon.item == "Icy Rock" and weather_name == "Hail")
             ):
-                self.weather_counter = 7
+                self.counter = 7
             else:
-                self.weather_counter = 4
+                self.counter = 4
 
-    def clear_weather(self):
-        """Checks the weather counter at the end of the turn and resets current_weather to 'Clear Skies' if 0."""
-        # TODO does making weather reset at 0 cause the weather to last for 6/9 turns?
-        if self.weather_counter == 0:
+    def decrement_weather(self):
+        """Decrements the weather counter by one at the end of each turn. If the counter equals 0, the weather is reset to Clear Skies."""
+        if self.current_weather != "Clear Skies" and self.counter == 0:
             print(f"The {self.current_weather.lower()} subsided.")
             self.current_weather = "Clear Skies"
+        else:
+            self.counter -= 1
 
 
-# TODO: weather counterdowner
-# TODO: What happens if pokemon uses Sandstorm while sandstorm is already up, does the count reset?
-# TODO: Remove weather funciton
-
-
-def weather_damage(weather, pokemon):
+def apply_weather_damage(weather, pokemon):
     """If weather is currently Sandstorm or Hail, damages all pokemon on the field at end of turn
     unless pokemon is of specific type, ability, or holding Safety Goggles."""
     if weather.current_weather not in ("Sandstorm", "Hail"):
@@ -81,7 +77,7 @@ def check_sandstorm_sp_def_boost(weather, pokemon):
     return 1
 
 
-def weather_move_damage_mod(weather, pokemon, n):
+def check_damage_mod_from_weather(weather, pokemon, n):
     """Boosts power of fire type moves by 50% and lowers power of water type moves by 50% if weather is Harsh Sunlight.
     Boosts power of water type moves by 50% and lower power of fire types moves by 50% if weather is Rain."""
     if weather.current_weather == "Harsh Sunlight":
