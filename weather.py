@@ -2,31 +2,32 @@ from pokemon import Pokemon
 
 
 class Weather:
-    def __init__(self, weather="Clear Skies", counter=None):
-        self.current_weather = weather
+    def __init__(self, weather_name="Clear Skies", counter=None):
+        self.current_weather = weather_name
         self.weather_counter = counter
 
-    def set_weather(self, weather, pokemon):
-        """Sets current_weather to the specified weather and weather_counter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
-        assert weather in ("Sandstorm", "Hail", "Rain", "Harsh Sunlight")
-        self.current_weather = weather
-        if weather == "Sandstorm":
-            print("A sandstorm kicked up!")
-        if weather == "Rain":
-            print("It started to rain!")
-        if weather == "Harsh Sunlight":
-            print("The sunlight turned harsh!")
-        if weather == "Hail":
-            print("It started to hail!")
-        if (
-            (pokemon.item == "Smooth Rock" and weather == "Sandstorm")
-            or (pokemon.item == "Damp Rock" and weather == "Rain")
-            or (pokemon.item == "Heat Rock" and weather == "Harsh Sunlight")
-            or (pokemon.item == "Icy Rock" and weather == "Hail")
-        ):
-            self.weather_counter = 8
-        else:
-            self.weather_counter = 5
+    def set_weather(self, weather_name, pokemon):
+        """Sets current_weather to the specified weather if currently Clear Skies and
+        set weather_counter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
+        if self.current_weather == "Clear Skies":
+            self.current_weather = weather
+            if weather == "Sandstorm":
+                print("A sandstorm kicked up!")
+            if weather == "Rain":
+                print("It started to rain!")
+            if weather == "Harsh Sunlight":
+                print("The sunlight turned harsh!")
+            if weather == "Hail":
+                print("It started to hail!")
+            if (
+                (pokemon.item == "Smooth Rock" and weather == "Sandstorm")
+                or (pokemon.item == "Damp Rock" and weather == "Rain")
+                or (pokemon.item == "Heat Rock" and weather == "Harsh Sunlight")
+                or (pokemon.item == "Icy Rock" and weather == "Hail")
+            ):
+                self.weather_counter = 7
+            else:
+                self.weather_counter = 4
 
     def clear_weather(self):
         """Checks the weather counter at the end of the turn and resets current_weather to 'Clear Skies' if 0."""
