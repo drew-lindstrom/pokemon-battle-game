@@ -147,6 +147,17 @@ multi_hit_attacks = {"Rock Blast"}
 
 recoil_attacks = {"High Jump Kick", "Wood Hammer"}
 
+contact_attacks = {
+    "Close Combat",
+    "Crunch",
+    "Grassy Glide",
+    "High Jump Kick",
+    "Iron Head",
+    "Knock Off",
+    "Thunder Punch",
+    "Wood Hammer",
+    "U-turn",
+}
 # TODO : Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
     "Abomasnow": (("Grass", "Ice"), ("90", "92", "75", "92", "85", "60")),
