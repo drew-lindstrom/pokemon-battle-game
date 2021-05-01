@@ -16,7 +16,7 @@ def activate_intimidate(user, target):
 
 def activate_regenerator(user):
     if user.ability == "Regenerator":
-        pass
+        user.heal(1 / 3)
 
 
 def activate_psychic_surge(user, terrain):
