@@ -1,13 +1,16 @@
 import main
 from pokemon import Pokemon
+from terrain import Terrain
 import pytest
 
 
 class TestMain:
     def test_check_priority(self):
-        assert main.check_priority("Ice Shard") == 1
-        assert main.check_priority("Avalanche") == -4
-        assert main.check_priority("Tackle") == 0
+        terrain = Terrain("Grassy Terrain", 5)
+        assert main.check_priority("Ice Shard", terrain) == 1
+        assert main.check_priority("Avalanche", terrain) == -4
+        assert main.check_priority("Tackle", terrain) == 0
+        assert main.check_priority("Grassy Glide", terrain) == 1
 
     def test_roll_frozen(self):
         p = Pokemon(

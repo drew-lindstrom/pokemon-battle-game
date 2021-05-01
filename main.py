@@ -54,7 +54,7 @@ def check_priority(attack, terrain):
     try:
         return priority_moves[attack]
     except Exception:
-        if attack == "Grassy Glide" and terrain == "Grassy Terrain":
+        if attack == "Grassy Glide" and terrain.current_terrain == "Grassy Terrain":
             return 1
         return 0
 
