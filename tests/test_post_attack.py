@@ -1,5 +1,6 @@
 from post_attack import apply_leftovers, apply_burn, apply_bad_poison
 from pokemon import Pokemon
+from frame import Frame
 import pytest
 
 
@@ -16,12 +17,13 @@ class TestPostAttack:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        slowbro.stat["hp"] = 360
-        apply_leftovers(slowbro)
-        assert slowbro.stat["hp"] == 384
-        slowbro.hp = 380
-        apply_leftovers(slowbro)
-        assert slowbro.stat["hp"] == 394
+        frame = Frame(slowbro)
+        frame.user.stat["hp"] = 360
+        apply_leftovers(frame.user)
+        assert frame.user.stat["hp"] == 384
+        frame.user.stat["hp"] = 380
+        apply_leftovers(frame.user)
+        assert frame.user.stat["hp"] == 394
 
     def test_apply_burn(self):
         p = Pokemon(
@@ -35,15 +37,15 @@ class TestPostAttack:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-
-        apply_burn(p)
-        assert p.stat["hp"] == 394
-        p.status = ["Burned"]
-        apply_burn(p)
-        assert p.stat["hp"] == 369
-        p.stat["hp"] = 5
-        apply_burn(p)
-        assert p.stat["hp"] == 0
+        frame = Frame(p)
+        apply_burn(frame.user)
+        assert frame.user.stat["hp"] == 394
+        frame.user.status = ["Burned"]
+        apply_burn(frame.user)
+        assert frame.user.stat["hp"] == 369
+        frame.user.stat["hp"] = 5
+        apply_burn(frame.user)
+        assert frame.user.stat["hp"] == 0
 
     def test_apply_bad_poison(self):
         p = Pokemon(
@@ -57,16 +59,16 @@ class TestPostAttack:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-
-        apply_bad_poison(p)
-        assert p.stat["hp"] == 394
-        p.status = ["Badly Poisoned", 14]
-        apply_bad_poison(p)
-        assert p.stat["hp"] == 369
-        p.status = ["Badly Poisoned", 13]
-        apply_bad_poison(p)
-        assert p.stat["hp"] == 319
-        p.stat["hp"] = 394
-        p.status = ["Badly Poisoned", 0]
-        apply_bad_poison(p)
-        assert p.stat["hp"] == 24
+        frame = Frame(p)
+        apply_bad_poison(frame.user)
+        assert frame.user.stat["hp"] == 394
+        frame.user.status = ["Badly Poisoned", 14]
+        apply_bad_poison(frame.user)
+        assert frame.user.stat["hp"] == 369
+        frame.user.status = ["Badly Poisoned", 13]
+        apply_bad_poison(frame.user)
+        assert frame.user.stat["hp"] == 319
+        frame.user.stat["hp"] = 394
+        frame.user.status = ["Badly Poisoned", 0]
+        apply_bad_poison(frame.user)
+        assert frame.user.stat["hp"] == 24
