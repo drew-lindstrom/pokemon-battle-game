@@ -26,7 +26,7 @@ class Frame:
         terrain=None,
     ):
         self.attacking_team = attacking_team
-        self.attacker = attacking_team.cur_pokemon
+        self.user = attacking_team.cur_pokemon
         self.defending_team = defending_team
         self.target = defending_team.cur_pokemon
         self.attack = self.user.moves[n]
