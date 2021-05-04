@@ -98,10 +98,6 @@ def roll_paralysis(user, i=None):
     return False
 
 
-def roll_sleep():
-    pass
-
-
 def roll_frozen(user, i=None):
     """Rolls to determine if a frozen pokemon thaws out during it's attack. Frozen pokemon are not able to attack. 20% chance to thaw out.
     The pokemon can use it's attack on the turn that it thaws out."""
@@ -135,8 +131,8 @@ def check_can_attack():
             return False
 
     if user.status[0] == "Asleep" and attack_name != "Sleep Talk":
-        if roll_sleep(user):
-            return False
+        print(f'{user.name} is asleep.')
+        return False
 
     if user.status[0] == "Frozen":
         if roll_frozen(user):
