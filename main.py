@@ -83,9 +83,13 @@ def check_priority(attack_name, terrain):
     try:
         return priority_moves[attack_name]
     except Exception:
-        if attack_name == "Grassy Glide" and terrain.current_terrain == "Grassy Terrain":
+        if (
+            attack_name == "Grassy Glide"
+            and terrain.current_terrain == "Grassy Terrain"
+        ):
             return 1
         return 0
+
 
 def roll_paralysis(user, i=None):
     """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
@@ -115,9 +119,9 @@ def roll_confusion(user, i=None):
     """Rolls to determine if a confused pokemon can successfully use an attack. 33% chance they will hit themselves in confusion."""
     if i == None or i < 1 or i > 2:
         i = random.randint(1, 2)
-    
+
     if i == 1:
-        #TODO: Implement confusion damage.
+        # TODO: Implement confusion damage.
         print(f"{user.name} hit its self in confusion!")
         return True
     return False
@@ -131,7 +135,7 @@ def check_can_attack():
             return False
 
     if user.status[0] == "Asleep" and attack_name != "Sleep Talk":
-        print(f'{user.name} is asleep.')
+        print(f"{user.name} is asleep.")
         return False
 
     if user.status[0] == "Frozen":
@@ -143,12 +147,34 @@ def check_can_attack():
             return False
 
     if "Flinched" in user.v_status:
-        print(f'{user.name} flinched!')
+        print(f"{user.name} flinched!")
         return False
 
     return True
 
-def check_attack_lands():
+
+def check_attack_lands(frame, i=None):
+    """Calculates required accuracy for an attack to land based on the accuracy of the attack,
+    accuracy of user, evasion of target, and any additional modifiers. Rolls i in range 0 to 100.
+    If i is less than or equal to required accuracy, attack hits and function returns True."""
+    additional_modifier = 1
+
+    a = (
+        frame.attack.accuracy
+        * (
+            frame.user.calc_modified_stat_helper["accuracy"]
+            - frame.target.calc_modified_stat_helper["evasion"]
+        )
+        * additional_modifier
+    )
+
+    if i is None or i < 0 or i > 100:
+        i = random.randint(0, 100)
+
+    if i <= a:
+        return True
+    return False
+
 
 def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
