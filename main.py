@@ -194,7 +194,10 @@ def apply_end_of_turn_effects(frame_order):
         frame.user.decrement_statuses()
         # TODO: decrement_pp()
         frame.attack.decrement_pp()
-        # TODO: weather damage
+    
+    if frame_order[0].weather.current_weather == "Sandstorm" or frame_order[0].weather.current_weather == "Hail":
+        for frame in frame_order:
+            weather.apply_weather_damage(frame.weather, frame.user)
     
     for frame in frame_order:
         if frame.user.item == "Leftovers":
