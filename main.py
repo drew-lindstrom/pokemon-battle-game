@@ -30,59 +30,60 @@ class Frame:
         self.defending_team = defending_team
         self.target = defending_team.cur_pokemon
         self.attack = self.user.moves[n]
+        self.attack_name = self.attack.name
         self.switch_choice = switch_choice
         self.weather = weather
         self.terrain = terrain
 
 
-def get_turn_order(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
+def get_turn_order(frame1, frame2):
     """Gets the turn order for the current turn of the game.
     Turn order is determined by the speeds of the current pokemon on the field.
     With the exception of the effects from certian moves, items, or abilities,
     the faster pokemon always switches or attacks before the slower pokemon.
     Switching to a different pokemon always occurs before a pokemon attacks (unless the opposing pokemon uses the move Pursuit)."""
-    if p1_choice[1] == "Pursuit" and p2_choice[1] == "Switch":
-        return [p1_choice, p2_choice]
-    elif p2_choice[1] == "Pursuit" and p1_choice[1] == "Switch":
-        return [p2_choice, p1_choice]
+    if frame1.attack_name == "Pursuit" and frame2.switch_choice:
+        return [frame1, frame2]
+    elif frame2.attack_name == "Pursuit" and frame1.switch_choice:
+        return [frame1, frame2]
 
-    if p1_choice[1] == "Switch" and p2_choice[1] != "Switch":
-        return [p1_choice, p2_choice]
-    elif p2_choice[1] == "Switch" and p1_choice[1] != "Switch":
-        return [p2_choice, p1_choice]
+    if frame1.switch_choice and frame2.attack:
+        return [frame1, frame2]
+    elif frame2.switch_choice and frame1.attack:
+        return [frame2, frame1]
 
-    priority_p1 = check_priority(p1_choice[1])
-    priority_p2 = check_priority(p2_choice[1])
+    priority_p1 = check_priority(frame1.attack_name, frame1.terrain)
+    priority_p2 = check_priority(frame2.attack_name, frame2.terrain)
 
     if priority_p1 == priority_p2:
-        return check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice)
+        return check_speed(frame1, frame2)
     elif priority_p1 > priority_p2:
-        return [p1_choice, p2_choice]
+        return [frame1, frame2]
     else:
-        return [p2_choice, p1_choice]
+        return [frame2, frame1]
 
 
-def check_speed(p1_cur_pokemon, p1_choice, p2_cur_pokemon, p2_choice):
+def check_speed(frame1, frame2):
     """Checks the speed of both pokemon on field to determine who moves first.
     Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
-    p1_speed = calc_speed(p1_choice[0])
-    p2_speed = calc_speed(p2_choice[0])
+    p1_speed = calc_speed(frame1.user)
+    p2_speed = calc_speed(frame2.user)
 
     if p1_speed > p2_speed:
-        return [p1_choice, p2_choice]
+        return [frame1, frame2]
     # If the speed check is a tie, its usually random who goes first, but for the sake of AI consistency, the opponent will always go first.
     else:
-        return [p2_choice, p1_choice]
+        return [frame2, frame1]
 
 
-def check_priority(attack, terrain):
+def check_priority(attack_name, terrain):
     """Calls priority_moves dictionary to see if the given attack has a priority number, if not returns 0.
     Attacks with a priority higher number will go before the opponent's attack regardless of speed.
     Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
     try:
-        return priority_moves[attack]
+        return priority_moves[attack_name]
     except Exception:
-        if attack == "Grassy Glide" and terrain.current_terrain == "Grassy Terrain":
+        if attack_name == "Grassy Glide" and terrain.current_terrain == "Grassy Terrain":
             return 1
         return 0
 
@@ -127,22 +128,6 @@ def roll_confusion():
     pass
 
 
-# def roll_infatuation():
-#     pass
-
-
-# def check_semi_invulnerable_turn():
-#     pass
-
-
-# def check_recharging():
-#     pass
-
-
-# def check_charging_turn():
-#     pass
-
-
 # def check_can_attack():
 #     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
 #     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
@@ -176,13 +161,10 @@ def roll_confusion():
 #         if roll_confusion(attacker):
 #             break
 
-#     if "Infatuation" in attacker.volatile_statuses:
-#         if roll_infatuation(attacker):
-#             break
-
 #     if check_flinched(attacker):
 #         break
 
+def check_attack_lands():
 
 def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
