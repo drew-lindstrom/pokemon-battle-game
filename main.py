@@ -3,6 +3,9 @@ from pokemon import Pokemon
 from move import Move
 from game_data import priority_moves
 from stat_calc import calc_speed
+from terrain import Terrain
+from weather import Weather
+import post_attack
 import ui
 import random
 
@@ -34,9 +37,10 @@ class Frame:
         self.switch_choice = switch_choice
         self.weather = weather
         self.terrain = terrain
+        self.successful_attack = False
 
 
-def get_turn_order(frame1, frame2):
+def get_frame_order(frame1, frame2):
     """Gets the turn order for the current turn of the game.
     Turn order is determined by the speeds of the current pokemon on the field.
     With the exception of the effects from certian moves, items, or abilities,
@@ -173,35 +177,70 @@ def check_attack_lands(frame, i=None):
 
     if i <= a:
         return True
+    print(f"{frame.user.name}s attack missed!")
     return False
+
+
+def apply_post_attack_effects(frame):
+    """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
+    post_attack.apply_stat_alt_attack(frame.user, frame.target, frame.attack)
+    post_attack.apply_status_inflicting_attack(frame.user, frame.target, frame.attack)
+    post_attack.apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack)
+
+
+def apply_end_of_turn_effects(frame_order):
+    """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
+    for frame in frame_order:
+        frame.user.decrement_statuses()
+        # TODO: decrement_pp()
+        frame.attack.decrement_pp()
+        # TODO: weather damage
+    
+    for frame in frame_order:
+        if frame.user.item == "Leftovers":
+            apply_leftovers(frame.user)
+
+    for frame in frame_order:
+        if frame.user.status[0] == "Burned":
+            apply_burn(frame.user):
+
+    for frame in frame_order:
+        if frame.user.status[0] == "Badly Poisoned":
+            apply_bad_poison(frame.user)
+    
+    # for frame in frame_order:
+    #     apply_recoil(frame.user)
 
 
 def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
     and calls appropriate functions to apply damage and various effects."""
+    w = Weather()
+    t = Terrain()
+
     while True:
         ui.print_pokemon_on_field(p1.cur_pokemon, p2.cur_pokemon)
 
         p1_choice = ui.get_choice(p1)
         p2_choice = ui.get_choice(p2)
 
-        turn_order = get_turn_order(
-            p1.cur_pokemon, p1_choice, p2.cur_pokemon, p2_choice
-        )
+        frame_order = get_frame_order(frame1, frame2)
 
-        for choice in turn_order:
-            player, move_name, n = choice
-            if player == "p1":
-                target = "p2"
+        for cur_frame in frame_order:
+            if cur_frame.switch_choice:
+                cur_frame.attacking_team.switch(cur_frame.switch_choice)
             else:
-                target = "p1"
+                if cur_frame.target.status != "Fainted":
+                    if check_can_attack(cur_frame) and check_attack_lands(cur_frame):
+                        damage_calc(cur_frame)
+                        apply_post_attack_effects(cur_frame)
 
-            if move_name == "Switch":
-                player.switch[n]
-            else:
-                attack(player.cur_pokemon, move_name, n, target)
+        apply_end_of_turn_effects(frame_order)
 
-        for choice in turn_order:
+        w.decrement_weather()
+        t.decrement_terrain()
+
+        for cur_frame in frame_order:
             player = choice[0]
             if player.check_game_over():
                 if player == p1:
