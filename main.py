@@ -127,27 +127,27 @@ def roll_confusion(user, i=None):
     return False
 
 
-def check_can_attack():
+def check_can_attack(frame):
     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-    if user.status[0] == "Paralyzed":
+    if frame.user.status[0] == "Paralyzed":
         if roll_paralyzed(user):
             return False
 
-    if user.status[0] == "Asleep" and attack_name != "Sleep Talk":
-        print(f"{user.name} is asleep.")
+    if frame.user.status[0] == "Asleep" and frame.attack_name != "Sleep Talk":
+        print(f"{frame.user.name} is asleep.")
         return False
 
-    if user.status[0] == "Frozen":
-        if roll_frozen(user):
+    if frame.user.status[0] == "Frozen":
+        if roll_frozen(frame.user):
             return False
 
-    if "Confusion" in user.v_status:
-        if roll_confusion(user):
+    if "Confusion" in frame.user.v_status:
+        if roll_confusion(frame.user):
             return False
 
-    if "Flinched" in user.v_status:
-        print(f"{user.name} flinched!")
+    if "Flinched" in frame.user.v_status:
+        print(f"{frame.user.name} flinched!")
         return False
 
     return True
