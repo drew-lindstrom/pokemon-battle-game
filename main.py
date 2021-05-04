@@ -128,41 +128,30 @@ def roll_confusion():
     pass
 
 
-# def check_can_attack():
-#     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
-#     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-#     if attacker.status == "Paralyzed":
-#         if roll_paralyzed(attacker):
-#             break
+def check_can_attack():
+    """Checks to make sure if an attacker is able to use a move based on any present status conditions.
+    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
+    if user.status[0] == "Paralyzed":
+        if roll_paralyzed(user):
+            return False
 
-#     if attacker.status == "Asleep" and attack != "Sleep Talk":
-#         if roll_sleep(attacker):
-#             break
+    if user.status[0] == "Asleep" and attack_name != "Sleep Talk":
+        if roll_sleep(user):
+            return False
 
-#     if attacker.status == "Frozen":
-#         moves_that_can_thaw_out = set(
-#             "Burn Up",
-#             "Flame Wheel",
-#             "Flare Blitz",
-#             "Fusion Flare",
-#             "Pyro Ball",
-#             "Sacred Fire",
-#             "Scald",
-#             "Scorching Sands",
-#             "Steam Eruption",
-#         )
-#         if attack in moves_that_can_thaw_out:
-#             pass
-#             # TODO: Create thaw out function.
-#         if roll_frozen(attacker):
-#             break
+    if user.status[0] == "Frozen":
+        if roll_frozen(user):
+            return False
 
-#     if "Confusion" in attacker.volatile_statuses:
-#         if roll_confusion(attacker):
-#             break
+    if "Confusion" in user.v_status:
+        if roll_confusion(user):
+            return False
 
-#     if check_flinched(attacker):
-#         break
+    if "Flinched" in user.v_status:
+        print(f'{user.name} flinched!')
+        return False
+        
+    return True
 
 def check_attack_lands():
 
