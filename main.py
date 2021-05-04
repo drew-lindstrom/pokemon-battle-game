@@ -87,6 +87,16 @@ def check_priority(attack_name, terrain):
             return 1
         return 0
 
+def roll_paralysis(user, i=None):
+    """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
+    if i == None or i < 1 or i > 4:
+        i = random.randint(1, 4)
+
+    if i == 1:
+        print(f"{user.name} is paralyzed and can't move.")
+        return True
+    return False
+
 
 def roll_sleep():
     pass
@@ -105,27 +115,16 @@ def roll_frozen(user, i=None):
     return True
 
 
-def roll_paralysis(user, i=None):
-    """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
-    if i == None or i < 1 or i > 4:
-        i = random.randint(1, 4)
-
+def roll_confusion(user, i=None):
+    """Rolls to determine if a confused pokemon can successfully use an attack. 33% chance they will hit themselves in confusion."""
+    if i == None or i < 1 or i > 2:
+        i = random.randint(1, 2)
+    
     if i == 1:
-        print(f"{user.name} is paralyzed and can't move.")
+        #TODO: Implement confusion damage.
+        print(f"{user.name} hit its self in confusion!")
         return True
     return False
-
-
-def roll_accuracy():
-    pass
-
-
-def roll_evasion():
-    pass
-
-
-def roll_confusion():
-    pass
 
 
 def check_can_attack():
@@ -150,7 +149,7 @@ def check_can_attack():
     if "Flinched" in user.v_status:
         print(f'{user.name} flinched!')
         return False
-        
+
     return True
 
 def check_attack_lands():
