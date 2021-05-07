@@ -37,3 +37,8 @@ class TestMove:
         assert earthquake.check_pp() == False
         earthquake.pp = -9
         assert earthquake.check_pp() == False
+
+    def test_decrement_pp(self):
+        earthquake = Move("Earthquake")
+        earthquake.decrement_pp()
+        assert earthquake.pp == 15
