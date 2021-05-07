@@ -31,13 +31,6 @@ class Terrain:
         self.counter = 0
 
 
-cur_terrain = Terrain()
-
-# TODO: Terrain counterdowner
-# TODO: What happens if pokemon uses terrain move with terrain is already present, does the counter reset?
-# TODO: Remove weather function
-# TODO: Terrain only effects pokemon on the ground, need to apply this.
-
 # TODO: Electric terrian prevents pokemon from being afflicted by Sleep or Yawn
 # TODO: Grassy terrain restores affected pkoemon by 1/16 of max HP
 # TODO: Grassy terrain: unless a pokemon is in a semi-vulnerable state of dig or dive, power of bulldoze, earthquake, and magnitude is halved (even if the user is not grounded)
@@ -65,3 +58,9 @@ def check_damage_mod_from_terrain(terrain, pokemon, n):
         return 0.5
     else:
         return 1
+
+
+def heal_from_grassy_terrain(terrain, pokemon):
+    """If the current terrain is Grassy Terrain and the pokemon is grounded, heals for 1/16 max HP at the end of the turn."""
+    if terrain.current_terrain == "Grassy Terrain" and pokemon.grounded == True:
+        pokemon.heal(0.0625)
