@@ -56,8 +56,8 @@ def get_frame_order(frame1, frame2):
     elif frame2.switch_choice and frame1.attack:
         return [frame2, frame1]
 
-    priority_p1 = check_priority(frame1.attack_name, frame1.terrain)
-    priority_p2 = check_priority(frame2.attack_name, frame2.terrain)
+    priority_p1 = check_priority(frame1)
+    priority_p2 = check_priority(frame2)
 
     if priority_p1 == priority_p2:
         return check_speed(frame1, frame2)
@@ -80,18 +80,19 @@ def check_speed(frame1, frame2):
         return [frame2, frame1]
 
 
-def check_priority(attack_name, terrain):
+def check_priority(f):
     """Calls priority_moves dictionary to see if the given attack has a priority number, if not returns 0.
     Attacks with a priority higher number will go before the opponent's attack regardless of speed.
     Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
+
+    if f.terrain.current_terrain == "Psychic Terrain" and f.target.grounded == True:
+        return 0
+    if f.terrain.current_terrain == "Grassy Terrain" and f.attack.name == "Grassy Glide":
+        return 1
+
     try:
-        return priority_moves[attack_name]
+        return priority_moves[f.attack.name]
     except Exception:
-        if (
-            attack_name == "Grassy Glide"
-            and terrain.current_terrain == "Grassy Terrain"
-        ):
-            return 1
         return 0
 
 
