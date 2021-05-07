@@ -9,10 +9,6 @@ class Move:
         self.category = moves_dict[name][1]
         self.pp = None
 
-        # Before attack effect?
-        # After attack effect? (applying burn)
-        # End of turn effect? (after both players go, like destiny bond or leech seed)
-
     @property
     def power(self):
         power = moves_dict[self.name][2]
@@ -66,3 +62,7 @@ class Move:
             print(f"{self.name} is out of PP!")
             return False
         return True
+
+    def decrement_pp(self):
+        """Decrements a move's pp by one at the end of the turn."""
+        self.pp -= 1
