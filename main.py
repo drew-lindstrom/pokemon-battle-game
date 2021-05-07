@@ -87,7 +87,10 @@ def check_priority(f):
 
     if f.terrain.current_terrain == "Psychic Terrain" and f.target.grounded == True:
         return 0
-    if f.terrain.current_terrain == "Grassy Terrain" and f.attack.name == "Grassy Glide":
+    if (
+        f.terrain.current_terrain == "Grassy Terrain"
+        and f.attack.name == "Grassy Glide"
+    ):
         return 1
 
     try:
@@ -195,23 +198,31 @@ def apply_end_of_turn_effects(frame_order):
         frame.user.decrement_statuses()
         # TODO: decrement_pp()
         frame.attack.decrement_pp()
-    
-    if frame_order[0].weather.current_weather == "Sandstorm" or frame_order[0].weather.current_weather == "Hail":
+
+    if (
+        frame_order[0].weather.current_weather == "Sandstorm"
+        or frame_order[0].weather.current_weather == "Hail"
+    ):
         for frame in frame_order:
             weather.apply_weather_damage(frame.weather, frame.user)
-    
+
+    if frame_order[0].terrain.current_terrain == "Grassy Terrain":
+        for fram in frame_order:
+            if frame.user == True:
+                terrain.heal_from_grassy_terrain(frame.terrain, frame.user)
+
     for frame in frame_order:
         if frame.user.item == "Leftovers":
             apply_leftovers(frame.user)
 
     for frame in frame_order:
         if frame.user.status[0] == "Burned":
-            apply_burn(frame.user):
+            apply_burn(frame.user)
 
     for frame in frame_order:
         if frame.user.status[0] == "Badly Poisoned":
             apply_bad_poison(frame.user)
-    
+
     # for frame in frame_order:
     #     apply_recoil(frame.user)
 
