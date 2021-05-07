@@ -1,5 +1,5 @@
 from pokemon import Pokemon
-from terrain import Terrain, check_damage_mod_from_terrain
+from terrain import Terrain, check_damage_mod_from_terrain, heal_from_grassy_terrain
 import pytest
 
 
@@ -97,3 +97,26 @@ class Test_Terrain:
         terrain.current_terrain = "Psychic Terrain"
         assert check_damage_mod_from_terrain(terrain, slowbro, 3) == 1.3
         assert check_damage_mod_from_terrain(terrain, slowbro, 0) == 1
+
+    def test_heal_from_grassy_terrain(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Thunder", "Vine Whip", "Dragon Pulse", "Psychic"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        t = Terrain()
+        slowbro.stat["hp"] = 100
+        heal_from_grassy_terrain(t, slowbro)
+        assert slowbro.stat["hp"] == 100
+        t.current_terrain = "Grassy Terrain"
+        heal_from_grassy_terrain(t, slowbro)
+        assert slowbro.stat["hp"] == 124
+        slowbro.grounded = False
+        heal_from_grassy_terrain(t, slowbro)
+        assert slowbro.stat["hp"] == 124
