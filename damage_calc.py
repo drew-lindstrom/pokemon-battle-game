@@ -43,9 +43,10 @@ def check_type_effectiveness(user, target, attack):
     return mult_1 * mult_2
 
 
-def random():
-
-    pass
+def roll_random(i=None):
+    if i is None or i < 85 or i > 100:
+        i = random.randint(85, 100)
+    return float(random / 100)
 
 
 def calc_modified_base_damage():
