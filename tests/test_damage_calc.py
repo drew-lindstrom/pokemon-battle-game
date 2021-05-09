@@ -1,5 +1,6 @@
 from player import Player
 from pokemon import Pokemon
+from move import Move
 import damage_calc
 import pytest
 
@@ -9,8 +10,24 @@ def testDamageCalc():
         assert damage_calc.roll_crit(1) == 1.5
         assert damage_calc.roll_crit(2) == 1
 
-    def check_stab(self):
-        pass
+    def test_check_stab(self):
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        scald = Move("Scald")
+        future_sight = Move("Future Sight")
+        earthquake = Move("Earthquake")
+        assert damage_calc.check_stab(slowbro, scald) == 1.5
+        assert damage_calc.check_stab(slowbro, future_sight) == 1.5
+        assert damage_calc.check_stab(slowbro, earthquake) == 1
 
     def check_type_effectiveness(self):
         pass
