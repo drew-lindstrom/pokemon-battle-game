@@ -29,7 +29,7 @@ def testDamageCalc():
         assert damage_calc.check_stab(slowbro, future_sight) == 1.5
         assert damage_calc.check_stab(slowbro, earthquake) == 1
 
-    def check_type_effectiveness(self):
+    def test_check_type_effectiveness(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -62,7 +62,7 @@ def testDamageCalc():
         assert damage_calc.check_type_effectiveness(slowbro, tyranitar, slack_off) == 1
 
     def test_roll_random(self):
-        pass
+        assert damage_calc.roll_random(85) == 0.85
 
     def test_activate_defog(self):
         slowbro = Pokemon(
