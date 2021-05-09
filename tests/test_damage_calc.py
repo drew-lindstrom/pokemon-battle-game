@@ -30,7 +30,36 @@ def testDamageCalc():
         assert damage_calc.check_stab(slowbro, earthquake) == 1
 
     def check_type_effectiveness(self):
-        pass
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        tyranitar = Pokemon(
+            "Tyranitar",
+            100,
+            "Male",
+            ("Crunch", "Stealth Rock", "Toxic", "Earthquake"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 0, 0, 216, 40),
+            "Careful",
+        )
+        scald = Move("Scald")
+        future_sight = Move("Future Sight")
+        slack_off = Move("Slack Off")
+        assert damage_calc.check_type_effectiveness(slowbro, tyranitar, scald) == 2
+        assert (
+            damage_calc.check_type_effectiveness(slowbro, tyranitar, future_sight) == 0
+        )
+        assert damage_calc.check_type_effectiveness(slowbro, tyranitar, slack_off) == 1
 
     def test_roll_random(self):
         pass
