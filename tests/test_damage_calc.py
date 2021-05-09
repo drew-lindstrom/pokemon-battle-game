@@ -5,6 +5,19 @@ import pytest
 
 
 def testDamageCalc():
+    def test_roll_crit(self):
+        assert damage_calc.roll_crit(1) == 1.5
+        assert damage_calc.roll_crit(2) == 1
+
+    def check_stab(self):
+        pass
+
+    def check_type_effectiveness(self):
+        pass
+
+    def test_roll_random(self):
+        pass
+
     def test_activate_defog(self):
         slowbro = Pokemon(
             "Slowbro",
