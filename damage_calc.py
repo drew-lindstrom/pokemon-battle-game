@@ -1,9 +1,10 @@
-from random import randint
+import random
 import time
 
 from move import Move
 from game_data import type_key, type_chart
 from pokemon import Pokemon
+from player import Player
 
 
 def roll_crit(i=None):
@@ -20,7 +21,7 @@ def roll_crit(i=None):
 
 def check_stab(user, attack):
     """Checks to see if the attacking move is the same type as the attacker. If so, attack power is boosted by 50%."""
-    if attacker.typing[0] == attack.type or attacker.typing[1] == attack.type:
+    if user.typing[0] == attack.type or user.typing[1] == attack.type:
         return 1.5
     else:
         return 1
@@ -46,7 +47,7 @@ def check_type_effectiveness(user, target, attack):
 def roll_random(i=None):
     if i is None or i < 85 or i > 100:
         i = random.randint(85, 100)
-    return float(random / 100)
+    return float(random) / 100
 
 
 def calc_modified_base_damage():
@@ -59,8 +60,8 @@ def calc_modified_damage():
 
 def activate_defog(player1, player2):
     """Using defog clears entry hazards from both sides of the field and lowers the opposing pokemon's evasion by 1."""
-    player1.clear_hazards()
-    player2.clear_hazards()
+    player.clear_hazards(player1)
+    player.clear_hazards(player2)
     print("The entry hazards were removed from the field!")
     player2.cur_pokemon.update_stat_modifier("evasion", -1)
 

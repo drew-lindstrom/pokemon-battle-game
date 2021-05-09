@@ -5,7 +5,7 @@ import damage_calc
 import pytest
 
 
-def testDamageCalc():
+class TestDamageCalc:
     def test_roll_crit(self):
         assert damage_calc.roll_crit(1) == 1.5
         assert damage_calc.roll_crit(2) == 1
@@ -59,7 +59,9 @@ def testDamageCalc():
         assert (
             damage_calc.check_type_effectiveness(slowbro, tyranitar, future_sight) == 0
         )
-        assert damage_calc.check_type_effectiveness(slowbro, tyranitar, slack_off) == 1
+        assert (
+            damage_calc.check_type_effectiveness(slowbro, tyranitar, slack_off) == 0.5
+        )
 
     def test_roll_random(self):
         assert damage_calc.roll_random(85) == 0.85
