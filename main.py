@@ -235,7 +235,7 @@ def main():
 
     while True:
         ui.print_pokemon_on_field(p1.cur_pokemon, p2.cur_pokemon)
-
+        #TODO: Add in struggle check.
         p1_choice = ui.get_choice(p1)
         p2_choice = ui.get_choice(p2)
 
