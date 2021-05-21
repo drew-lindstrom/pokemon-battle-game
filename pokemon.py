@@ -239,7 +239,6 @@ class Pokemon:
     def check_grounded(self):
         """Checks to see if a pokemon is considered grounded at the start of a turn.
         Non grounded pokemon are immune to ground type moves and entry hazards with the exception of stealth rocks."""
-        # TODO: Lot of additional conditions for checking grounded.
         if (
             "Flying" in self.typing
             or self.ability == "Levitate"
