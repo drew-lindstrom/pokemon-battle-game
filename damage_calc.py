@@ -2,7 +2,7 @@ import random
 import time
 
 from move import Move
-from game_data import type_key, type_chart, modified_base_damage_tuple
+from game_data import type_key, type_chart, modified_base_damage_list
 from pokemon import Pokemon
 from player import Player
 
@@ -101,16 +101,16 @@ def calc_damage(frame):
     burn = check_burn(frame.user, frame.attack)
 
     if frame.attack_name == "Psyshock":
-        attack_stat = user.stat["special_attack"]
-        defense_stat = user.stat["defense"]
+        attack_stat = frame.user.stat["sp_attack"]
+        defense_stat = frame.user.stat["defense"]
     elif frame.attack.category == "Physical":
-        attack_stat = user.stats["attack"]
-        defense_stat = target.stats["defense"]
+        attack_stat = frame.user.stat["attack"]
+        defense_stat = frame.target.stat["defense"]
     elif frame.attack.category == "Special":
-        attack_stat = user.stats["special_attack"]
-        defense_stat = target.stats["special_defense"]
+        attack_stat = frame.user.stat["sp_attack"]
+        defense_stat = frame.target.stat["sp_defense"]
 
-    if frame.attack_name in modified_base_damage_tuple:
+    if frame.attack_name in modified_base_damage_list:
         # TODO: Implement modified_base_damage_list
         base_damage = calc_modified_base_damage
     else:
@@ -120,7 +120,7 @@ def calc_damage(frame):
         (
             int(
                 (
-                    (int(2 * user.level / 5) + 2)
+                    (int(2 * frame.user.level / 5) + 2)
                     * int(base_damage)
                     * (attack_stat / defense_stat)
                 )
