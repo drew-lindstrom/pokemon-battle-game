@@ -158,6 +158,9 @@ contact_attacks = {
     "Wood Hammer",
     "U-turn",
 }
+
+modified_base_damage_tuple = ('Eruption')
+
 # TODO : Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
     "Abomasnow": (("Grass", "Ice"), ("90", "92", "75", "92", "85", "60")),
