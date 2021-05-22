@@ -2,7 +2,7 @@ import random
 import time
 
 from move import Move
-from game_data import type_key, type_chart
+from game_data import type_key, type_chart, modified_base_damage_tuple
 from pokemon import Pokemon
 from player import Player
 
@@ -41,7 +41,16 @@ def check_type_effectiveness(user, target, attack):
     except:
         mult_2 = 1
 
-    return mult_1 * mult_2
+    modifier = mult_1 * mult_2
+
+    if modifier > 1:
+        print("It's super effective!")
+    elif modifier < 1 and modifier > 0:
+        print("It's not very effective...")
+    elif modifier == 0:
+        print("It had no effect...")
+
+    return modifier
 
 
 def roll_random(i=None):
@@ -50,7 +59,7 @@ def roll_random(i=None):
     return float(random) / 100
 
 
-def use_eruption(frame):
+def activate_eruption(frame):
     """Returns base power for the move eruption based on the users hp."""
     return int(150 * frame.user.stats["hp"] / frame.attacker.stats["max_hp"])
 
@@ -73,84 +82,49 @@ def activate_defog(player1, player2):
     player2.cur_pokemon.update_stat_modifier("evasion", -1)
 
 
-"""General attack layout:
-Switch:
-Intimidate
-Psychic Surge
-Regenerator
-Sand Stream
-Grassy Surge
-
-Before Damage Calc:
-Sand Rush (should already be implemented)
-Libero
-Unseen Fist
-Rock Blast
-Grassy Glide
-
-
-
-During Damage Calc:
-Flash Fire
-Psyshock
-Eruption
-Knock Off
-
-Post Damage:
-Static
-High Jump Kick
-Defog
-Knock Off
-Wood Hammer
-
-Status effects:
-Toxic
-Defog
-Slack Off
-"""
-
-
-def attack(attacker, n, defender):
-    """Determines if a move hits and how much damage is dealt."""
+def calc_damage(frame):
+    """Returns damage from an attack for a given frame."""
     #  TODO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
     # print(f'{attacker.name} used {attacker.moves[n]["name"]}!')
     print(f"{attacker.name} used {attacker.moves[n].name}!")
-    if accuracy_check(attacker, n, defender):
-        crit = crit_check()
-        stab = stab_check(attacker, n)
-        typ = type_effectiveness_check(attacker, n, defender)
-        burn = burn_check(attacker, n)
 
-        if attacker.moves[n].category == "Physical":
-            attack_stat = attacker.attack
-            defense_stat = defender.defense
-        elif attacker.moves[n].category == "Special":
-            attack_stat = attacker.sp_attack
-            defense_stat = defender.sp_defense
+    crit = crit_check()
+    stab = stab_check(attacker, n)
+    typ = type_effectiveness_check(attacker, n, defender)
+    burn = burn_check(attacker, n)
 
-        damage = int(
-            (
-                int(
-                    (
-                        (int(2 * attacker.level / 5) + 2)
-                        * int(attacker.moves[n].power)
-                        * (attack_stat / defense_stat)
-                    )
-                    / 50
+    if frame.attack_name == "Psyshock":
+        attack_stat = user.stat["special_attack"]
+        defense_stat = user.stat["defense"]
+    elif frame.attack.category == "Physical":
+        attack_stat = user.stats["attack"]
+        defense_stat = target.stats["defense"]
+    elif frame.attack.category == "Special":
+        attack_stat = user.stats["special_attack"]
+        defense_stat = target.stats["special_defense"]
+
+    if frame.attack_name in modified_base_damage_tuple:
+        # TODO: Implement modified_base_damage_list
+        base_damage = calc_modified_base_damage
+    else:
+        base_damage = frame.attack.power
+
+    damage = int(
+        (
+            int(
+                (
+                    (int(2 * user.level / 5) + 2)
+                    * int(base_damage)
+                    * (attack_stat / defense_stat)
                 )
-                + 2
+                / 50
             )
-            * crit
-            * stab
-            * typ
-            * burn
+            + 2
         )
+        * crit
+        * stab
+        * typ
+        * burn
+    )
 
-        defender.hp -= damage
-
-        if typ > 1:
-            print("It's super effective!")
-        elif typ < 1 and typ > 0:
-            print("It's not very effective...")
-        elif typ == 0:
-            print("It had no effect...")
+    return damage
