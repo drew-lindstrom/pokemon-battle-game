@@ -11,27 +11,30 @@ def print_pokemon_on_field(pokemon1, pokemon2):
     print()
 
 
-def get_choice(team):
+def get_choice(f):
     choice = None
 
     while choice not in range(1, 7):
-        print_options(team)
+        print_options(f.attacking_team)
 
         choice = int(input())
         print()
 
         if choice >= 1 and choice <= 4:
-            if team.cur_pokemon.moves[choice - 1].pp > 0:
-                return (team, team.cur_pokemon.moves[choice - 1].name, choice - 1)
+            # TODO: Add struggle.
+            if f.user.moves[choice - 1].pp > 0:
+                f.attack = f.user.moves[choice - 1]
+                f.attack_name = (f.user.moves[choice - 1].name,)
+                return f
             else:
-                print("{team.cur_pokemon.moves[choice-1].name} is out of PP.")
+                print(f"{team.cur_pokemon.moves[choice-1].name} is out of PP.")
                 choice = None
 
         elif choice == 5:
             return get_switch(team)
 
         elif choice == 6:
-            team.cur_pokemon.show_stats()
+            f.user.show_stats()
             choice = None
             continue
 
@@ -67,7 +70,8 @@ def get_switch(team):
         switch_choice = input()
         print()
 
-    return (team, "Switch", n)
+    f.switch_choice = switch_choice
+    return f
 
 
 def clear_screen():

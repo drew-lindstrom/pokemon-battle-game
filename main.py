@@ -23,8 +23,8 @@ class Frame:
         self,
         attacking_team=None,
         defending_team=None,
-        attack=None,
-        switch_choice=None,
+        attack=False,
+        switch_choice=False,
         weather=None,
         terrain=None,
     ):
@@ -32,9 +32,13 @@ class Frame:
         self.user = attacking_team.cur_pokemon
         self.defending_team = defending_team
         self.target = defending_team.cur_pokemon
-        self.attack = self.user.moves[n]
-        self.attack_name = self.attack.name
-        self.switch_choice = switch_choice
+        if attack:
+            self.attack = self.user.moves[n]
+            self.attack_name = self.attack.name
+        if switch_choice:
+            self.switch_choice = switch_choice
+        else:
+            self.switch_choice = False
         self.weather = weather
         self.terrain = terrain
         self.successful_attack = False
@@ -70,8 +74,8 @@ def get_frame_order(frame1, frame2):
 def check_speed(frame1, frame2):
     """Checks the speed of both pokemon on field to determine who moves first.
     Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
-    p1_speed = calc_speed(frame1.user)
-    p2_speed = calc_speed(frame2.user)
+    p1_speed = calc_speed(frame1.attacking_team, frame1.weather)
+    p2_speed = calc_speed(frame2.attacking_team, frame2.weather)
 
     if p1_speed > p2_speed:
         return [frame1, frame2]
@@ -191,8 +195,8 @@ def check_attack_lands(f, i=None):
     a = (
         f.attack.accuracy
         * (
-            f.user.calc_modified_stat_helper["accuracy"]
-            - f.target.calc_modified_stat_helper["evasion"]
+            f.user.calc_modified_stat("accuracy")
+            - f.target.calc_modified_stat("evasion")
         )
         * additional_modifier
     )
@@ -255,10 +259,12 @@ def main():
     t = Terrain()
 
     while True:
-        ui.print_pokemon_on_field(p1.cur_pokemon, p2.cur_pokemon)
+        frame1 = Frame(p1, p2, None, None, w, t)
+        frame2 = Frame(p2, p1, None, None, w, t)
+        ui.print_pokemon_on_field(frame1.user, frame2.user)
         # TODO: Add in struggle check.
-        p1_choice = ui.get_choice(p1)
-        p2_choice = ui.get_choice(p2)
+        frame1 = ui.get_choice(frame1)
+        frame2 = ui.get_choice(frame2)
 
         frame_order = get_frame_order(frame1, frame2)
 
@@ -277,7 +283,7 @@ def main():
         t.decrement_terrain()
 
         for cur_frame in frame_order:
-            player = choice[0]
+            player = cur_frame.attacking_team
             if player.check_game_over():
                 if player == p1:
                     print("Player 2 Wins!")
@@ -392,8 +398,8 @@ if __name__ == "__main__":
         (0, 252, 0, 0, 4, 252),
         "Jolly",
     )
-    hydregion = Pokemon(
-        "Hydregion",
+    hydreigon = Pokemon(
+        "Hydreigon",
         100,
         "Male",
         ("Defog", "Roost", "Dark Pulse", "Earth Power"),
@@ -414,7 +420,7 @@ if __name__ == "__main__":
         (176, 0, 188, 0, 0, 144),
         "Impish",
     )
-    rilladoom = Pokemon(
+    rillaboom = Pokemon(
         "Rillaboom",
         100,
         "Male",
@@ -426,6 +432,6 @@ if __name__ == "__main__":
         "Adamant",
     )
 
-    p1 = Player(tapu_lele, cinderace, excadrill, slowbro, tyranitar, zapdos)
-    p2 = Player(heatran, tapu_lele_2, urshifu, hydregion, landorus, rillaboom)
+    p1 = Player([tapu_lele, cinderace, excadrill, slowbro, tyranitar, zapdos])
+    p2 = Player([heatran, tapu_lele_2, urshifu, hydreigon, landorus, rillaboom])
     main()

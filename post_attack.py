@@ -79,3 +79,7 @@ def apply_bad_poison(pokemon):
     if pokemon.status[0] == "Badly Poisoned":
         print(f"{pokemon.name} was hurt by the poison!")
         pokemon.apply_damage_percentage(0.0625 * (15 - pokemon.status[1]))
+
+
+def apply_recoil(pokemon):
+    pass
