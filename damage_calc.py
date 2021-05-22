@@ -50,8 +50,15 @@ def roll_random(i=None):
     return float(random) / 100
 
 
-def calc_modified_base_damage():
-    pass
+def use_eruption(frame):
+    """Returns base power for the move eruption based on the users hp."""
+    return int(150 * frame.user.stats["hp"] / frame.attacker.stats["max_hp"])
+
+
+def calc_modified_base_damage(frame):
+    """Returns base power for various moves that have varying base powers based on different parameters."""
+    if frame.attack_name == "Eruption":
+        return use_eruption(frame)
 
 
 def calc_modified_damage():
