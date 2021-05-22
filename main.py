@@ -135,43 +135,64 @@ def roll_confusion(user, i=None):
     return False
 
 
-def check_can_attack(frame):
+def check_can_attack(f):
     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-    if frame.user.status[0] == "Paralyzed":
+    if f.user.status[0] == "Paralyzed":
         if roll_paralyzed(user):
             return False
 
-    if frame.user.status[0] == "Asleep" and frame.attack_name != "Sleep Talk":
+    if f.user.status[0] == "Asleep" and f.attack_name != "Sleep Talk":
         print(f"{frame.user.name} is asleep.")
         return False
 
-    if frame.user.status[0] == "Frozen":
-        if roll_frozen(frame.user):
+    if f.user.status[0] == "Frozen":
+        if roll_frozen(f.user):
             return False
 
-    if "Confusion" in frame.user.v_status:
-        if roll_confusion(frame.user):
+    if "Confusion" in f.user.v_status:
+        if roll_confusion(f.user):
             return False
 
-    if "Flinched" in frame.user.v_status:
-        print(f"{frame.user.name} flinched!")
+    if "Flinched" in f.user.v_status:
+        print(f"{f.user.name} flinched!")
+        return False
+
+    if check_immunity(f):
+        print(f"It had no effect.")
         return False
 
     return True
 
 
-def check_attack_lands(frame, i=None):
+def check_immunity(f):
+    """Returns boolean if current attack isn't able to land due to target being immune to the attack's type."""
+    if (
+        (f.attack.type == "Poison" and "Steel" in f.target.typing)
+        or (f.attack.type == "Dragon" and "Fairy" in f.target.typing)
+        or (
+            (f.attack.type == "Normal" or f.attack.type == "Fighting")
+            and "Ghost" in f.target.typing
+        )
+        or (f.attack.type == "Ghost" and "Normal" in f.target.typing)
+        or (f.attack.type == "Electric" and "Ground" in f.target.typing)
+        or (f.attack.type == "Psychic" and "Dark" in f.target.typing)
+    ):
+        return True
+    return False
+
+
+def check_attack_lands(f, i=None):
     """Calculates required accuracy for an attack to land based on the accuracy of the attack,
     accuracy of user, evasion of target, and any additional modifiers. Rolls i in range 0 to 100.
     If i is less than or equal to required accuracy, attack hits and function returns True."""
     additional_modifier = 1
 
     a = (
-        frame.attack.accuracy
+        f.attack.accuracy
         * (
-            frame.user.calc_modified_stat_helper["accuracy"]
-            - frame.target.calc_modified_stat_helper["evasion"]
+            f.user.calc_modified_stat_helper["accuracy"]
+            - f.target.calc_modified_stat_helper["evasion"]
         )
         * additional_modifier
     )
@@ -181,7 +202,7 @@ def check_attack_lands(frame, i=None):
 
     if i <= a:
         return True
-    print(f"{frame.user.name}s attack missed!")
+    print(f"{f.user.name}s attack missed!")
     return False
 
 
@@ -235,7 +256,7 @@ def main():
 
     while True:
         ui.print_pokemon_on_field(p1.cur_pokemon, p2.cur_pokemon)
-        #TODO: Add in struggle check.
+        # TODO: Add in struggle check.
         p1_choice = ui.get_choice(p1)
         p2_choice = ui.get_choice(p2)
 
