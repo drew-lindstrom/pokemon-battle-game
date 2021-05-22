@@ -11,7 +11,7 @@ def roll_crit(i=None):
     """Rolls to determine if a move lands a critical hit. Critical hits boost damage by 1.5 ignore the attacker's negative stat stages,
     the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil. Burn is not ignored."""
     if i is None or i < 0 or i > 24:
-        i = randint(1, 24)
+        i = random.randint(1, 24)
     if i == 1:
         print("A critical hit!")
         return 1.5
@@ -21,13 +21,13 @@ def roll_crit(i=None):
 
 def check_stab(user, attack):
     """Checks to see if the attacking move is the same type as the attacker. If so, attack power is boosted by 50%."""
-    if user.typing[0] == attack.type or user.typing[1] == attack.type:
+    if attack.type in user.typing:
         return 1.5
     else:
         return 1
 
 
-def check_type_effectiveness(user, target, attack):
+def check_type_effectiveness(user, attack, target):
     """Return the damage multiplier for how super effective the move is. type_chart is a matrix showing how each type matches up between each
     other. X-axis is the defending type, y-axis is the attacking type. Top left corner is (0, 0). Each type corresponds to a number on the
     x and y axis."""
@@ -51,6 +51,13 @@ def check_type_effectiveness(user, target, attack):
         print("It had no effect...")
 
     return modifier
+
+
+def check_burn(user, attack):
+    """Returns damage modifer is user is burned and currently attacking with a physical move."""
+    if user.status[0] == "Burn" and attack.category == "Physical":
+        return 0.5
+    return 1
 
 
 def roll_random(i=None):
@@ -86,12 +93,12 @@ def calc_damage(frame):
     """Returns damage from an attack for a given frame."""
     #  TODO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
     # print(f'{attacker.name} used {attacker.moves[n]["name"]}!')
-    print(f"{attacker.name} used {attacker.moves[n].name}!")
+    print(f"{frame.user.name} used {frame.attack_name[0]}!")
 
-    crit = crit_check()
-    stab = stab_check(attacker, n)
-    typ = type_effectiveness_check(attacker, n, defender)
-    burn = burn_check(attacker, n)
+    crit = roll_crit()
+    stab = check_stab(frame.user, frame.attack)
+    typ = check_type_effectiveness(frame.user, frame.attack, frame.target)
+    burn = check_burn(frame.user, frame.attack)
 
     if frame.attack_name == "Psyshock":
         attack_stat = user.stat["special_attack"]
