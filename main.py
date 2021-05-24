@@ -5,6 +5,7 @@ from game_data import priority_moves
 from stat_calc import calc_speed
 from terrain import Terrain
 from weather import Weather
+from damage_calc import *
 import post_attack
 import ui
 import random
@@ -41,7 +42,8 @@ class Frame:
             self.switch_choice = False
         self.weather = weather
         self.terrain = terrain
-        self.successful_attack = False
+        self.can_attack = False
+        self.attack_lands = False
 
 
 def get_frame_order(frame1, frame2):
@@ -144,29 +146,29 @@ def check_can_attack(f):
     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
     if f.user.status[0] == "Paralyzed":
         if roll_paralyzed(user):
-            return False
+            pass
 
     if f.user.status[0] == "Asleep" and f.attack_name != "Sleep Talk":
         print(f"{frame.user.name} is asleep.")
-        return False
+        pass
 
     if f.user.status[0] == "Frozen":
         if roll_frozen(f.user):
-            return False
+            pass
 
     if "Confusion" in f.user.v_status:
         if roll_confusion(f.user):
-            return False
+            pass
 
     if "Flinched" in f.user.v_status:
         print(f"{f.user.name} flinched!")
-        return False
+        pass
 
     if check_immunity(f):
         print(f"It had no effect.")
-        return False
+        pass
 
-    return True
+    f.can_attack = True
 
 
 def check_immunity(f):
@@ -192,11 +194,15 @@ def check_attack_lands(f, i=None):
     If i is less than or equal to required accuracy, attack hits and function returns True."""
     additional_modifier = 1
 
+    # TODO: The accuracy minus evasion is probably wrong.
     a = (
         f.attack.accuracy
         * (
-            f.user.calc_modified_stat("accuracy")
-            - f.target.calc_modified_stat("evasion")
+            100
+            - (
+                f.user.calc_modified_stat("accuracy")
+                - f.target.calc_modified_stat("evasion")
+            )
         )
         * additional_modifier
     )
@@ -205,9 +211,9 @@ def check_attack_lands(f, i=None):
         i = random.randint(0, 100)
 
     if i <= a:
-        return True
+        f.attack_lands = True
+        return
     print(f"{f.user.name}s attack missed!")
-    return False
 
 
 def apply_post_attack_effects(frame):
@@ -248,6 +254,7 @@ def apply_end_of_turn_effects(frame_order):
         if frame.user.status[0] == "Badly Poisoned":
             apply_bad_poison(frame.user)
 
+    # TODO: Recoil damage.
     # for frame in frame_order:
     #     apply_recoil(frame.user)
 
@@ -272,9 +279,11 @@ def main():
             if cur_frame.switch_choice:
                 cur_frame.attacking_team.switch(cur_frame.switch_choice)
             else:
-                if cur_frame.target.status != "Fainted":
-                    if check_can_attack(cur_frame) and check_attack_lands(cur_frame):
-                        damage_calc(cur_frame)
+                if cur_frame.user.status != "Fainted":
+                    check_can_attack(cur_frame)
+                    check_attack_lands(cur_frame)
+                    if cur_frame.can_attack and cur_frame.attack_lands:
+                        cur_frame.target.apply_damage(calc_damage(cur_frame))
                         apply_post_attack_effects(cur_frame)
 
         apply_end_of_turn_effects(frame_order)
@@ -293,8 +302,7 @@ def main():
                     break
 
             if player.cur_pokemon.status[0] == "Fainted":
-                player.get_switch()
-                player.switch[n]
+                player.switch(ui.get_switch(cur_frame).switch_choice)
 
 
 if __name__ == "__main__":

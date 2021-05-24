@@ -159,8 +159,7 @@ class Pokemon:
     def apply_damage(self, amount):
         """Damages pokemon by a specified amount. HP won't fall below 0. If HP is at 0, sets status to Fainted."""
         self.stat["hp"] = max(0, int(self.stat["hp"] - amount))
-        if self.stat["hp"] == 0:
-            self.status[0] = "Fainted"
+        self.check_fainted()
 
     def apply_damage_percentage(self, n):
         """Damages pokemon by a specified percentage. HP won't fall below 0. Effects that indirectly cause damage (like Burn or Poison)
@@ -176,6 +175,7 @@ class Pokemon:
         """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""
         if self.stat["hp"] <= 0:
             print(f"{self.name} fainted!")
+            print()
             self.status = ["Fainted", 0]
             self.stat["hp"] = 0
             return True

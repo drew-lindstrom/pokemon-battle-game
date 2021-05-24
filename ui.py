@@ -52,17 +52,15 @@ def print_options(team):
     print()
 
 
-def get_switch(team):
-    # TODO: HP Check
-
+def get_switch(frame):
     team_list = []
     switch_choice = ""
 
-    print(f"Switch {team.cur_pokemon.name} with...?")
+    print(f"Switch {frame.user.name} with...?")
 
-    for n in range(1, len(team)):
+    for n in range(1, len(frame.attacking_team)):
         print(
-            f"({n}) {team[n].name} - {team[n].hp}/{team[n].max_hp} HP, Status: {team[n].status}"
+            f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status}"
         )
         team_list.append(str(n))
 
@@ -70,8 +68,8 @@ def get_switch(team):
         switch_choice = input()
         print()
 
-    f.switch_choice = switch_choice
-    return f
+    frame.switch_choice = switch_choice
+    return frame
 
 
 def clear_screen():
