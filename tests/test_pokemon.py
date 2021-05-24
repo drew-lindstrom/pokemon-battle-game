@@ -127,6 +127,7 @@ class TestPokemon:
         test_pokemon.stat["hp"] = 35
         test_pokemon.apply_damage(50)
         assert test_pokemon.stat["hp"] == 0
+        assert test_pokemon.status[0] == "Fainted"
 
     def test_apply_damage_percentage(self):
         test_pokemon = Pokemon(
