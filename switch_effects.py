@@ -13,6 +13,7 @@ def activate_intimidate(user, target):
     """Lowers target's attack by one when a pokemon with intimidate ability switches in."""
     if user.ability == "Intimidate":
         print(f"{target.name} was initimated!")
+        print()
         target.update_stat_modifier("attack", -1)
 
 
