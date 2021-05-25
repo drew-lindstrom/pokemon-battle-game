@@ -81,14 +81,6 @@ def calc_modified_damage():
     pass
 
 
-def activate_defog(player1, player2):
-    """Using defog clears entry hazards from both sides of the field and lowers the opposing pokemon's evasion by 1."""
-    player.clear_hazards(player1)
-    player.clear_hazards(player2)
-    print("The entry hazards were removed from the field!")
-    player2.cur_pokemon.update_stat_modifier("evasion", -1)
-
-
 def calc_damage(frame):
     """Returns damage from an attack for a given frame."""
     #  TODO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.

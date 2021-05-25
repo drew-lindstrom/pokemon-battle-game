@@ -38,9 +38,12 @@ def reset_reflect(player):
         player.reflect = False
 
 
-def set_stealth_rocks(player):
+def set_stealth_rocks(frame):
     """Adds stealth rocks to the target player's side."""
-    player.stealth_rocks = True
+    if frame.defending_team.stealth_rocks == False:
+        frame.defending_team.stealth_rocks = True
+        print("Stealth Rocks were placed on the opposing teams side!")
+        print()
 
 
 def set_spike(player):
@@ -60,8 +63,12 @@ def set_sticky_web(player):
     player.sticky_web = True
 
 
-def defog(attacker, defender):
-    terrain.clear_terrain()
+def activate_defog(frame):
+    """Using defog clears entry hazards from both sides of the field and lowers the opposing pokemon's evasion by 1."""
+    player.clear_hazards(frame.user)
+    player.clear_hazards(frame.target)
+    print("The entry hazards were removed from the field!")
+    frame.target.update_stat_modifier("evasion", -1)
 
 
 def roost(attacker, defender):
@@ -71,10 +78,6 @@ def roost(attacker, defender):
 
 def slack_off(attacker, defender):
     attacker.heal(0.5)
-
-
-def stealth_rock(attacker, defender):
-    set_stealth_rocks(defender)
 
 
 def frost_breath():

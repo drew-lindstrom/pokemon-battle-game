@@ -6,6 +6,7 @@ from stat_calc import calc_speed
 from terrain import Terrain
 from weather import Weather
 from damage_calc import *
+from move_effects import *
 import post_attack
 import ui
 import random
@@ -216,6 +217,14 @@ def check_attack_lands(f, i=None):
     print(f"{f.user.name}s attack missed!")
 
 
+def apply_non_damaging_move(frame):
+    if frame.attack_name == "Stealth Rocks":
+        set_stealth_rocks(frame)
+
+    if frame.attack_name == "Defog":
+        activate_defog(frame)
+
+
 def apply_post_attack_effects(frame):
     """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
     post_attack.apply_stat_alt_attack(frame.user, frame.target, frame.attack)
@@ -283,8 +292,14 @@ def main():
                     check_can_attack(cur_frame)
                     check_attack_lands(cur_frame)
                     if cur_frame.can_attack and cur_frame.attack_lands:
-                        cur_frame.target.apply_damage(calc_damage(cur_frame))
-                        apply_post_attack_effects(cur_frame)
+                        if (
+                            cur_frame.attack.category == "Pysical"
+                            or cur_frame.attack.category == "Special"
+                        ):
+                            cur_frame.target.apply_damage(calc_damage(cur_frame))
+                            apply_post_attack_effects(cur_frame)
+                        else:
+                            apply_non_damaging_move(cur_frame)
 
         apply_end_of_turn_effects(frame_order)
 
@@ -323,7 +338,7 @@ if __name__ == "__main__":
         "Male",
         ("Pyro Ball", "U-turn", "Gunk Shot", "High Jump Kick"),
         "Libero",
-        "Heavy-Duty Boots",
+        "Heavy Duty Boots",
         (31, 31, 31, 31, 31, 31),
         (0, 252, 0, 0, 4, 252),
         "Jolly",
@@ -345,7 +360,7 @@ if __name__ == "__main__":
         "Male",
         ("Teleport", "Slack Off", "Ice Beam", "Psychic"),
         "Regenerator",
-        "Heav-Duty Boots",
+        "Heav Duty Boots",
         (31, 31, 31, 31, 31, 31),
         (248, 0, 252, 8, 0, 0),
         "Relaxed",
@@ -367,7 +382,7 @@ if __name__ == "__main__":
         None,
         ("Discharge", "Hurricane", "Roost", "Defog"),
         "Static",
-        "Heavy-Duty Boots",
+        "Heavy Duty Boots",
         (31, 31, 31, 31, 31, 31),
         (248, 0, 124, 0, 0, 136),
         "Bold",
@@ -423,7 +438,7 @@ if __name__ == "__main__":
         "Male",
         ("Toxic", "Earthquake", "U-turn", "Knock Off"),
         "Intimidate",
-        "Heavy-Duty Boots",
+        "Heavy Duty Boots",
         (31, 31, 31, 31, 31, 31),
         (176, 0, 188, 0, 0, 144),
         "Impish",
