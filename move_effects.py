@@ -1,7 +1,7 @@
 from player import Player
 from pokemon import Pokemon
 from move import Move
-from terrain import Terrain, cur_terrain
+from terrain import Terrain
 
 
 def set_light_screen(player):

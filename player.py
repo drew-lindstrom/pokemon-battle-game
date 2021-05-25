@@ -1,4 +1,5 @@
 from pokemon import Pokemon
+from switch_effects import *
 from game_data import type_key, type_chart
 
 
@@ -41,7 +42,7 @@ class Player:
                     self.team[n],
                     self.team[0],
                 )
-                print(f"{self.cur_pokemon.name} switched with {self.team[n].name}.")
+                print(f"{self.team[n].name} switched with {self.team[0].name}.")
                 self.cur_pokemon = self.team[0]
                 print()
                 # apply_entry_hazards(self.current_pokemon)

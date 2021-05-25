@@ -7,6 +7,7 @@ from terrain import Terrain
 from weather import Weather
 from damage_calc import *
 from move_effects import *
+from post_attack import *
 import post_attack
 import ui
 import random
@@ -25,8 +26,8 @@ class Frame:
         self,
         attacking_team=None,
         defending_team=None,
-        attack=False,
-        switch_choice=False,
+        attack=None,
+        switch_choice=None,
         weather=None,
         terrain=None,
     ):
@@ -34,6 +35,7 @@ class Frame:
         self.user = attacking_team.cur_pokemon
         self.defending_team = defending_team
         self.target = defending_team.cur_pokemon
+        self.attack_name = None
         if attack:
             self.attack = self.user.moves[n]
             self.attack_name = self.attack.name
@@ -45,6 +47,11 @@ class Frame:
         self.terrain = terrain
         self.can_attack = False
         self.attack_lands = False
+
+    def update_cur_pokemon(self):
+        "Whenever a switch occurs, updates the frames to switch the user/target to the current pokemon on the respective teams."
+        self.user = self.attacking_team.cur_pokemon
+        self.target = self.defending_team.cur_pokemon
 
 
 def get_frame_order(frame1, frame2):
@@ -236,8 +243,8 @@ def apply_end_of_turn_effects(frame_order):
     """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
     for frame in frame_order:
         frame.user.decrement_statuses()
-        # TODO: decrement_pp()
-        frame.attack.decrement_pp()
+        if frame.attack_name:
+            frame.attack.decrement_pp()
 
     if (
         frame_order[0].weather.current_weather == "Sandstorm"
@@ -287,6 +294,8 @@ def main():
         for cur_frame in frame_order:
             if cur_frame.switch_choice:
                 cur_frame.attacking_team.switch(cur_frame.switch_choice)
+                frame1.update_cur_pokemon()
+                frame2.update_cur_pokemon()
             else:
                 if cur_frame.user.status != "Fainted":
                     check_can_attack(cur_frame)
