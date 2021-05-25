@@ -168,12 +168,60 @@ def check_attack_lands(f, i=None):
     print(f"{f.user.name}s attack missed!")
 
 
+
 def apply_non_damaging_move(frame):
+    """Applies effect of current non damaging move being used."""
     if frame.attack_name == "Stealth Rocks":
         set_stealth_rocks(frame)
 
     if frame.attack_name == "Defog":
         activate_defog(frame)
+
+def switch(frame, n):
+    """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
+    Ex: Player team order is [Tyranitar, Slowbro] -> player_team.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
+    n = int(n)
+    if frame.attacking_team.team[n].stat["hp"] == 0:
+        print(f"{frame.attacking_team.team[n].name} has already fainted!")
+    else:
+        try:
+            frame.attacking_team.team[0], frame.attacking_team.team[n] = (
+                frame.attacking_team.team[n],
+                frame.attacking_team.team[0],
+            )
+            print(f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}.")
+            apply_switch_effect(frame.attacking_team.team[n], frame, 'Out')
+            apply_switch_effect(frame.attacking_team.team[0], frame, 'In')
+            frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
+            print()
+            # apply_entry_hazards(self.current_pokemon)
+            frame.attacking_team.team[n].move_lock = -1
+            frame.attacking_team.team[n].prev_move = None
+            frame.attacking_team.team[n].reset_stat_modifier()
+            frame.attacking_team.team[n].reset_statuses()
+        except Exception:
+            print(f"Can't switch out {frame.attacking_team.cur_pokemon.name}...")
+    # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
+
+def apply_switch_effect(user, frame, switch_dir):
+"""Applies switch effect for current pokemon that's switched in or switched out."""
+#TODO: Implement tests.
+    if switch_dir == 'In':
+        if user.ability == 'Grassy Surge':
+            activate_grassy_surge(user, frame.terrain)
+        
+        if user.ability == 'Intimidate':
+            activate_intimidate(user, frame.target)
+        
+        if user.ability == 'Psychic Surge':
+            activate_psychic_surge(user, frame.terrain)
+        
+        if user.ability == 'Sand Stream':
+            activate_sand_stream(user, frame.weather)
+
+    if switch_dir == 'Out':
+        if user.ability == 'Regenerator':
+            activate_regenerator(user)
 
 
 def apply_post_attack_effects(frame):

@@ -30,30 +30,6 @@ class Player:
         for n in range(len(self.team)):
             self.team[n].show_stats()
 
-    def switch(self, n):
-        """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
-        Ex: Player team order is [Tyranitar, Slowbro] -> player_team.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
-        n = int(n)
-        if self.team[n].stat["hp"] == 0:
-            print(f"{self.team[n].name} has already fainted!")
-        else:
-            try:
-                self.team[0], self.team[n] = (
-                    self.team[n],
-                    self.team[0],
-                )
-                print(f"{self.team[n].name} switched with {self.team[0].name}.")
-                self.cur_pokemon = self.team[0]
-                print()
-                # apply_entry_hazards(self.current_pokemon)
-                self.team[n].move_lock = -1
-                self.team[n].prev_move = None
-                self.team[n].reset_stat_modifier()
-                self.team[n].reset_statuses()
-            except Exception:
-                print(f"Can't switch out {self.cur_pokemon.name}...")
-        # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
-
     def check_game_over(self):
         """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
         Returns False if all Pokemon on team are fainted."""
