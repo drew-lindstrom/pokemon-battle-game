@@ -11,30 +11,30 @@ def print_pokemon_on_field(pokemon1, pokemon2):
     print()
 
 
-def get_choice(f):
+def get_choice(frame):
     choice = None
 
     while choice not in range(1, 7):
-        print_options(f.attacking_team)
+        print_options(frame.attacking_team)
 
         choice = int(input())
         print()
 
         if choice >= 1 and choice <= 4:
             # TODO: Add struggle.
-            if f.user.moves[choice - 1].pp > 0:
-                f.attack = f.user.moves[choice - 1]
-                f.attack_name = (f.user.moves[choice - 1].name,)
-                return f
+            if frame.user.moves[choice - 1].pp > 0:
+                frame.attack = frame.user.moves[choice - 1]
+                frame.attack_name = (frame.user.moves[choice - 1].name,)
+                return frame
             else:
-                print(f"{team.cur_pokemon.moves[choice-1].name} is out of PP.")
+                print(f"{frame.user.moves[choice-1].name} is out of PP.")
                 choice = None
 
         elif choice == 5:
-            return get_switch(team)
+            return get_switch(frame)
 
         elif choice == 6:
-            f.user.show_stats()
+            frame.user.show_stats()
             choice = None
             continue
 
@@ -60,9 +60,10 @@ def get_switch(frame):
 
     for n in range(1, len(frame.attacking_team)):
         print(
-            f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status}"
+            f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status[0]}"
         )
         team_list.append(str(n))
+    print()
 
     while switch_choice not in team_list:
         switch_choice = input()

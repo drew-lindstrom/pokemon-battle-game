@@ -60,15 +60,17 @@ def apply_v_status_inflicting_attack(attacker, defender, attack, i=None):
 
 def apply_leftovers(pokemon):
     """Heals the user's HP at the end of the turn by 1/16 of it's max HP if holding leftovers."""
-    if pokemon.item == "Leftovers":
+    if pokemon.item == "Leftovers" and pokemon.stat["hp"] != pokemon.stat["max_hp"]:
         pokemon.heal(0.0625)
         print(f"{pokemon.name} healed some of it's HP with it's leftovers.")
+        print()
 
 
 def apply_burn(pokemon):
     """Damages a burned pokemon by 1/16 of its max HP. Fire type pokemon cannot be burned."""
     if pokemon.status[0] == "Burned":
         print(f"{pokemon.name} was damaged by its burn!")
+        print()
         pokemon.apply_damage_percentage(0.0625)
 
 
@@ -78,6 +80,7 @@ def apply_bad_poison(pokemon):
     the damage resets to the original 1/16 of max HP."""
     if pokemon.status[0] == "Badly Poisoned":
         print(f"{pokemon.name} was hurt by the poison!")
+        print()
         pokemon.apply_damage_percentage(0.0625 * (15 - pokemon.status[1]))
 
 
