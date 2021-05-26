@@ -1,3 +1,11 @@
+from post_attack import *
+from switch_effects import *
+from weather import *
+from random import *
+from game_data import priority_moves
+from stat_calc import calc_speed
+
+
 def get_frame_order(frame1, frame2):
     """Gets the turn order for the current turn of the game.
     Turn order is determined by the speeds of the current pokemon on the field.
@@ -9,9 +17,9 @@ def get_frame_order(frame1, frame2):
     elif frame2.attack_name == "Pursuit" and frame1.switch_choice:
         return [frame1, frame2]
 
-    if frame1.switch_choice and frame2.attack:
+    if frame1.switch_choice and frame2.attack_name:
         return [frame1, frame2]
-    elif frame2.switch_choice and frame1.attack:
+    elif frame2.switch_choice and frame1.attack_name:
         return [frame2, frame1]
 
     priority_p1 = check_priority(frame1)
@@ -60,7 +68,7 @@ def check_priority(f):
 def roll_paralysis(user, i=None):
     """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
     if i == None or i < 1 or i > 4:
-        i = random.randint(1, 4)
+        i = randint(1, 4)
 
     if i == 1:
         print(f"{user.name} is paralyzed and can't move.")
@@ -72,7 +80,7 @@ def roll_frozen(user, i=None):
     """Rolls to determine if a frozen pokemon thaws out during it's attack. Frozen pokemon are not able to attack. 20% chance to thaw out.
     The pokemon can use it's attack on the turn that it thaws out."""
     if i == None or i < 1 or i > 5:
-        i = random.randint(1, 5)
+        i = randint(1, 5)
 
     if i == 1:
         print(f"{user.name} thawed out!")
@@ -84,7 +92,7 @@ def roll_frozen(user, i=None):
 def roll_confusion(user, i=None):
     """Rolls to determine if a confused pokemon can successfully use an attack. 33% chance they will hit themselves in confusion."""
     if i == None or i < 1 or i > 2:
-        i = random.randint(1, 2)
+        i = randint(1, 2)
 
     if i == 1:
         # TODO: Implement confusion damage.
@@ -160,13 +168,12 @@ def check_attack_lands(f, i=None):
     )
 
     if i is None or i < 0 or i > 100:
-        i = random.randint(0, 100)
+        i = randint(0, 100)
 
     if i <= a:
         f.attack_lands = True
         return
     print(f"{f.user.name}s attack missed!")
-
 
 
 def apply_non_damaging_move(frame):
@@ -177,10 +184,11 @@ def apply_non_damaging_move(frame):
     if frame.attack_name == "Defog":
         activate_defog(frame)
 
-def switch(frame, n):
+
+def switch(frame):
     """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
     Ex: Player team order is [Tyranitar, Slowbro] -> player_team.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
-    n = int(n)
+    n = int(frame.switch_choice)
     if frame.attacking_team.team[n].stat["hp"] == 0:
         print(f"{frame.attacking_team.team[n].name} has already fainted!")
     else:
@@ -189,46 +197,49 @@ def switch(frame, n):
                 frame.attacking_team.team[n],
                 frame.attacking_team.team[0],
             )
-            print(f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}.")
-            apply_switch_effect(frame.attacking_team.team[n], frame, 'Out')
-            apply_switch_effect(frame.attacking_team.team[0], frame, 'In')
+            apply_switch_effect(frame.attacking_team.team[n], frame, "Out")
+            apply_switch_effect(frame.attacking_team.team[0], frame, "In")
             frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
-            print()
             # apply_entry_hazards(self.current_pokemon)
             frame.attacking_team.team[n].move_lock = -1
             frame.attacking_team.team[n].prev_move = None
             frame.attacking_team.team[n].reset_stat_modifier()
             frame.attacking_team.team[n].reset_statuses()
+            print(
+                f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}."
+            )
+            print()
         except Exception:
             print(f"Can't switch out {frame.attacking_team.cur_pokemon.name}...")
     # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
+
 def apply_switch_effect(user, frame, switch_dir):
-"""Applies switch effect for current pokemon that's switched in or switched out."""
-#TODO: Implement tests.
-    if switch_dir == 'In':
-        if user.ability == 'Grassy Surge':
+    """Applies switch effect for current pokemon that's switched in or switched out."""
+    # TODO: Implement tests.
+    if switch_dir == "In":
+        if user.ability == "Grassy Surge":
             activate_grassy_surge(user, frame.terrain)
-        
-        if user.ability == 'Intimidate':
+
+        if user.ability == "Intimidate":
             activate_intimidate(user, frame.target)
-        
-        if user.ability == 'Psychic Surge':
+
+        if user.ability == "Psychic Surge":
             activate_psychic_surge(user, frame.terrain)
-        
-        if user.ability == 'Sand Stream':
+
+        if user.ability == "Sand Stream":
             activate_sand_stream(user, frame.weather)
 
-    if switch_dir == 'Out':
-        if user.ability == 'Regenerator':
+    if switch_dir == "Out":
+        if user.ability == "Regenerator":
             activate_regenerator(user)
 
 
 def apply_post_attack_effects(frame):
     """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
-    post_attack.apply_stat_alt_attack(frame.user, frame.target, frame.attack)
-    post_attack.apply_status_inflicting_attack(frame.user, frame.target, frame.attack)
-    post_attack.apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack)
+    apply_stat_alt_attack(frame.user, frame.target, frame.attack)
+    apply_status_inflicting_attack(frame.user, frame.target, frame.attack)
+    apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack)
 
 
 def apply_end_of_turn_effects(frame_order):
@@ -243,7 +254,7 @@ def apply_end_of_turn_effects(frame_order):
         or frame_order[0].weather.current_weather == "Hail"
     ):
         for frame in frame_order:
-            weather.apply_weather_damage(frame.weather, frame.user)
+            apply_weather_damage(frame.weather, frame.user)
 
     if frame_order[0].terrain.current_terrain == "Grassy Terrain":
         for fram in frame_order:

@@ -32,4 +32,4 @@ def activate_psychic_surge(user, terrain):
 def activate_sand_stream(user, weather):
     """Sets weather to sandstorm, if possible, when pokemon with sand stream ability switches in."""
     if user.ability == "Sand Stream":
-        weater.set_weather("Sandstorm")
+        weather.set_weather("Sandstorm", user)
