@@ -152,6 +152,10 @@ def check_attack_lands(f, i=None):
     """Calculates required accuracy for an attack to land based on the accuracy of the attack,
     accuracy of user, evasion of target, and any additional modifiers. Rolls i in range 0 to 100.
     If i is less than or equal to required accuracy, attack hits and function returns True."""
+    if f.attack.accuracy == 0:
+        f.attack_lands = True
+        return
+
     additional_modifier = 1
 
     # TODO: The accuracy minus evasion is probably wrong.

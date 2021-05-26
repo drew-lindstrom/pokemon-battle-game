@@ -106,6 +106,8 @@ def main():
             if player.cur_pokemon.status[0] == "Fainted":
                 player.switch(ui.get_switch(cur_frame).switch_choice)
 
+        clear_screen()
+
 
 if __name__ == "__main__":
     tapu_lele = Pokemon(
