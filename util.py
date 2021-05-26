@@ -2,7 +2,7 @@ from post_attack import *
 from switch_effects import *
 from weather import *
 from random import *
-from game_data import priority_moves
+from game_data import priority_moves, type_key, type_chart
 from stat_calc import calc_speed
 
 
@@ -196,25 +196,25 @@ def switch(frame):
     if frame.attacking_team.team[n].stat["hp"] == 0:
         print(f"{frame.attacking_team.team[n].name} has already fainted!")
     else:
-        try:
-            frame.attacking_team.team[0], frame.attacking_team.team[n] = (
-                frame.attacking_team.team[n],
-                frame.attacking_team.team[0],
-            )
-            apply_switch_effect(frame.attacking_team.team[n], frame, "Out")
-            apply_switch_effect(frame.attacking_team.team[0], frame, "In")
-            frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
-            # apply_entry_hazards(self.current_pokemon)
-            frame.attacking_team.team[n].move_lock = -1
-            frame.attacking_team.team[n].prev_move = None
-            frame.attacking_team.team[n].reset_stat_modifier()
-            frame.attacking_team.team[n].reset_statuses()
-            print(
-                f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}."
-            )
-            print()
-        except Exception:
-            print(f"Can't switch out {frame.attacking_team.cur_pokemon.name}...")
+        # try:
+        frame.attacking_team.team[0], frame.attacking_team.team[n] = (
+            frame.attacking_team.team[n],
+            frame.attacking_team.team[0],
+        )
+        apply_switch_effect(frame.attacking_team.team[n], frame, "Out")
+        apply_switch_effect(frame.attacking_team.team[0], frame, "In")
+        frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
+        apply_entry_hazards(frame)
+        frame.attacking_team.team[n].move_lock = -1
+        frame.attacking_team.team[n].prev_move = None
+        frame.attacking_team.team[n].reset_stat_modifier()
+        frame.attacking_team.team[n].reset_statuses()
+        print(
+            f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}."
+        )
+        print()
+        # except Exception:
+        #     print(f"Can't switch out {frame.attacking_team.cur_pokemon.name}...")
     # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
 
@@ -237,6 +237,48 @@ def apply_switch_effect(user, frame, switch_dir):
     if switch_dir == "Out":
         if user.ability == "Regenerator":
             activate_regenerator(user)
+
+
+def apply_entry_hazards(frame):
+    """Applies the appropriate entry hazards effects after a pokemon switches in.
+    Calls funciton to clear toxic spikes if target if a grounded poison type."""
+    if (
+        frame.user.item != "Heavy Duty Boots"
+        and frame.attacking_team.stealth_rocks == True
+    ):
+        apply_stealth_rocks_damage(frame)
+    else:
+        pass
+        # if player.current_pokemon.grounded == True:
+        # apply_spikes_damage(player.current_pokemon)
+        # tspikes_clear_check(player.current_pokemon)
+        # apply_tspikes_effect(player.current_pokemon)
+        # apply_sticky_web_effect(player.current_pokemon)
+
+
+def apply_stealth_rocks_damage(frame):
+    """Applies stealth rock damage to the target depending on target's weakness to Rock."""
+    atk_id = type_key.get("Rock")
+    def1_id = type_key.get(frame.user.typing[0])
+    mult_1 = type_chart[atk_id][def1_id]
+    try:
+        def2_id = type_key.get(frame.user.typing[1])
+        mult_2 = type_chart[atk_id][def2_id]
+    except:
+        mult_2 = 1
+
+    frame.user.apply_damage_percentage(0.125 * mult_1 * mult_2)
+    print(f"Pointed stones dug into {frame.user.name}!")
+    print()
+
+
+def clear_hazards(player):
+    """Clears the hazards on the player's side of the field."""
+    # Rapid spin clears all entry hazards.
+    player.stealth_rocks = False
+    player.sticky_web = False
+    player.spikes = 0
+    player.tspikes = 0
 
 
 def apply_post_attack_effects(frame):
