@@ -45,7 +45,3 @@ def check_disabled(attacker, move_name, n):
         print(f"{attacker.name} is not able to use {move_name} while it is disabled.")
         return True
     return False
-
-
-def pp_check():
-    pass
