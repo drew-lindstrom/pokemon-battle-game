@@ -14,8 +14,9 @@ import pytest
 
 
 class TestStatCalc:
-    def test_calc_attack(self):
-        p1 = Pokemon(
+    @pytest.fixture
+    def test_pokemon(self):
+        test_pokemon = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -26,6 +27,10 @@ class TestStatCalc:
             (0, 0, 0, 0, 0, 0),
             "Relaxed",
         )
+        return test_pokemon
+
+    def test_calc_attack(self, test_pokemon):
+        p1 = test_pokemon
         team = Player([p1])
         assert calc_attack(team, False) == 186
         assert calc_attack(team, True) == 186
@@ -66,18 +71,8 @@ class TestStatCalc:
         assert calc_attack(team, False) == 34
         assert calc_attack(team, True) == 139
 
-    def test_calc_defense(self):
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 0, 0, 0, 0),
-            "Relaxed",
-        )
+    def test_calc_defense(self, test_pokemon):
+        p1 = test_pokemon
         team = Player([p1])
 
         assert calc_defense(team, False) == 281
@@ -91,18 +86,8 @@ class TestStatCalc:
         assert calc_defense(team, False) == 70
         assert calc_defense(team, True) == 70
 
-    def test_calc_sp_attack(self):
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 0, 0, 0, 0),
-            "Relaxed",
-        )
+    def test_calc_sp_attack(self, test_pokemon):
+        p1 = test_pokemon
         team = Player([p1])
         assert calc_sp_attack(team, False) == 236
         assert calc_sp_attack(team, True) == 236
@@ -126,18 +111,8 @@ class TestStatCalc:
         assert calc_sp_attack(team, False) == 88
         assert calc_sp_attack(team, True) == 354
 
-    def test_calc_sp_defense(self):
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 0, 0, 0, 0),
-            "Relaxed",
-        )
+    def test_calc_sp_defense(self, test_pokemon):
+        p1 = test_pokemon
         team = Player([p1])
         w = Weather()
         p1.typing = ["Rock", "Psychic"]
@@ -162,18 +137,8 @@ class TestStatCalc:
         assert calc_sp_defense(team, True, w) == 73
         w.current_weather = "Clear Skies"
 
-    def test_calc_speed(self):
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 0, 0, 0, 0),
-            "Relaxed",
-        )
+    def test_calc_speed(self, test_pokemon):
+        p1 = test_pokemon
         team = Player([p1])
         assert calc_speed(team, False) == 86
         p1.item = "Choice Scarf"
@@ -212,8 +177,8 @@ class TestStatCalc:
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 15
 
-    def test_calc_accuracy(self):
-        pass
+    # def test_calc_accuracy(self):
+    #     pass
 
-    def test_calc_evasion(self):
-        pass
+    # def test_calc_evasion(self):
+    #     pass

@@ -2,7 +2,7 @@ from pokemon import Pokemon
 from player import Player
 import weather
 
-# TODO: Weather boosts.
+
 def calc_attack(team, crit, cur_weather="Clear Skies"):
     """Calculates the attack stat of the given pokemon by calculating its modified attack stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a negative attack stat_mod is ignored and calc_modified_stat is not called.
@@ -74,15 +74,15 @@ def calc_speed(team, crit=False, cur_weather="Clear Skies"):
     return int(cur_pokemon.calc_modified_stat("speed") * additional_modifier)
 
 
-def calc_accuracy(team, crit=False, cur_weather="Clear Skies"):
-    """Calculates the accuracy percentage of the given pokemon by calculating its modified accuaracy and multiplying it with any additional modifiers."""
-    cur_pokemon = team.cur_pokemon
-    additional_modifier = 1
-    return int(cur_pokemon.calc_modified_stat("accuracy") * additional_modifier)
+# def calc_accuracy(team, crit=False, cur_weather="Clear Skies"):
+#     """Calculates the accuracy percentage of the given pokemon by calculating its modified accuaracy and multiplying it with any additional modifiers."""
+#     cur_pokemon = team.cur_pokemon
+#     additional_modifier = 1
+#     return int(cur_pokemon.calc_modified_stat("accuracy") * additional_modifier)
 
 
-def calc_evasion(team, crit=False, cur_weather="Clear Skies"):
-    """Calculates the evasion percentage of the give pokemon by calculating its modified evasion and multiplying it with any additional modifiers."""
-    cur_pokemon = team.cur_pokemon
-    additional_modifier = 1
-    return int(cur_pokemon.calc_modified_stat("evasion") * additional_modifier)
+# def calc_evasion(team, crit=False, cur_weather="Clear Skies"):
+#     """Calculates the evasion percentage of the give pokemon by calculating its modified evasion and multiplying it with any additional modifiers."""
+#     cur_pokemon = team.cur_pokemon
+#     additional_modifier = 1
+#     return int(cur_pokemon.calc_modified_stat("evasion") * additional_modifier)
