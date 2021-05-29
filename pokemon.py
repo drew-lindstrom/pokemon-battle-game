@@ -274,3 +274,22 @@ class Pokemon:
     def reset_previous_move(self):
         """Resets a pokemon's prev_move attribute, typically when they switch out."""
         self.prev_move = None
+
+    def check_choice_item(self, move_name):
+        """Checks if pokemon is holding a choice item, and if so, adds Move Lock to v_status if not already there.
+        Also checks to make sure current attack is same as prev_move."""
+        if (
+            self.item == "Choice Scarf"
+            or self.item == "Choice Band"
+            or self.item == "Choice Specs"
+        ):
+            self.v_status["Move Lock"] = [1]
+            if self.prev_move and move_name != self.prev_move:
+                return False
+        return True
+
+    def check_move_lock(self):
+        """Checks if move lock is currently in the pokemons v_status dictionary."""
+        if "Move Lock" in self.v_status:
+            return True
+        return False

@@ -371,4 +371,39 @@ class TestPokemon:
         p.reset_prev_move()
         assert p.prev_move == None
 
+    def test_check_choice_item(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.check_choice_item("Scald") == True
+        p.prev_move = "Slack Off"
+        p.item = "Choice Scarf"
+        assert p.check_choice_item("Scald") == False
+        assert p.check_choice_item("Slack Off") == True
+        assert "Move Lock" in p.v_status
+
+    def test_check_move_lock(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.check_move_lock == False
+        p.v_status["Move Lock"] = 1
+        assert p.check_move_lock == True
+
     # TODO: test set_v_status
