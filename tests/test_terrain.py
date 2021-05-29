@@ -4,8 +4,9 @@ import pytest
 
 
 class Test_Terrain:
-    def test_set_terrain(self):
-        slowbro = Pokemon(
+    @pytest.fixture
+    def test_pokemon(self):
+        test_pokemon = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -16,6 +17,11 @@ class Test_Terrain:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
+
+        return test_pokemon
+
+    def test_set_terrain(self, test_pokemon):
+        slowbro = test_pokemon
         terrain = Terrain()
         terrain.set_terrain("Psychic Terrain", slowbro)
         assert terrain.current_terrain == "Psychic Terrain"
@@ -29,18 +35,8 @@ class Test_Terrain:
         assert terrain.current_terrain == "Grassy Terrain"
         assert terrain.counter == 7
 
-    def test_decrement_terrain(self):
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            "Heat Rock",
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+    def test_decrement_terrain(self, test_pokemon):
+        slowbro = test_pokemon
         terrain = Terrain()
         terrain.set_terrain("Psychic Terrain", slowbro)
         assert terrain.current_terrain == "Psychic Terrain"
@@ -52,18 +48,8 @@ class Test_Terrain:
         assert terrain.current_terrain is None
         assert terrain.counter == 0
 
-    def test_clear_terrain(self):
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            "Heat Rock",
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+    def test_clear_terrain(self, test_pokemon):
+        slowbro = test_pokemon
         terrain = Terrain()
         terrain.set_terrain("Psychic Terrain", slowbro)
         assert terrain.current_terrain == "Psychic Terrain"
@@ -72,18 +58,12 @@ class Test_Terrain:
         terrain.clear_terrain()
         assert terrain.current_terrain == None
 
-    def test_check_damage_mod_from_terrain(self):
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Thunder", "Vine Whip", "Dragon Pulse", "Psychic"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+    def test_check_damage_mod_from_terrain(self, test_pokemon):
+        slowbro = test_pokemon
+        slowbro.moves[0].type = "Electric"
+        slowbro.moves[1].type = "Grass"
+        slowbro.moves[2].type = "Dragon"
+        slowbro.moves[3].type = "Psychic"
         terrain = Terrain()
         terrain.current_terrain = "Electric Terrain"
         assert check_damage_mod_from_terrain(terrain, slowbro, 0) == 1.3
@@ -98,18 +78,8 @@ class Test_Terrain:
         assert check_damage_mod_from_terrain(terrain, slowbro, 3) == 1.3
         assert check_damage_mod_from_terrain(terrain, slowbro, 0) == 1
 
-    def test_heal_from_grassy_terrain(self):
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Thunder", "Vine Whip", "Dragon Pulse", "Psychic"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+    def test_heal_from_grassy_terrain(self, test_pokemon):
+        slowbro = test_pokemon
         t = Terrain()
         slowbro.stat["hp"] = 100
         heal_from_grassy_terrain(t, slowbro)
