@@ -152,13 +152,26 @@ class Pokemon:
         if self.stat["hp"] <= 0:
             print(f"{self.name} has fainted and can't be healed.")
             return
-        self.stat["hp"] = min(
-            self.stat["hp"] + int(self.stat["max_hp"] * n), self.stat["max_hp"]
-        )
+        if n > self.stat["max_hp"] - self.stat["hp"]:
+            heal_amount = int(self.stat["max_hp"] - self.stat["hp"])
+        else:
+            heal_amount = int(n)
 
-    def apply_damage(self, amount):
+        self.stat["hp"] += heal_amount
+        print(f"{self.name} recovered {heal_amount} HP!")
+        print()
+
+    def apply_damage(
+        self,
+    ):
         """Damages pokemon by a specified amount. HP won't fall below 0. If HP is at 0, sets status to Fainted."""
-        self.stat["hp"] = max(0, int(self.stat["hp"] - amount))
+        if n > self.stat["hp"]:
+            damage = int(self.stat["hp"])
+        else:
+            damage = int(n)
+        self.stat["hp"] -= damage
+        print(f"{self.name} lost {damage} HP!")
+        print()
         self.check_fainted()
 
     def apply_damage_percentage(self, n):
