@@ -16,7 +16,6 @@ class Pokemon:
         self.moves = [None, None, None, None]
 
         self.prev_move = None
-        self.move_lock = -1
 
         for n in range(4):
             self.moves[n] = Move(moves[n])
@@ -267,3 +266,11 @@ class Pokemon:
                 self.grounded = False
         else:
             self.grounded = True
+
+    def set_previous_move(self, move_name):
+        """Updates the prev_move attribute whenever a pokemon uses a move."""
+        self.prev_move = move_name
+
+    def reset_previous_move(self):
+        """Resets a pokemon's prev_move attribute, typically when they switch out."""
+        self.prev_move = None

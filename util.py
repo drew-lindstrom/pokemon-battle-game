@@ -205,8 +205,7 @@ def switch(frame):
         apply_switch_effect(frame.attacking_team.team[0], frame, "In")
         frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
         apply_entry_hazards(frame)
-        frame.attacking_team.team[n].move_lock = -1
-        frame.attacking_team.team[n].prev_move = None
+        frame.attacking_team.team[n].reset_prev_move()
         frame.attacking_team.team[n].reset_stat_modifier()
         frame.attacking_team.team[n].reset_statuses()
         print(

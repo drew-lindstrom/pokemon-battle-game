@@ -339,4 +339,36 @@ class TestPokemon:
         p.check_grounded()
         assert p.grounded == False
 
+    def test_set_prev_move(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        assert p.prev_move == None
+        p.set_prev_move("Scald")
+        assert p.prev_move == "Scald"
+
+    def test_reset_prev_move(self):
+        p = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        p.prev_move = "Scald"
+        p.reset_prev_move()
+        assert p.prev_move == None
+
     # TODO: test set_v_status
