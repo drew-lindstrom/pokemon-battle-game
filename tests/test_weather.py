@@ -9,8 +9,9 @@ import pytest
 
 
 class Test_Weather:
-    def test_set_weather(self):
-        slowbro = Pokemon(
+    @pytest.fixture
+    def test_pokemon(self):
+        test_pokemon = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -21,6 +22,10 @@ class Test_Weather:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
+        return test_pokemon
+
+    def test_set_weather(self, test_pokemon):
+        slowbro = test_pokemon
         weather = Weather()
         weather.set_weather("Rain", slowbro)
         assert weather.current_weather == "Rain"
@@ -33,18 +38,8 @@ class Test_Weather:
         assert weather.current_weather == "Harsh Sunlight"
         assert weather.counter == 7
 
-    def test_decrement_weather(self):
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            "Heat Rock",
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+    def test_decrement_weather(self, test_pokemon):
+        slowbro = test_pokemon
         weather = Weather()
         weather.set_weather("Rain", slowbro)
         weather.decrement_weather()
@@ -55,19 +50,9 @@ class Test_Weather:
         assert weather.current_weather == "Clear Skies"
         assert weather.counter == 0
 
-    def test_clear_weather(self):
+    def test_clear_weather(self, test_pokemon):
         weather = Weather()
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            "Heat Rock",
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+        slowbro = test_pokemon
         weather.set_weather("Harsh Sunlight", slowbro)
         assert weather.current_weather == "Harsh Sunlight"
         assert weather.counter == 7
@@ -75,19 +60,9 @@ class Test_Weather:
         assert weather.current_weather == "Clear Skies"
         assert weather.counter == 0
 
-    def test_apply_weather_damage(self):
+    def test_apply_weather_damage(self, test_pokemon):
         weather = Weather("Sandstorm", 5)
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+        slowbro = test_pokemon
         assert apply_weather_damage(weather, slowbro) == True
         slowbro.ability = "Sand Force"
         assert apply_weather_damage(weather, slowbro) == False
@@ -117,38 +92,20 @@ class Test_Weather:
         weather = Weather("Rain", 5)
         assert apply_weather_damage(weather, slowbro) == False
 
-    def test_check_sandstorm_sp_def_boost(self):
+    def test_check_sandstorm_sp_def_boost(self, test_pokemon):
         weather = Weather("Sandstorm", 5)
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+        slowbro = test_pokemon
         assert check_sandstorm_sp_def_boost(weather, slowbro) == 1
         slowbro.typing = ["Rock", "Fire"]
         assert check_sandstorm_sp_def_boost(weather, slowbro) == 1.5
         slowbro.typing = ["Dark", "Rock"]
         assert check_sandstorm_sp_def_boost(weather, slowbro) == 1.5
 
-    def test_check_damage_mod_from_weather(self):
+    def test_check_damage_mod_from_weather(self, test_pokemon):
         weather = Weather("Harsh Sunlight", 5)
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Fire Blast", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
+        slowbro = test_pokemon
+        slowbro.moves[0].type = "Water"
+        slowbro.moves[1].type = "Fire"
         assert check_damage_mod_from_weather(weather, slowbro, 0) == 0.5
         assert check_damage_mod_from_weather(weather, slowbro, 1) == 1.5
         weather.current_weather = "Rain"

@@ -13,12 +13,16 @@ class Weather:
             self.current_weather = weather_name
             if weather_name == "Sandstorm":
                 print("A sandstorm kicked up!")
+                print()
             if weather_name == "Rain":
                 print("It started to rain!")
+                print()
             if weather_name == "Harsh Sunlight":
                 print("The sunlight turned harsh!")
+                print()
             if weather_name == "Hail":
                 print("It started to hail!")
+                print()
             if (
                 (pokemon.item == "Smooth Rock" and weather_name == "Sandstorm")
                 or (pokemon.item == "Damp Rock" and weather_name == "Rain")
@@ -34,6 +38,7 @@ class Weather:
         if self.current_weather != "Clear Skies":
             if self.counter == 0:
                 print(f"The {self.current_weather.lower()} subsided.")
+                print()
                 self.clear_weather()
             else:
                 self.counter -= 1
@@ -71,6 +76,7 @@ def apply_weather_damage(weather, pokemon):
         return False
     pokemon.apply_damage_percentage(1 / 16)
     print(f"{pokemon.name} was buffeted by the {weather.current_weather.lower()}!")
+    print()
     return True
 
 
