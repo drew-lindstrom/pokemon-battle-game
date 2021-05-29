@@ -11,7 +11,6 @@ class Player:
         self.cur_pokemon = self.team[0]
         self.light_screen = False
         self.light_screen_counter = 0
-        # TODO: Reflet and light screen might halve damage received instead of doubling defense/sp_defense
         self.reflect = False
         self.reflect_counter = 0
         self.stealth_rocks = False

@@ -1,12 +1,4 @@
-from stat_calc import (
-    calc_attack,
-    calc_defense,
-    calc_sp_attack,
-    calc_sp_defense,
-    calc_speed,
-    calc_accuracy,
-    calc_evasion,
-)
+from stat_calc import *
 from pokemon import Pokemon
 from player import Player
 from weather import Weather
