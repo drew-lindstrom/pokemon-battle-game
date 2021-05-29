@@ -6,7 +6,7 @@ from weather import Weather
 def activate_grassy_surge(user, terrain):
     """Sets terrain to grassy terrain, if possible, when pokemon with grassy surge ability switches in."""
     if user.ability == "Grassy Surge":
-        terrain.set_terrain("Grassy Terrain")
+        terrain.set_terrain("Grassy Terrain", user)
 
 
 def activate_intimidate(user, target):
@@ -26,7 +26,7 @@ def activate_regenerator(user):
 def activate_psychic_surge(user, terrain):
     """Sets terrain to psychic terrain, if possible, when pokemon with psychic surge ability switches in."""
     if user.ability == "Psychic Surge":
-        terrain.set_terrain("Psychic Terrain")
+        terrain.set_terrain("Psychic Terrain", user)
 
 
 def activate_sand_stream(user, weather):
