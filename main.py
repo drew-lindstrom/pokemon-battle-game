@@ -59,6 +59,14 @@ def main():
     w = Weather()
     t = Terrain()
 
+    #'Switches' leading pokemon with their respective selves in order to activate any abilities that activate on switch in.
+    opening_frame_1 = Frame(p1, p2, None, None, w, t)
+    opening_frame_1.switch_choice = 0
+    opening_frame_2 = Frame(p2, p1, None, None, w, t)
+    opening_frame_2.switch_choice = 0
+    switch(opening_frame_1)
+    switch(opening_frame_2)
+
     while True:
         frame1 = Frame(p1, p2, None, None, w, t)
         frame2 = Frame(p2, p1, None, None, w, t)
