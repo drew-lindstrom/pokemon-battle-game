@@ -19,24 +19,24 @@ def roll_crit(i=None):
         return 1
 
 
-def check_stab(user, attack):
+def check_stab(frame):
     """Checks to see if the attacking move is the same type as the attacker. If so, attack power is boosted by 50%."""
-    if attack.type in user.typing:
+    if frame.attack.type in frame.user.typing:
         return 1.5
     else:
         return 1
 
 
-def check_type_effectiveness(user, attack, target):
+def check_type_effectiveness(frame):
     """Return the damage multiplier for how super effective the move is. type_chart is a matrix showing how each type matches up between each
     other. X-axis is the defending type, y-axis is the attacking type. Top left corner is (0, 0). Each type corresponds to a number on the
     x and y axis."""
 
-    atk_id = type_key.get(attack.type)
-    def1_id = type_key.get(target.typing[0])
+    atk_id = type_key.get(frame.attack.type)
+    def1_id = type_key.get(frame.target.typing[0])
     mult_1 = type_chart[atk_id][def1_id]
     try:
-        def2_id = type_key.get(target.typing[1])
+        def2_id = type_key.get(frame.target.typing[1])
         mult_2 = type_chart[atk_id][def2_id]
     except:
         mult_2 = 1
@@ -53,9 +53,9 @@ def check_type_effectiveness(user, attack, target):
     return modifier
 
 
-def check_burn(user, attack):
+def check_burn(frame):
     """Returns damage modifer is user is burned and currently attacking with a physical move."""
-    if user.status[0] == "Burn" and attack.category == "Physical":
+    if frame.user.status[0] == "Burn" and frame.attack.category == "Physical":
         return 0.5
     return 1
 
@@ -63,44 +63,57 @@ def check_burn(user, attack):
 def roll_random(i=None):
     if i is None or i < 85 or i > 100:
         i = random.randint(85, 100)
-    return float(random) / 100
+    return float(i) / 100
 
 
-def activate_eruption(frame):
-    """Returns base power for the move eruption based on the users hp."""
-    return int(150 * frame.user.stats["hp"] / frame.attacker.stats["max_hp"])
-
-
-def calc_modified_base_damage(frame):
-    """Returns base power for various moves that have varying base powers based on different parameters."""
-    if frame.attack_name == "Eruption":
-        return use_eruption(frame)
-
-
-def calc_modified_damage():
-    pass
-
-
-def calc_damage(frame):
-    """Returns damage from an attack for a given frame."""
-    #  TODO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
-    # print(f'{attacker.name} used {attacker.moves[n]["name"]}!')
-    print(f"{frame.user.name} used {frame.attack_name[0]}!")
-
-    crit = roll_crit()
-    stab = check_stab(frame.user, frame.attack)
-    typ = check_type_effectiveness(frame.user, frame.attack, frame.target)
-    burn = check_burn(frame.user, frame.attack)
-
+def check_attacking_and_defending_stats(frame):
+    """Checks if the attack for the given frame is Physical or Special. If physical, returns Attack and Defense for stats used in damage calc.
+    If special, returns Special Attack and Special Defense. If the attack is Psyshock, returns Special Attack and Defense."""
     if frame.attack_name == "Psyshock":
         attack_stat = frame.user.stat["sp_attack"]
-        defense_stat = frame.user.stat["defense"]
+        defense_stat = frame.target.stat["defense"]
     elif frame.attack.category == "Physical":
         attack_stat = frame.user.stat["attack"]
         defense_stat = frame.target.stat["defense"]
     elif frame.attack.category == "Special":
         attack_stat = frame.user.stat["sp_attack"]
         defense_stat = frame.target.stat["sp_defense"]
+
+    return attack_stat, defense_stat
+
+
+def activate_eruption(frame):
+    """Returns base power for the move eruption based on the users hp."""
+    return int(150 * frame.user.stat["hp"] / frame.user.stat["max_hp"])
+
+
+def calc_modified_base_damage(frame):
+    """Returns base power for various moves that have varying base powers based on different parameters."""
+    if frame.attack_name == "Eruption":
+        return activate_eruption(frame)
+
+
+def calc_modified_damage():
+    pass
+
+
+def calc_damage(frame, include_crit=True, include_random=True):
+    """Returns damage from an attack for a given frame."""
+    #  TODO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
+    # print(f'{attacker.name} used {attacker.moves[n]["name"]}!')
+    print(f"{frame.user.name} used {frame.attack.name}!")
+    crit, random = 1, 1
+
+    if include_crit == True:
+        crit = roll_crit()
+    if include_random == True:
+        random_mod = roll_random()
+
+    stab = check_stab(frame)
+    typ = check_type_effectiveness(frame)
+    burn = check_burn(frame)
+
+    attack_stat, defense_stat = check_attacking_and_defending_stats(frame)
 
     if frame.attack_name in modified_base_damage_list:
         # TODO: Implement modified_base_damage_list
