@@ -28,7 +28,6 @@ def get_choice(frame, input_list=[]):
         choice = int(choice)
 
         if choice >= 1 and choice <= 4:
-            # TODO: Add struggle.
             if frame.user.moves[choice - 1].pp > 0:
                 frame.attack = frame.user.moves[choice - 1]
                 frame.attack_name = frame.user.moves[choice - 1].name
