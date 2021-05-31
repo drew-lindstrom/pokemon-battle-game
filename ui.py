@@ -11,26 +11,35 @@ def print_pokemon_on_field(pokemon1, pokemon2):
     print()
 
 
-def get_choice(frame):
+def get_choice(frame, input_list=[]):
     choice = None
 
     while choice not in range(1, 7):
         print_options(frame.attacking_team)
+        choice_options = ["1", "2", "3", "4", "5", "6"]
+        choice = None
+        while choice is None or choice not in choice_options:
+            if len(input_list) == 0:
+                choice = input()
+            else:
+                choice = input_list.pop(0)
+            print()
 
-        choice = int(input())
-        print()
+        choice = int(choice)
 
         if choice >= 1 and choice <= 4:
             # TODO: Add struggle.
             if frame.user.moves[choice - 1].pp > 0:
                 frame.attack = frame.user.moves[choice - 1]
-                frame.attack_name = (frame.user.moves[choice - 1].name,)
+                frame.attack_name = frame.user.moves[choice - 1].name
                 return frame
             else:
                 print(f"{frame.user.moves[choice-1].name} is out of PP.")
                 choice = None
 
         elif choice == 5:
+            if len(input_list) > 0:
+                return get_switch(frame, input_list)
             return get_switch(frame)
 
         elif choice == 6:
@@ -52,7 +61,7 @@ def print_options(team):
     print()
 
 
-def get_switch(frame):
+def get_switch(frame, input_list=[]):
     team_list = []
     switch_choice = ""
 
@@ -66,7 +75,10 @@ def get_switch(frame):
     print()
 
     while switch_choice not in team_list:
-        switch_choice = input()
+        if len(input_list) == 0:
+            switch_choice = input()
+        else:
+            switch_choice = input_list.pop(0)
         print()
 
     frame.switch_choice = switch_choice
