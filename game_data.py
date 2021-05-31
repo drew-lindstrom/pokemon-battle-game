@@ -134,7 +134,7 @@ status_inflicting_attacks = {
     "Ice Beam": ("target", 10, "Frozen"),
     "Pyro Ball": ("target", 10, "Burned"),
     "Thunder Punch": ("target", 10, "Paralyzed"),
-    "Toxic": ("target", 100, "Baldy Poisoned"),
+    "Toxic": ("target", 100, "Badly Poisoned"),
 }
 
 v_status_inflicting_attacks = {
@@ -159,7 +159,7 @@ contact_attacks = {
     "U-turn",
 }
 
-modified_base_damage_list = ['Eruption']
+modified_base_damage_list = ["Eruption"]
 
 # TODO : Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
