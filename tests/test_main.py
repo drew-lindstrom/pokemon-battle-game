@@ -1,19 +1,15 @@
-import main
+from main import Frame
+from player import Player
 from pokemon import Pokemon
+from weather import Weather
 from terrain import Terrain
 import pytest
 
 
 class TestMain:
-    def test_check_priority(self):
-        terrain = Terrain("Grassy Terrain", 5)
-        assert main.check_priority("Ice Shard", terrain) == 1
-        assert main.check_priority("Avalanche", terrain) == -4
-        assert main.check_priority("Tackle", terrain) == 0
-        assert main.check_priority("Grassy Glide", terrain) == 1
-
-    def test_roll_frozen(self):
-        p = Pokemon(
+    @pytest.fixture
+    def test_frame(self):
+        slowbro = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -24,164 +20,56 @@ class TestMain:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        p.status[0] = "Frozen"
-        assert main.roll_frozen(p, 4) == True
-        assert p.status[0] == "Frozen"
-        assert main.roll_frozen(p, 1) == False
-        assert p.status[0] == None
-
-    def test_roll_paralysis(self):
-        p = Pokemon(
-            "Slowbro",
+        tyranitar = Pokemon(
+            "Tyranitar",
             100,
             "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            ("Crunch", "Stealth Rock", "Toxic", "Earthquake"),
             None,
             None,
             (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
+            (252, 0, 0, 0, 216, 40),
+            "Careful",
         )
-        assert main.roll_paralysis(p, 4) == False
-        assert main.roll_paralysis(p, 1) == True
-
-    def test_check_speed(self):
-        p1 = Pokemon(
-            "Slowbro",
+        tapu_lele = Pokemon(
+            "Tapu Lele",
+            100,
+            None,
+            ("Psychic", "Moonblast", "Focus Blast", "Psyshock"),
+            "Psychic Surge",
+            "Choice Specs",
+            (31, 0, 31, 31, 31, 31),
+            (0, 0, 0, 252, 4, 252),
+            "Timid",
+        )
+        cinderace = Pokemon(
+            "Cinderace",
             100,
             "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
+            ("Pyro Ball", "U-turn", "Gunk Shot", "High Jump Kick"),
+            "Libero",
+            "Heavy Duty Boots",
             (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
+            (0, 252, 0, 0, 4, 252),
+            "Jolly",
         )
+        p1 = Player([slowbro, tyranitar])
+        p2 = Player([tapu_lele, cinderace])
+        w = Weather()
+        t = Terrain()
+        test_frame = Frame(p1, p2, None, None, w, t)
+        return test_frame, slowbro, tyranitar, tapu_lele, cinderace
 
-        p2 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status[0] = "Paralyzed"
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status[0] = None
-        p1.stat_mod["speed"] = 4
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status[0] = "Paralyzed"
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status[0] = None
-        p1.stat_mod["speed"] = -4
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 252, 0, 0, 252),
-            "Relaxed",
-        )
-        p1.stat_mod["speed"] = 0
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status[0] = "Paralyzed"
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status[0] = None
-        p1.stat_mod["speed"] = 4
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.stat_mod["speed"] = -4
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-        p2 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 252),
-            "Relaxed",
-        )
-        p1.stat_mod["speed"] = 0
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.stat_mod["speed"] = 4
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.stat_mod["speed"] = -4
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-
-    def test_get_turn_order(self):
-        p1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 252, 0, 4, 252),
-            "Relaxed",
-        )
-
-        p2 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-
-        assert main.get_turn_order(
-            p1, ("p1", "Pursuit", 0), p2, ("p2", "Switch", 0)
-        ) == [("p1", "Pursuit", 0), ("p2", "Switch", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Pursuit", 0)
-        ) == [("p1", "Tackle", 0), ("p2", "Pursuit", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Switch", 0), p2, ("p2", "Switch", 0)
-        ) == [("p1", "Switch", 0), ("p2", "Switch", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Switch", 0)
-        ) == [("p2", "Switch", 0), ("p1", "Tackle", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Extreme Speed", 0)
-        ) == [("p2", "Extreme Speed", 0), ("p1", "Tackle", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Teleport", 0), p2, ("p2", "Tackle", 0)
-        ) == [("p2", "Tackle", 0), ("p1", "Teleport", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Extreme Speed", 0), p2, ("p2", "Extreme Speed", 0)
-        ) == [("p1", "Extreme Speed", 0), ("p2", "Extreme Speed", 0)]
-        p1.status = "Paralyzed"
-        assert main.get_turn_order(
-            p1, ("p1", "Switch", 0), p2, ("p2", "Switch", 0)
-        ) == [("p2", "Switch", 0), ("p1", "Switch", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Tackle", 0)
-        ) == [("p2", "Tackle", 0), ("p1", "Tackle", 0)]
+    def test_update_cur_pokemon(self, test_frame):
+        frame = test_frame[0]
+        slowbro = test_frame[1]
+        tyranitar = test_frame[2]
+        tapu_lele = test_frame[3]
+        cinderace = test_frame[4]
+        assert frame.user == slowbro
+        assert frame.target == tapu_lele
+        frame.attacking_team.cur_pokemon = tyranitar
+        frame.defending_team.cur_pokemon = cinderace
+        frame.update_cur_pokemon()
+        assert frame.user == tyranitar
+        assert frame.target == cinderace
