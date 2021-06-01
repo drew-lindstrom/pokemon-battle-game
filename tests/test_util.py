@@ -381,11 +381,32 @@ class TestUtil:
         test_player.switch(1)
         assert test_player.cur_pokemon.name == "Tyranitar"
 
-    def test_apply_switch_effect(self):
-        pass
+    def test_apply_switch_effect(self, test_frame):
+        test_frame.user.ability = "Grassy Surge"
+        apply_switch_effect(test_frame, "In")
+        assert test_frame.terrain.current_terrain == "Grassy Terrain"
+        test_frame.terrain.current_terrain = None
+        test_frame.user.ability = "Psychic Surge"
+        apply_switch_effect(test_frame, "In")
+        assert test_frame.terrain.current_terrain == "Psychic Terrain"
+        test_frame.user.ability = "Intimidate"
+        apply_switch_effect(test_frame, "In")
+        assert test_frame.target.stat_mod["attack"] == -1
+        test_frame.user.ability = "Sand Stream"
+        apply_switch_effect(test_frame, "In")
+        assert test_frame.weather.current_weather == "Sandstorm"
+        test_frame.user.stat["hp"] = 50
+        test_frame.user.ability = "Regenerator"
+        apply_switch_effect(test_frame, "Out")
+        assert test_frame.user.stat["hp"] == 181
 
-    def test_apply_entry_hazards(self):
-        pass
+    def test_apply_entry_hazards(self, test_frame):
+        test_frame.attacking_team.stealth_rocks = True
+        apply_entry_hazards(test_frame)
+        assert test_frame.user.stat["hp"] == 344
+        test_frame.user.item = "Heavy Duty Boots"
+        apply_entry_hazards(test_frame)
+        assert test_frame.user.stat["hp"] == 344
 
     def test_apply_stealth_rocks_damage(self):
         slowbro = Pokemon(
@@ -446,19 +467,85 @@ class TestUtil:
             "Relaxed",
         )
         test_player = Player([slowbro, aggron, steelix, fearow, charizard])
-        test_player.switch(1)
-        assert test_player.current_pokemon.hp == 263
-        test_player.switch(1)
-        assert test_player.current_pokemon.hp == 289
-        test_player.switch(2)
-        assert test_player.current_pokemon.hp == 281
-        test_player.switch(3)
-        assert test_player.current_pokemon.hp == 203
-        test_player.switch(4)
-        assert test_player.current_pokemon.hp == 148
+        test_frame = Frame(test_player, test_player, None, None, None, None)
+        apply_stealth_rocks_damage(test_frame)
+        assert test_frame.user.stat["hp"] == 289
+        test_frame.user = aggron
+        apply_stealth_rocks_damage(test_frame)
+        assert test_frame.user.stat["hp"] == 263
+        test_frame.user = steelix
+        apply_stealth_rocks_damage(test_frame)
+        assert test_frame.user.stat["hp"] == 281
+        test_frame.user = fearow
+        apply_stealth_rocks_damage(test_frame)
+        assert test_frame.user.stat["hp"] == 203
+        test_frame.user = charizard
+        apply_stealth_rocks_damage(test_frame)
+        assert test_frame.user.stat["hp"] == 148
 
     def test_apply_post_attack_effects(self):
-        pass
+        slowbro = Pokemon(
+            "Slowbro",
+            100,
+            "Male",
+            ("Close Combat", "Toxic", "Test Dark Pulse", "Teleport"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 252, 0, 4, 0),
+            "Relaxed",
+        )
+        tyranitar = Pokemon(
+            "Tyranitar",
+            100,
+            "Male",
+            ("Crunch", "Stealth Rock", "Toxic", "Earthquake"),
+            None,
+            None,
+            (31, 31, 31, 31, 31, 31),
+            (252, 0, 0, 0, 216, 40),
+            "Careful",
+        )
+        team1 = Player([slowbro])
+        team2 = Player([tyranitar])
+        test_frame = Frame(team1, team2, None, None, None, None)
+        test_frame.attack = test_frame.user.moves[0]
+        assert test_frame.user.stat_mod["defense"] == 0
+        assert test_frame.user.stat_mod["sp_defense"] == 0
+        apply_post_attack_effects(test_frame)
+        assert test_frame.user.stat_mod["defense"] == -1
+        assert test_frame.user.stat_mod["sp_defense"] == -1
+        test_frame.attack = test_frame.user.moves[1]
+        assert test_frame.target.status[0] == None
+        apply_post_attack_effects(test_frame)
+        assert test_frame.target.status[0] == "Badly Poisoned"
+        test_frame.attack = test_frame.user.moves[2]
+        assert len(test_frame.target.v_status) == 0
+        apply_post_attack_effects(test_frame)
+        assert test_frame.target.v_status["Flinched"] == [1]
 
-    def test_apply_end_of_turn_effects(self):
-        pass
+    def test_apply_end_of_turn_effects(self, test_frame, test_frame2):
+        frame_order = [test_frame, test_frame2]
+        test_frame.attack = test_frame.user.moves[0]
+        test_frame2.attack = test_frame2.user.moves[0]
+        test_frame.weather.current_weather = "Sandstorm"
+        test_frame.user.status = ["Asleep", 3]
+        test_frame.user.v_status["Flinched"] = [2]
+        apply_end_of_turn_effects(frame_order)
+        assert test_frame.user.moves[0].pp == 23
+        assert test_frame.user.stat["hp"] == 369
+        assert test_frame.user.status[1] == 2
+        assert test_frame.user.v_status["Flinched"] == [1]
+        test_frame.user.stat["hp"] = 50
+        test_frame.weather.current_weather = None
+        test_frame.terrain.current_terrain = "Grassy Terrain"
+        test_frame2.user.status = ["Burned", 1]
+        apply_end_of_turn_effects(frame_order)
+        assert test_frame.user.stat["hp"] == 74
+        assert test_frame2.user.stat["hp"] == 263
+        test_frame.terrain.current_terrain = None
+        test_frame.user.item = "Leftovers"
+        test_frame2.user.status = ["Badly Poisoned", 3]
+        apply_end_of_turn_effects(frame_order)
+        assert test_frame.user.stat["hp"] == 98
+        assert test_frame2.user.stat["hp"] == 34
