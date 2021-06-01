@@ -71,10 +71,12 @@ def main():
         frame1 = Frame(p1, p2, None, None, w, t)
         frame2 = Frame(p2, p1, None, None, w, t)
         ui.print_pokemon_on_field(frame1.user, frame2.user)
-        # TODO: Add in struggle check.
+
+        # Gets input on what each player wants to do before the given turn.
         frame1 = ui.get_choice(frame1)
         frame2 = ui.get_choice(frame2)
 
+        # Determines which player goes first for the turn (based on speed, priority moves, etc.)
         frame_order = get_frame_order(frame1, frame2)
 
         for cur_frame in frame_order:
@@ -84,7 +86,7 @@ def main():
                 frame2.update_cur_pokemon()
             else:
                 if cur_frame.user.status != "Fainted":
-                    check_can_attack(cur_frame)
+                    cur_frame.can_attack = check_can_attack(cur_frame)
                     check_attack_lands(cur_frame)
                     if cur_frame.can_attack and cur_frame.attack_lands:
                         if (
@@ -103,6 +105,7 @@ def main():
 
         for cur_frame in frame_order:
             player = cur_frame.attacking_team
+            # Game over check
             if player.check_game_over():
                 if player == p1:
                     print("Player 2 Wins!")
@@ -110,7 +113,7 @@ def main():
                 elif player == p2:
                     print("Player 1 Wins!")
                     break
-
+            # Prompts player to switch any fainted pokemon at end of turn.
             if player.cur_pokemon.status[0] == "Fainted":
                 player.switch(ui.get_switch(cur_frame).switch_choice)
 

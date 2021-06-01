@@ -77,8 +77,8 @@ def roll_paralysis(user, i=None):
 
     if i == 1:
         print(f"{user.name} is paralyzed and can't move.")
-        return True
-    return False
+        return False
+    return True
 
 
 def roll_frozen(user, i=None):
@@ -90,8 +90,10 @@ def roll_frozen(user, i=None):
     if i == 1:
         print(f"{user.name} thawed out!")
         user.cure_status()
-        return False
-    return True
+        return True
+    print(f"{user.name} is frozen and cant attack!")
+    print()
+    return False
 
 
 def roll_confusion(user, i=None):
@@ -102,38 +104,8 @@ def roll_confusion(user, i=None):
     if i == 1:
         # TODO: Implement confusion damage.
         print(f"{user.name} hit its self in confusion!")
-        return True
-    return False
-
-
-def check_can_attack(frame):
-    """Checks to make sure if an attacker is able to use a move based on any present status conditions.
-    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-    if frame.user.status[0] == "Paralyzed":
-        if roll_paralyzed(frame.user):
-            pass
-
-    if f.user.status[0] == "Asleep" and frame.attack_name != "Sleep Talk":
-        print(f"{frame.user.name} is asleep.")
-        pass
-
-    if frame.user.status[0] == "Frozen":
-        if roll_frozen(frame.user):
-            pass
-
-    if "Confusion" in frame.user.v_status:
-        if roll_confusion(frame.user):
-            pass
-
-    if "Flinched" in frame.user.v_status:
-        print(f"{frame.user.name} flinched!")
-        pass
-
-    if check_immunity(frame):
-        print(f"It had no effect.")
-        pass
-
-    f.can_attack = True
+        return False
+    return True
 
 
 def check_immunity(frame):
@@ -149,8 +121,41 @@ def check_immunity(frame):
         or (frame.attack.type == "Electric" and "Ground" in frame.target.typing)
         or (frame.attack.type == "Psychic" and "Dark" in frame.target.typing)
     ):
-        return True
-    return False
+        return False
+    return True
+
+
+def check_can_attack(frame, i=None):
+    """Checks to make sure if an attacker is able to use a move based on any present status conditions.
+    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
+    if frame.user.status[0] == "Paralyzed":
+        if not roll_paralysis(frame.user, i):
+            return False
+
+    if frame.user.status[0] == "Asleep" and frame.attack_name != "Sleep Talk":
+        print(f"{frame.user.name} is asleep.")
+        print()
+        return False
+
+    if frame.user.status[0] == "Frozen":
+        if not roll_frozen(frame.user, i):
+            return False
+
+    if "Confusion" in frame.user.v_status:
+        if not roll_confusion(frame.user, i):
+            return False
+
+    if "Flinched" in frame.user.v_status:
+        print(f"{frame.user.name} flinched!")
+        print()
+        return False
+
+    if not check_immunity(frame):
+        print(f"It had no effect.")
+        print()
+        return False
+
+    return True
 
 
 def check_attack_lands(frame, i=None):
@@ -224,7 +229,6 @@ def switch(frame):
 
 def apply_switch_effect(frame, switch_dir):
     """Applies switch effect for current pokemon that's switched in or switched out."""
-    # TODO: Implement tests.
     user = frame.user
     if switch_dir == "In":
         if user.ability == "Grassy Surge":
