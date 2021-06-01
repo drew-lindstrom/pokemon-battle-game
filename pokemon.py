@@ -11,7 +11,7 @@ class Pokemon:
         self.name = name
         self.level = level
         self.gender = gender
-        self.typing = pokemon_dict[name][0]
+        self.typing = list(pokemon_dict[name][0])
 
         self.moves = [None, None, None, None]
 
