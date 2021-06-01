@@ -46,21 +46,24 @@ def check_speed(frame1, frame2):
         return [frame2, frame1]
 
 
-def check_priority(f):
+def check_priority(frame):
     """Calls priority_moves dictionary to see if the given attack has a priority number, if not returns 0.
     Attacks with a priority higher number will go before the opponent's attack regardless of speed.
     Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
 
-    if f.terrain.current_terrain == "Psychic Terrain" and f.target.grounded == True:
+    if (
+        frame.terrain.current_terrain == "Psychic Terrain"
+        and frame.target.grounded == True
+    ):
         return 0
     if (
-        f.terrain.current_terrain == "Grassy Terrain"
-        and f.attack.name == "Grassy Glide"
+        frame.terrain.current_terrain == "Grassy Terrain"
+        and frame.attack_name == "Grassy Glide"
     ):
         return 1
 
     try:
-        return priority_moves[f.attack.name]
+        return priority_moves[frame.attack_name]
     except Exception:
         return 0
 
@@ -101,71 +104,71 @@ def roll_confusion(user, i=None):
     return False
 
 
-def check_can_attack(f):
+def check_can_attack(frame):
     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
-    if f.user.status[0] == "Paralyzed":
-        if roll_paralyzed(user):
+    if frame.user.status[0] == "Paralyzed":
+        if roll_paralyzed(frame.user):
             pass
 
-    if f.user.status[0] == "Asleep" and f.attack_name != "Sleep Talk":
+    if f.user.status[0] == "Asleep" and frame.attack_name != "Sleep Talk":
         print(f"{frame.user.name} is asleep.")
         pass
 
-    if f.user.status[0] == "Frozen":
-        if roll_frozen(f.user):
+    if frame.user.status[0] == "Frozen":
+        if roll_frozen(frame.user):
             pass
 
-    if "Confusion" in f.user.v_status:
-        if roll_confusion(f.user):
+    if "Confusion" in frame.user.v_status:
+        if roll_confusion(frame.user):
             pass
 
-    if "Flinched" in f.user.v_status:
-        print(f"{f.user.name} flinched!")
+    if "Flinched" in frame.user.v_status:
+        print(f"{frame.user.name} flinched!")
         pass
 
-    if check_immunity(f):
+    if check_immunity(frame):
         print(f"It had no effect.")
         pass
 
     f.can_attack = True
 
 
-def check_immunity(f):
+def check_immunity(frame):
     """Returns boolean if current attack isn't able to land due to target being immune to the attack's type."""
     if (
-        (f.attack.type == "Poison" and "Steel" in f.target.typing)
-        or (f.attack.type == "Dragon" and "Fairy" in f.target.typing)
+        (frame.attack.type == "Poison" and "Steel" in frame.target.typing)
+        or (frame.attack.type == "Dragon" and "Fairy" in frame.target.typing)
         or (
-            (f.attack.type == "Normal" or f.attack.type == "Fighting")
-            and "Ghost" in f.target.typing
+            (frame.attack.type == "Normal" or frame.attack.type == "Fighting")
+            and "Ghost" in frame.target.typing
         )
-        or (f.attack.type == "Ghost" and "Normal" in f.target.typing)
-        or (f.attack.type == "Electric" and "Ground" in f.target.typing)
-        or (f.attack.type == "Psychic" and "Dark" in f.target.typing)
+        or (frame.attack.type == "Ghost" and "Normal" in frame.target.typing)
+        or (frame.attack.type == "Electric" and "Ground" in frame.target.typing)
+        or (frame.attack.type == "Psychic" and "Dark" in frame.target.typing)
     ):
         return True
     return False
 
 
-def check_attack_lands(f, i=None):
+def check_attack_lands(frame, i=None):
     """Calculates required accuracy for an attack to land based on the accuracy of the attack,
     accuracy of user, evasion of target, and any additional modifiers. Rolls i in range 0 to 100.
     If i is less than or equal to required accuracy, attack hits and function returns True."""
-    if f.attack.accuracy == 0:
-        f.attack_lands = True
+    if frame.attack.accuracy == 0:
+        frame.attack_lands = True
         return
 
     additional_modifier = 1
 
     # TODO: The accuracy minus evasion is probably wrong.
     a = (
-        f.attack.accuracy
+        frame.attack.accuracy
         * (
             100
             - (
-                f.user.calc_modified_stat("accuracy")
-                - f.target.calc_modified_stat("evasion")
+                frame.user.calc_modified_stat("accuracy")
+                - frame.target.calc_modified_stat("evasion")
             )
         )
         * additional_modifier
@@ -175,9 +178,9 @@ def check_attack_lands(f, i=None):
         i = randint(0, 100)
 
     if i <= a:
-        f.attack_lands = True
+        frame.attack_lands = True
         return
-    print(f"{f.user.name}s attack missed!")
+    print(f"{frame.user.name}s attack missed!")
 
 
 def apply_non_damaging_move(frame):
