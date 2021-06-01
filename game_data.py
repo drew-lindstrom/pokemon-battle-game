@@ -141,6 +141,7 @@ v_status_inflicting_attacks = {
     "Dark Pulse": ("target", 20, "Flinched"),
     "Hurricane": ("target", 30, "Confused"),
     "Iron Head": ("target", 30, "Flinched"),
+    "Test Dark Pulse": ("target", 100, "Flinched"),
 }
 
 multi_hit_attacks = {"Rock Blast"}
@@ -1569,6 +1570,7 @@ moves_dict = {
     "Curse": ("Ghost", "Status", None, None, "10"),
     "Cut": ("Normal", "Physical", "50", "95", "30"),
     "Dark Pulse": ("Dark", "Special", "80", "100", "15"),
+    "Test Dark Pulse": ("Dark", "Special", "80", "100", "15"),
     "Dark Void": ("Dark", "Status", None, "50", "10"),
     "Darkest Lariat": ("Dark", "Physical", "85", "100", "10"),
     "Dazzling Gleam": ("Fairy", "Special", "80", "100", "10"),
