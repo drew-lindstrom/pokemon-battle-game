@@ -186,7 +186,7 @@ class TestUtil:
         ) == [("p2", "Tackle", 0), ("p1", "Tackle", 0)]
 
     def test_check_speed(self):
-        p1 = Pokemon(
+        test_pokemon_1 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -198,7 +198,7 @@ class TestUtil:
             "Relaxed",
         )
 
-        p2 = Pokemon(
+        test_pokemon_2 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -209,20 +209,23 @@ class TestUtil:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
+        player1 = Player([test_pokemon_1])
+        player2 = Player([test_pokemon_2])
+        f1 = Frame(player1, player2, None, None, None, None)
+        f2 = Frame(player2, player1, None, None, None, None)
+        assert check_speed(f1, f2) == [f2, f1]
+        f1.user.status[0] = "Paralyzed"
+        assert check_speed(f1, f2) == [f2, f1]
+        f1.user.status[0] = None
+        f1.user.stat_mod["speed"] = 4
+        assert check_speed(f1, f2) == [f1, f2]
+        f1.user.status[0] = "Paralyzed"
+        assert check_speed(f1, f2) == [f1, f2]
+        f1.user.status[0] = None
+        f1.user.stat_mod["speed"] = -4
+        assert check_speed(f1, f2) == [f2, f1]
 
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status[0] = "Paralyzed"
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status[0] = None
-        p1.stat_mod["speed"] = 4
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status[0] = "Paralyzed"
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status[0] = None
-        p1.stat_mod["speed"] = -4
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-
-        p1 = Pokemon(
+        test_pokemon_1 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -233,17 +236,21 @@ class TestUtil:
             (0, 0, 252, 0, 0, 252),
             "Relaxed",
         )
-        p1.stat_mod["speed"] = 0
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.status[0] = "Paralyzed"
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.status[0] = None
-        p1.stat_mod["speed"] = 4
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.stat_mod["speed"] = -4
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
+        player1 = Player([test_pokemon_1])
+        player2 = Player([test_pokemon_2])
+        f1 = Frame(player1, player2, None, None, None, None)
+        f2 = Frame(player2, player1, None, None, None, None)
+        f1.user.stat_mod["speed"] = 0
+        assert check_speed(f1, f2) == [f1, f2]
+        f1.user.status[0] = "Paralyzed"
+        assert check_speed(f1, f2) == [f2, f1]
+        f1.user.status[0] = None
+        f1.user.stat_mod["speed"] = 4
+        assert check_speed(f1, f2) == [f1, f2]
+        f1.user.stat_mod["speed"] = -4
+        assert check_speed(f1, f2) == [f2, f1]
 
-        p1 = Pokemon(
+        test_pokemon_1 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -254,7 +261,7 @@ class TestUtil:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        p2 = Pokemon(
+        test_pokemon_2 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -265,12 +272,16 @@ class TestUtil:
             (252, 0, 252, 0, 4, 252),
             "Relaxed",
         )
-        p1.stat_mod["speed"] = 0
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
-        p1.stat_mod["speed"] = 4
-        assert main.check_speed(p1, 1, p2, 2) == [1, 2]
-        p1.stat_mod["speed"] = -4
-        assert main.check_speed(p1, 1, p2, 2) == [2, 1]
+        player1 = Player([test_pokemon_1])
+        player2 = Player([test_pokemon_2])
+        f1 = Frame(player1, player2, None, None, None, None)
+        f2 = Frame(player2, player1, None, None, None, None)
+        f1.user.stat_mod["speed"] = 0
+        assert check_speed(f1, f2) == [f2, f1]
+        f1.user.stat_mod["speed"] = 4
+        assert check_speed(f1, f2) == [f1, f2]
+        f1.user.stat_mod["speed"] = -4
+        assert check_speed(f1, f2) == [f2, f1]
 
     def test_check_priority(self, test_frame):
         test_frame.terrain.current_terrain = "Grassy Terrain"
@@ -287,34 +298,31 @@ class TestUtil:
         assert check_priority(test_frame) == 0
 
     def test_roll_paralysis(self, test_pokemon):
-        assert roll_paralysis(test_pokemon, 4) == False
-        assert roll_paralysis(test_pokemon, 1) == True
+        assert roll_paralysis(test_pokemon, 4) == None
+        assert roll_paralysis(test_pokemon, 1) == False
 
     def test_roll_frozen(self, test_pokemon):
         test_pokemon.status[0] = "Frozen"
-        assert roll_frozen(test_pokemon, 4) == True
+        assert roll_frozen(test_pokemon, 4) == False
         assert test_pokemon.status[0] == "Frozen"
-        assert roll_frozen(test_pokemon, 1) == False
+        assert roll_frozen(test_pokemon, 1) == True
         assert test_pokemon.status[0] == None
 
     def test_roll_confusion(self, test_pokemon):
-        assert roll_confusion(test_pokemon, 2) == False
-        assert roll_confusion(test_pokemon, 1) == True
-
-    def test_check_can_attack(self, test_frame):
-        pass
+        assert roll_confusion(test_pokemon, 2) == None
+        assert roll_confusion(test_pokemon, 1) == False
 
     @pytest.mark.parametrize(
         "attack_type,target_type,expected",
         [
-            ("Poison", "Steel", True),
-            ("Dragon", "Fairy", True),
-            ("Normal", "Ghost", True),
-            ("Fighting", "Ghost", True),
-            ("Ghost", "Normal", True),
-            ("Electric", "Ground", True),
-            ("Psychic", "Dark", True),
-            ("Poison", "Fire", False),
+            ("Poison", "Steel", False),
+            ("Dragon", "Fairy", False),
+            ("Normal", "Ghost", False),
+            ("Fighting", "Ghost", False),
+            ("Ghost", "Normal", False),
+            ("Electric", "Ground", False),
+            ("Psychic", "Dark", False),
+            ("Poison", "Fire", None),
         ],
     )
     def test_check_immunity(self, test_frame, attack_type, target_type, expected):
@@ -322,6 +330,42 @@ class TestUtil:
         test_frame.attack.type = attack_type
         test_frame.target.typing[0] = target_type
         assert check_immunity(test_frame) == expected
+
+    def test_check_can_attack(self, test_frame):
+        test_frame.attack = test_frame.user.moves[0]
+        test_frame.user.status = ["Paralyzed", 2]
+        check_can_attack(test_frame, 1)
+        assert test_frame.can_attack == False
+        test_frame.can_attack = True
+        check_can_attack(test_frame, 2)
+        assert test_frame.can_attack == True
+        test_frame.user.status = ["Asleep", 3]
+        check_can_attack(test_frame)
+        assert test_frame.can_attack == False
+        test_frame.can_attack = True
+        test_frame.user.status = ["Frozen", 3]
+        check_can_attack(test_frame, 1)
+        assert test_frame.can_attack == False
+        test_frame.can_attack = True
+        test_frame.status = None
+        test_frame.v_status["Flinched"] = [2]
+        check_can_attack(test_frame)
+        assert test_frame.can_attack == False
+        test_frame.can_attack = True
+        del test_frame.v_status["Flinched"]
+        test_frame.v_status["Confusion"] = [1]
+        check_can_attack(test_frame)
+        assert test_frame.can_attack == False
+        test_frame.can_attack = True
+        del test_frame.v_status["Confusion"]
+        test_frame.attack.type = "Poison"
+        test_frame.target.typing[0] = "Steel"
+        check_can_attack(test_frame)
+        assert test_frame.can_attack == False
+        test_frame.can_attack = True
+        test_frame.target.typing[0] = "Water"
+        check_can_attack(test_frame)
+        assert test_frame.can_attack == True
 
     def test_check_attack_lands(self, test_frame, test_frame2):
         test_frame.attack = test_frame.user.moves[1]
