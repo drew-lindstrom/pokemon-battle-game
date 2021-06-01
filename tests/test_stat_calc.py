@@ -140,7 +140,7 @@ class TestStatCalc:
         assert calc_speed(team, False) == 86
         assert calc_speed(team, False, "Sandstorm") == 172
         p1.ability = None
-        p1.status = "Paralyzed"
+        p1.status = ["Paralyzed", 2]
         assert calc_speed(team, False) == 43
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 64
@@ -152,7 +152,7 @@ class TestStatCalc:
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 516
         p1.item = None
-        p1.status = "Paralyzed"
+        p1.status = ["Paralyzed", 2]
         assert calc_speed(team, False) == 172
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 258
@@ -164,7 +164,7 @@ class TestStatCalc:
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 31
         p1.item = None
-        p1.status = "Paralyzed"
+        p1.status = ["Paralyzed", 2]
         assert calc_speed(team, False) == 10
         p1.item = "Choice Scarf"
         assert calc_speed(team, False) == 15

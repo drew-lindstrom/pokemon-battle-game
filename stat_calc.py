@@ -66,7 +66,7 @@ def calc_speed(team, crit=False, cur_weather="Clear Skies"):
     additional_modifier = 1
     if cur_pokemon.item == "Choice Scarf":
         additional_modifier *= 1.5
-    if cur_pokemon.status == "Paralyzed":
+    if cur_pokemon.status and cur_pokemon.status[0] == "Paralyzed":
         additional_modifier *= 0.5
     if cur_pokemon.ability == "Sand Rush" and cur_weather == "Sandstorm":
         additional_modifier *= 2
