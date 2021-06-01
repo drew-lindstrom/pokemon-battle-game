@@ -1,6 +1,7 @@
 from post_attack import *
 from switch_effects import *
 from weather import *
+from terrain import *
 from random import *
 import move_effects
 from game_data import priority_moves, type_key, type_chart
@@ -287,7 +288,7 @@ def apply_end_of_turn_effects(frame_order):
     """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
     for frame in frame_order:
         frame.user.decrement_statuses()
-        if frame.attack_name:
+        if frame.attack.name:
             frame.attack.decrement_pp()
 
     if (
@@ -299,8 +300,7 @@ def apply_end_of_turn_effects(frame_order):
 
     if frame_order[0].terrain.current_terrain == "Grassy Terrain":
         for frame in frame_order:
-            if frame.user == True:
-                terrain.heal_from_grassy_terrain(frame.terrain, frame.user)
+            heal_from_grassy_terrain(frame.terrain, frame.user)
 
     for frame in frame_order:
         if frame.user.item == "Leftovers":
