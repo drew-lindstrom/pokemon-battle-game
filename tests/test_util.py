@@ -310,7 +310,7 @@ class TestUtil:
         assert check_priority(test_frame) == 0
 
     def test_roll_paralysis(self, test_pokemon):
-        assert roll_paralysis(test_pokemon, 4) == None
+        assert roll_paralysis(test_pokemon, 4) == True
         assert roll_paralysis(test_pokemon, 1) == False
 
     def test_roll_frozen(self, test_pokemon):
@@ -321,7 +321,7 @@ class TestUtil:
         assert test_pokemon.status[0] == None
 
     def test_roll_confusion(self, test_pokemon):
-        assert roll_confusion(test_pokemon, 2) == None
+        assert roll_confusion(test_pokemon, 2) == True
         assert roll_confusion(test_pokemon, 1) == False
 
     @pytest.mark.parametrize(
@@ -346,38 +346,25 @@ class TestUtil:
     def test_check_can_attack(self, test_frame):
         test_frame.attack = test_frame.user.moves[0]
         test_frame.user.status = ["Paralyzed", 2]
-        check_can_attack(test_frame, 1)
-        assert test_frame.can_attack == False
-        test_frame.can_attack = True
-        check_can_attack(test_frame, 2)
-        assert test_frame.can_attack == True
+        assert check_can_attack(test_frame, 1) == False
+        assert check_can_attack(test_frame, 2) == True
         test_frame.user.status = ["Asleep", 3]
-        check_can_attack(test_frame)
-        assert test_frame.can_attack == False
-        test_frame.can_attack = True
+        assert check_can_attack(test_frame) == False
         test_frame.user.status = ["Frozen", 3]
-        check_can_attack(test_frame, 1)
-        assert test_frame.can_attack == False
-        test_frame.can_attack = True
-        test_frame.status = None
-        test_frame.v_status["Flinched"] = [2]
-        check_can_attack(test_frame)
-        assert test_frame.can_attack == False
-        test_frame.can_attack = True
-        del test_frame.v_status["Flinched"]
-        test_frame.v_status["Confusion"] = [1]
-        check_can_attack(test_frame)
-        assert test_frame.can_attack == False
-        test_frame.can_attack = True
-        del test_frame.v_status["Confusion"]
+        assert check_can_attack(test_frame, 2) == False
+
+        test_frame.user.status = [None]
+        test_frame.user.v_status["Flinched"] = [2]
+        assert check_can_attack(test_frame) == False
+        del test_frame.user.v_status["Flinched"]
+        test_frame.user.v_status["Confusion"] = [1]
+        assert check_can_attack(test_frame, 1) == False
+        del test_frame.user.v_status["Confusion"]
         test_frame.attack.type = "Poison"
         test_frame.target.typing[0] = "Steel"
-        check_can_attack(test_frame)
-        assert test_frame.can_attack == False
-        test_frame.can_attack = True
+        assert check_can_attack(test_frame) == False
         test_frame.target.typing[0] = "Water"
-        check_can_attack(test_frame)
-        assert test_frame.can_attack == True
+        assert check_can_attack(test_frame) == True
 
     def test_check_attack_lands(self, test_frame, test_frame2):
         test_frame.attack = test_frame.user.moves[1]
