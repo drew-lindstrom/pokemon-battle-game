@@ -221,9 +221,10 @@ def switch(frame):
     # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
 
-def apply_switch_effect(user, frame, switch_dir):
+def apply_switch_effect(frame, switch_dir):
     """Applies switch effect for current pokemon that's switched in or switched out."""
     # TODO: Implement tests.
+    user = frame.user
     if switch_dir == "In":
         if user.ability == "Grassy Surge":
             activate_grassy_surge(user, frame.terrain)
@@ -277,9 +278,9 @@ def apply_stealth_rocks_damage(frame):
 
 def apply_post_attack_effects(frame):
     """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
-    apply_stat_alt_attack(frame.user, frame.target, frame.attack)
-    apply_status_inflicting_attack(frame.user, frame.target, frame.attack)
-    apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack)
+    apply_stat_alt_attack(frame.user, frame.target, frame.attack.name)
+    apply_status_inflicting_attack(frame.user, frame.target, frame.attack.name)
+    apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack.name)
 
 
 def apply_end_of_turn_effects(frame_order):
