@@ -2,6 +2,7 @@ from post_attack import *
 from switch_effects import *
 from weather import *
 from random import *
+import move_effects
 from game_data import priority_moves, type_key, type_chart
 from stat_calc import calc_speed
 
@@ -186,10 +187,10 @@ def check_attack_lands(frame, i=None):
 def apply_non_damaging_move(frame):
     """Applies effect of current non damaging move being used."""
     if frame.attack_name == "Stealth Rocks":
-        set_stealth_rocks(frame)
+        move_effects.set_stealth_rocks(frame)
 
     if frame.attack_name == "Defog":
-        activate_defog(frame)
+        move_effects.activate_defog(frame)
 
 
 def switch(frame):
@@ -274,15 +275,6 @@ def apply_stealth_rocks_damage(frame):
     print()
 
 
-def clear_hazards(player):
-    """Clears the hazards on the player's side of the field."""
-    # Rapid spin clears all entry hazards.
-    player.stealth_rocks = False
-    player.sticky_web = False
-    player.spikes = 0
-    player.tspikes = 0
-
-
 def apply_post_attack_effects(frame):
     """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
     apply_stat_alt_attack(frame.user, frame.target, frame.attack)
@@ -305,7 +297,7 @@ def apply_end_of_turn_effects(frame_order):
             apply_weather_damage(frame.weather, frame.user)
 
     if frame_order[0].terrain.current_terrain == "Grassy Terrain":
-        for fram in frame_order:
+        for frame in frame_order:
             if frame.user == True:
                 terrain.heal_from_grassy_terrain(frame.terrain, frame.user)
 

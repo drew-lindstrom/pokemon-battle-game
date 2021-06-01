@@ -37,3 +37,11 @@ class Player:
             if pokemon.stat["hp"] > 0:
                 return False
         return True
+
+    def clear_hazards(self):
+        """Clears the hazards on the player's side of the field."""
+        # Rapid spin clears all entry hazards.
+        self.stealth_rocks = False
+        self.sticky_web = False
+        self.spikes = 0
+        self.tspikes = 0

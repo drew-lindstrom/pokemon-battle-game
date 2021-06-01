@@ -2,13 +2,12 @@ from player import Player
 from pokemon import Pokemon
 from move import Move
 from terrain import Terrain
-from util import clear_hazards
 
 
 def activate_defog(frame):
     """Using defog clears entry hazards from both sides of the field and lowers the opposing pokemon's evasion by 1."""
-    clear_hazards(frame.user)
-    clear_hazards(frame.target)
+    frame.attacking_team.clear_hazards()
+    frame.defending_team.clear_hazards()
     print("The entry hazards were removed from the field!")
     frame.target.update_stat_modifier("evasion", -1)
 
