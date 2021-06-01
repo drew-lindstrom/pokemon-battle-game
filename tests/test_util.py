@@ -132,7 +132,7 @@ class TestUtil:
         return test_frame
 
     def test_get_frame_order(self):
-        p1 = Pokemon(
+        test_pokemon_1 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -144,7 +144,7 @@ class TestUtil:
             "Relaxed",
         )
 
-        p2 = Pokemon(
+        test_pokemon_2 = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -155,35 +155,47 @@ class TestUtil:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
+        player1 = Player([test_pokemon_1])
+        player2 = Player([test_pokemon_2])
+        t = Terrain()
+        f1 = Frame(player1, player2, None, None, None, t)
+        f2 = Frame(player2, player1, None, None, None, t)
 
-        assert main.get_turn_order(
-            p1, ("p1", "Pursuit", 0), p2, ("p2", "Switch", 0)
-        ) == [("p1", "Pursuit", 0), ("p2", "Switch", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Pursuit", 0)
-        ) == [("p1", "Tackle", 0), ("p2", "Pursuit", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Switch", 0), p2, ("p2", "Switch", 0)
-        ) == [("p1", "Switch", 0), ("p2", "Switch", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Switch", 0)
-        ) == [("p2", "Switch", 0), ("p1", "Tackle", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Extreme Speed", 0)
-        ) == [("p2", "Extreme Speed", 0), ("p1", "Tackle", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Teleport", 0), p2, ("p2", "Tackle", 0)
-        ) == [("p2", "Tackle", 0), ("p1", "Teleport", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Extreme Speed", 0), p2, ("p2", "Extreme Speed", 0)
-        ) == [("p1", "Extreme Speed", 0), ("p2", "Extreme Speed", 0)]
-        p1.status = "Paralyzed"
-        assert main.get_turn_order(
-            p1, ("p1", "Switch", 0), p2, ("p2", "Switch", 0)
-        ) == [("p2", "Switch", 0), ("p1", "Switch", 0)]
-        assert main.get_turn_order(
-            p1, ("p1", "Tackle", 0), p2, ("p2", "Tackle", 0)
-        ) == [("p2", "Tackle", 0), ("p1", "Tackle", 0)]
+        f1.attack_name = "Pursuit"
+        f2.switch_choice = 1
+        assert get_frame_order(f1, f2) == [f1, f2]
+        f1.attack_name = "Tackle"
+        f2.switch_choice = None
+        f2.attack_name = "Pursuit"
+        assert get_frame_order(f1, f2) == [f1, f2]
+        f1.attack_name = None
+        f1.switch_choice = 1
+        f2.attack_name = None
+        f2.switch_choice = 1
+        assert get_frame_order(f1, f2) == [f1, f2]
+        f1.switch_choice = None
+        f1.attack_name = "Tackle"
+        assert get_frame_order(f1, f2) == [f2, f1]
+        f2.switch_choice = None
+        f2.attack_name = "Extreme Speed"
+        assert get_frame_order(f1, f2) == [f2, f1]
+        f1.attack_name = "Teleport"
+        f2.attack_name = "Tackle"
+        assert get_frame_order(f1, f2) == [f2, f1]
+        f1.attack_name = "Extreme Speed"
+        f2.attack_name = "Extreme Speed"
+        assert get_frame_order(f1, f2) == [f1, f2]
+        f1.user.status = ["Paralyzed"]
+        f1.attack_name = None
+        f1.switch_choice = 1
+        f2.attack_name = None
+        f2.switch_choice = 1
+        assert get_frame_order(f1, f2) == [f2, f1]
+        f1.switch_choice = None
+        f1.attack_name = "Tackle"
+        f2.switch_choice = None
+        f2.attack_name = "Tackle"
+        assert get_frame_order(f1, f2) == [f2, f1]
 
     def test_check_speed(self):
         test_pokemon_1 = Pokemon(
