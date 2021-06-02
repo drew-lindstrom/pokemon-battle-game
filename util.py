@@ -325,8 +325,11 @@ def apply_end_of_turn_effects(frame_order):
             apply_burn(frame.user)
 
     for frame in frame_order:
-        if frame.user.status[0] == "Badly Poisoned":
-            apply_bad_poison(frame.user)
+        if (
+            frame.user.status[0] == "Badly Poisoned"
+            or frame.user.status[0] == "Poisoned"
+        ):
+            apply_poison(frame.user)
 
     # TODO: Recoil damage.
     # for frame in frame_order:

@@ -577,3 +577,7 @@ class TestUtil:
         apply_end_of_turn_effects(frame_order)
         assert test_frame.user.stat["hp"] == 98
         assert test_frame2.user.stat["hp"] == 34
+        test_frame2.user.status = ["Poisoned", 4]
+        test_frame2.user.stat["hp"] = 200
+        apply_end_of_turn_effects(frame_order)
+        assert test_frame2.user.stat["hp"] == 164

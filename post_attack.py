@@ -78,14 +78,19 @@ def apply_burn(pokemon):
         pokemon.apply_damage_percentage(0.0625)
 
 
-def apply_bad_poison(pokemon):
+def apply_poison(pokemon):
     """Damages a baldy poison pokemon with increasingly higher damage at the end of every turn. Initially deals 1/16 of max HP
     but adds an addition 1/16 damage (up until 15 * floor(max hp/16)) every turn the pokemon is in. If the pokemon switches out,
-    the damage resets to the original 1/16 of max HP."""
-    if pokemon.status[0] == "Badly Poisoned":
+    the damage resets to the original 1/16 of max HP.
+
+    Damages a poisoned pokemon by 1/8 of their max hp."""
+    if pokemon.status[0] == "Badly Poisoned" or pokemon.status[0] == "Poisoned":
         print(f"{pokemon.name} was hurt by the poison!")
         print()
-        pokemon.apply_damage_percentage(0.0625 * (15 - pokemon.status[1]))
+        if pokemon.status[0] == "Badly Poisoned":
+            pokemon.apply_damage_percentage(0.0625 * (15 - pokemon.status[1]))
+        if pokemon.status[0] == "Poisoned":
+            pokemon.apply_damage_percentage(0.125)
 
 
 # TODO: Recoil

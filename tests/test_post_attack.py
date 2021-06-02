@@ -59,17 +59,21 @@ class TestPostAttack:
         apply_burn(p)
         assert p.stat["hp"] == 0
 
-    def test_apply_bad_poison(self, test_pokemon):
+    def test_apply_poison(self, test_pokemon):
         p = test_pokemon
-        apply_bad_poison(p)
+        apply_poison(p)
         assert p.stat["hp"] == 394
         p.status = ["Badly Poisoned", 14]
-        apply_bad_poison(p)
+        apply_poison(p)
         assert p.stat["hp"] == 369
         p.status = ["Badly Poisoned", 13]
-        apply_bad_poison(p)
+        apply_poison(p)
         assert p.stat["hp"] == 319
         p.stat["hp"] = 394
         p.status = ["Badly Poisoned", 0]
-        apply_bad_poison(p)
+        apply_poison(p)
         assert p.stat["hp"] == 24
+        p.status = ["Poisoned"]
+        p.stat["hp"] = 300
+        apply_poison(p)
+        assert p.stat["hp"] == 250
