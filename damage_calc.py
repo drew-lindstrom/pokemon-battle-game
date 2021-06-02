@@ -87,10 +87,21 @@ def activate_eruption(frame):
     return int(150 * frame.user.stat["hp"] / frame.user.stat["max_hp"])
 
 
+def activate_knock_off(frame):
+    """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
+    print(f"{frame.target.name} lost their item!")
+    print()
+
+    return int(65 * 1.5)
+
+
 def calc_modified_base_damage(frame):
     """Returns base power for various moves that have varying base powers based on different parameters."""
     if frame.attack_name == "Eruption":
         return activate_eruption(frame)
+
+    if frame.attack_name == "Knock Off" and frame.target.item:
+        return activate_knock_off(frame)
 
 
 def calc_modified_damage():

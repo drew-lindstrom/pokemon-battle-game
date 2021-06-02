@@ -85,6 +85,11 @@ class TestDamageCalc:
         test_frame.user.stat["hp"] = 1
         assert activate_eruption(test_frame) == 0
 
+    def test_activate_eruption(self, test_frame):
+        test_frame.attack_name = "Knock Off"
+        assert activate_knock_off(test_frame) == 97
+        assert test_frame.target.item == None
+
     def test_calc_modified_base_damage(self, test_frame):
         test_frame.attack_name = "Eruption"
         assert calc_modified_base_damage(test_frame) == 150
