@@ -131,6 +131,7 @@ stat_alt_attacks = {
 status_inflicting_attacks = {
     "Discharge": ("target", 30, "Paralyzed"),
     "Fire Blast": ("target", 10, "Burned"),
+    "Gunk Shot": ("target", 30, "Poisoned"),
     "Ice Beam": ("target", 10, "Frozen"),
     "Pyro Ball": ("target", 10, "Burned"),
     "Thunder Punch": ("target", 10, "Paralyzed"),
