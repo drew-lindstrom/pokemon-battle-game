@@ -190,7 +190,13 @@ def check_attack_lands(frame, i=None):
     if i <= a:
         frame.attack_lands = True
         return
+
     print(f"{frame.user.name}s attack missed!")
+
+    # If high jump kick misses, it damages the user.
+    if frame.attack_name == "High Jump Kick":
+        print(f"{frame.user.name} came crashing down...")
+        frame.user.apply_damage_percentage(0.5)
 
 
 def apply_non_damaging_move(frame):

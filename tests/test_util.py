@@ -375,6 +375,9 @@ class TestUtil:
         assert test_frame2.attack_lands == False
         check_attack_lands(test_frame2, 20)
         assert test_frame2.attack_lands == True
+        test_frame2.attack_name = "High Jump Kick"
+        check_attack_lands(test_frame2, 100)
+        assert test_frame2.user.stat["hp"] == 140
 
     def test_apply_non_damaging_move(self, test_frame):
         test_frame.attack = test_frame.user.moves[0]
