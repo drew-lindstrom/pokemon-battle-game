@@ -93,6 +93,8 @@ def apply_poison(pokemon):
             pokemon.apply_damage_percentage(0.125)
 
 
-# TODO: Recoil
-def apply_recoil(pokemon):
-    pass
+def apply_recoil(pokemon, move_damage, n):
+    """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
+    print(f"{pokemon.name} was damaged by recoil!")
+    print()
+    pokemon.stat["hp"] = max(0, int(pokemon.stat["hp"] - move_damage * n))

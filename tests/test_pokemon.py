@@ -90,14 +90,6 @@ class TestPokemon:
         p.apply_damage_percentage(0.5)
         assert p.stat["hp"] == 0
 
-    def test_apply_recoil(self, test_pokemon):
-        p = test_pokemon
-        p.apply_recoil(0.5)
-        assert p.stat["hp"] == 197
-        p.stat["hp"] = 35
-        p.apply_recoil(0.5)
-        assert p.stat["hp"] == 0
-
     def test_check_fainted(self, test_pokemon):
         p = test_pokemon
         assert p.check_fainted() == False

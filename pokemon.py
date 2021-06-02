@@ -177,11 +177,6 @@ class Pokemon:
         are calculated with a specific percetage of the pokemon's max HP."""
         self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
 
-    def apply_recoil(self, n):
-        """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
-        print(f"{self.name} was damaged by recoil!")
-        self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
-
     def check_fainted(self):
         """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""
         if self.stat["hp"] <= 0:

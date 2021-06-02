@@ -77,3 +77,11 @@ class TestPostAttack:
         p.stat["hp"] = 300
         apply_poison(p)
         assert p.stat["hp"] == 250
+
+    def test_apply_recoil(self, test_pokemon):
+        p = test_pokemon
+        apply_recoil(p, 100, 0.5)
+        assert p.stat["hp"] == 344
+        p.stat["hp"] = 35
+        apply_recoil(p, 100, 0.5)
+        assert p.stat["hp"] == 0

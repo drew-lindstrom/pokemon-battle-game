@@ -331,6 +331,6 @@ def apply_end_of_turn_effects(frame_order):
         ):
             apply_poison(frame.user)
 
-    # TODO: Recoil damage.
-    # for frame in frame_order:
-    #     apply_recoil(frame.user)
+    for frame in frame_order:
+        if frame.attack_name == "Wood Hammer":
+            apply_recoil(frame.user, frame.attack_damage, 0.33)

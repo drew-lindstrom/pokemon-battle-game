@@ -46,6 +46,7 @@ class Frame:
         self.terrain = terrain
         self.can_attack = False
         self.attack_lands = False
+        self.attack_damage = 0
 
     def update_cur_pokemon(self):
         "Whenever a switch occurs, updates the frames to switch the user/target to the current pokemon on the respective teams."
@@ -93,7 +94,8 @@ def main():
                             cur_frame.attack.category == "Pysical"
                             or cur_frame.attack.category == "Special"
                         ):
-                            cur_frame.target.apply_damage(calc_damage(cur_frame))
+                            cur_frame.attack_damage = calc_damage(cur_frame)
+                            cur_frame.target.apply_damage(cur_frame.attack_damage)
                             apply_post_attack_effects(cur_frame)
                         else:
                             apply_non_damaging_move(cur_frame)
