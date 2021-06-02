@@ -168,18 +168,21 @@ def check_attack_lands(frame, i=None):
 
     additional_modifier = 1
 
-    # TODO: The accuracy minus evasion is probably wrong.
-    a = (
-        frame.attack.accuracy
-        * (
-            100
-            - (
-                frame.user.calc_modified_stat("accuracy")
-                - frame.target.calc_modified_stat("evasion")
-            )
-        )
-        * additional_modifier
-    )
+    accuracy_evasion_stat = frame.user.calc_modified_stat(
+        "accuracy"
+    ) - frame.target.calc_modified_stat("evasion")
+
+    if accuracy_evasion_stat < -6:
+        accuracy_evasion_stat = -6
+
+    if accuracy_evasion_stat < 0:
+        accuracy_evasion_stat = 3 / (3 + accuracy_evasion_stat * -1)
+    elif accuracy_evasion_stat > 0:
+        accuracy_evasion_stat = (3 + accuracy_evasion_stat) / 3
+    else:
+        accuracy_evasion_stat = 1
+
+    a = frame.attack.accuracy * accuracy_evasion_stat * additional_modifier
 
     if i is None or i < 0 or i > 100:
         i = randint(0, 100)
@@ -211,11 +214,12 @@ def switch(frame):
             frame.attacking_team.team[n],
             frame.attacking_team.team[0],
         )
-        apply_switch_effect(frame.attacking_team.team[n], frame, "Out")
-        apply_switch_effect(frame.attacking_team.team[0], frame, "In")
+        apply_switch_effect(frame, n, "Out")
+        apply_switch_effect(frame, 0, "In")
+        frame.user = frame.attacking_team[0]
         frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
         apply_entry_hazards(frame)
-        frame.attacking_team.team[n].reset_prev_move()
+        frame.attacking_team.team[n].reset_previous_move()
         frame.attacking_team.team[n].reset_stat_modifier()
         frame.attacking_team.team[n].reset_statuses()
         print(
@@ -227,9 +231,9 @@ def switch(frame):
     # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
 
 
-def apply_switch_effect(frame, switch_dir):
+def apply_switch_effect(frame, n, switch_dir):
     """Applies switch effect for current pokemon that's switched in or switched out."""
-    user = frame.user
+    user = frame.attacking_team[n]
     if switch_dir == "In":
         if user.ability == "Grassy Surge":
             activate_grassy_surge(user, frame.terrain)

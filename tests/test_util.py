@@ -32,7 +32,7 @@ class TestUtil:
             100,
             "Male",
             ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
+            "Regenerator",
             None,
             (31, 31, 31, 31, 31, 31),
             (252, 0, 252, 0, 4, 0),
@@ -334,7 +334,7 @@ class TestUtil:
             ("Ghost", "Normal", False),
             ("Electric", "Ground", False),
             ("Psychic", "Dark", False),
-            ("Poison", "Fire", None),
+            ("Poison", "Fire", True),
         ],
     )
     def test_check_immunity(self, test_frame, attack_type, target_type, expected):
@@ -385,62 +385,44 @@ class TestUtil:
         apply_non_damaging_move(test_frame)
         assert test_frame.defending_team.stealth_rocks == False
 
-    def test_switch(self):
+    def test_switch(self, test_frame):
         # TODO: Needs to be updated.
-        slowbro = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-        tyranitar = Pokemon(
-            "Tyranitar",
-            100,
-            "Male",
-            ("Crunch", "Stealth Rock", "Toxic", "Earthquake"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 0, 0, 216, 40),
-            "Careful",
-        )
-        slowbro.move_lock = 1
-        slowbro.prev_move = "Scald"
-        slowbro.stat_mod["attack"] = 6
-        slowbro.v_status["Confused"] = [0]
-        test_player = Player([slowbro, tyranitar])
-        test_player.switch(1)
-        assert test_player.cur_pokemon.name == "Tyranitar"
-        assert slowbro.move_lock == -1
-        assert slowbro.prev_move == None
-        assert slowbro.stat_mod["attack"] == 0
-        assert len(slowbro.v_status) == 0
-        test_player[1].stat["hp"] = 0
-        test_player.switch(1)
-        assert test_player.cur_pokemon.name == "Tyranitar"
+        test_frame.user.prev_move = "Scald"
+        test_frame.user.stat_mod["attack"] = 6
+        test_frame.user.v_status["Confused"] = [0]
+        test_frame.user.stat["hp"] = 50
+        test_frame.attacking_team.stealth_rocks = True
+        test_frame.switch_choice = 1
+        switch(test_frame)
+        test_frame.update_cur_pokemon()
+        assert test_frame.user.name == "Tyranitar"
+        assert test_frame.user.stat["hp"] == 353
+        assert test_frame.attacking_team[1].prev_move == None
+        assert test_frame.attacking_team[1].stat_mod["attack"] == 0
+        assert len(test_frame.attacking_team[1].v_status) == 0
+        assert test_frame.attacking_team[1].stat["hp"] == 181
+        test_frame.attacking_team[1].stat["hp"] = 0
+        switch(test_frame)
+        test_frame.update_cur_pokemon()
+        assert test_frame.user.name == "Tyranitar"
 
     def test_apply_switch_effect(self, test_frame):
         test_frame.user.ability = "Grassy Surge"
-        apply_switch_effect(test_frame, "In")
+        apply_switch_effect(test_frame, 0, "In")
         assert test_frame.terrain.current_terrain == "Grassy Terrain"
         test_frame.terrain.current_terrain = None
         test_frame.user.ability = "Psychic Surge"
-        apply_switch_effect(test_frame, "In")
+        apply_switch_effect(test_frame, 0, "In")
         assert test_frame.terrain.current_terrain == "Psychic Terrain"
         test_frame.user.ability = "Intimidate"
-        apply_switch_effect(test_frame, "In")
+        apply_switch_effect(test_frame, 0, "In")
         assert test_frame.target.stat_mod["attack"] == -1
         test_frame.user.ability = "Sand Stream"
-        apply_switch_effect(test_frame, "In")
+        apply_switch_effect(test_frame, 0, "In")
         assert test_frame.weather.current_weather == "Sandstorm"
         test_frame.user.stat["hp"] = 50
         test_frame.user.ability = "Regenerator"
-        apply_switch_effect(test_frame, "Out")
+        apply_switch_effect(test_frame, 0, "Out")
         assert test_frame.user.stat["hp"] == 181
 
     def test_apply_entry_hazards(self, test_frame):
