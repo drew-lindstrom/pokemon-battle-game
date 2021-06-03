@@ -394,7 +394,6 @@ class TestUtil:
         assert test_frame.defending_team.stealth_rocks == False
 
     def test_switch(self, test_frame):
-        # TODO: Needs to be updated.
         test_frame.user.prev_move = "Scald"
         test_frame.user.stat_mod["attack"] = 6
         test_frame.user.v_status["Confused"] = [0]
@@ -556,6 +555,10 @@ class TestUtil:
         assert len(test_frame.target.v_status) == 0
         apply_post_attack_effects(test_frame)
         assert test_frame.target.v_status["Flinched"] == [1]
+        test_frame.target.ability = "Static"
+        test_frame.attack_name = "Close Combat"
+        apply_post_attack_effects(test_frame, 20)
+        assert test_frame.user.status[0] == "Paralyzed"
 
     def test_apply_end_of_turn_effects(self, test_frame, test_frame2):
         frame_order = [test_frame, test_frame2]

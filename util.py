@@ -297,11 +297,13 @@ def apply_stealth_rocks_damage(frame):
     print()
 
 
-def apply_post_attack_effects(frame):
+def apply_post_attack_effects(frame, i=None):
     """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
     apply_stat_alt_attack(frame.user, frame.target, frame.attack.name)
     apply_status_inflicting_attack(frame.user, frame.target, frame.attack.name)
     apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack.name)
+    if frame.target.ability == "Static":
+        apply_static(frame, i)
 
 
 def apply_end_of_turn_effects(frame_order):

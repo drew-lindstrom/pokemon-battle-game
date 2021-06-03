@@ -3,6 +3,7 @@ from game_data import (
     stat_alt_attacks,
     status_inflicting_attacks,
     v_status_inflicting_attacks,
+    contact_attacks,
 )
 import random
 
@@ -98,3 +99,19 @@ def apply_recoil(pokemon, move_damage, n):
     print(f"{pokemon.name} was damaged by recoil!")
     print()
     pokemon.stat["hp"] = max(0, int(pokemon.stat["hp"] - move_damage * n))
+
+
+def apply_static(frame, i=None):
+    """30% to paralyze attacking pokemon if attack made contact."""
+    if (
+        frame.user.item != "Protective Pads"
+        and frame.attack_name in contact_attacks
+        and frame.user.status[0] == None
+    ):
+        if i is None:
+            i = random.randint(1, 100)
+
+        if i <= 30:
+            print(f"{frame.user.name} was paralyzed by {frame.target.name}s Static!")
+            print()
+            frame.user.set_status("Paralyzed")
