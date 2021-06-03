@@ -1,173 +1,215 @@
 from stat_calc import *
+from frame import Frame
 from pokemon import Pokemon
 from player import Player
 from weather import Weather
+from terrain import Terrain
 import pytest
 
 
 class TestStatCalc:
     @pytest.fixture
-    def test_pokemon(self):
-        test_pokemon = Pokemon(
+    def test_frame(self):
+        slowbro = Pokemon(
             "Slowbro",
             100,
             "Male",
             ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
+            "Regenerator",
             None,
             (31, 31, 31, 31, 31, 31),
-            (0, 0, 0, 0, 0, 0),
+            (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        return test_pokemon
 
-    def test_calc_attack(self, test_pokemon):
-        p1 = test_pokemon
-        team = Player([p1])
-        assert calc_attack(team, False) == 186
-        assert calc_attack(team, True) == 186
+        p1 = Player([slowbro])
+        p2 = Player([slowbro])
+        w = Weather()
+        t = Terrain()
+        test_frame = Frame(p1, p2, None, None, w, t)
+        return test_frame
+
+    def test_calc_attack(self, test_frame):
+        p1 = test_frame.user
+        test_frame.attack = test_frame.user.moves[0]
+        assert calc_attack(test_frame) == 186
+        test_frame.user.ability = "Blaze"
+        assert check_blaze(test_frame) == 1
+
+        test_frame.attack.type = "Fire"
+        test_frame.user.stat["hp"] = 1
+        assert calc_attack(test_frame) == 279
+        test_frame.user.stat["hp"] = 300
+        test_frame.crit = True
+        assert calc_attack(test_frame) == 186
         p1.item = "Choice Band"
-        assert calc_attack(team, False) == 279
-        p1.item = None
-        p1.status = "Burn"
-        assert calc_attack(team, False) == 93
-        p1.item = "Choice Band"
-        assert calc_attack(team, False) == 139
-        assert calc_attack(team, True) == 139
+        test_frame.crit = False
+        assert calc_attack(test_frame) == 279
 
         p1.item = None
-        p1.status = None
         p1.stat_mod["attack"] = 6
-        assert calc_attack(team, False) == 744
-        assert calc_attack(team, True) == 744
+        assert calc_attack(test_frame) == 744
+        test_frame.crit = True
+        assert calc_attack(test_frame) == 744
         p1.item = "Choice Band"
-        assert calc_attack(team, False) == 1116
-        p1.item = None
-        p1.status = "Burn"
-        assert calc_attack(team, False) == 372
-        p1.item = "Choice Band"
-        assert calc_attack(team, False) == 558
-        assert calc_attack(team, True) == 558
+        test_frame.crit = False
+        assert calc_attack(test_frame) == 1116
 
         p1.item = None
-        p1.status = None
         p1.stat_mod["attack"] = -6
-        assert calc_attack(team, False) == 46
-        assert calc_attack(team, True) == 186
+        assert calc_attack(test_frame) == 46
+        test_frame.crit = True
+        assert calc_attack(test_frame) == 186
         p1.item = "Choice Band"
-        assert calc_attack(team, False) == 69
-        p1.item = None
-        p1.status = "Burn"
-        assert calc_attack(team, False) == 23
-        p1.item = "Choice Band"
-        assert calc_attack(team, False) == 34
-        assert calc_attack(team, True) == 139
+        test_frame.crit = False
+        assert calc_attack(test_frame) == 69
 
-    def test_calc_defense(self, test_pokemon):
-        p1 = test_pokemon
-        team = Player([p1])
+    def test_calc_defense(self, test_frame):
+        p1 = test_frame.target
 
-        assert calc_defense(team, False) == 281
-        assert calc_defense(team, True) == 281
+        assert calc_defense(test_frame) == 350
+        test_frame.crit = True
+        assert calc_defense(test_frame) == 350
 
         p1.stat_mod["defense"] = 6
-        assert calc_defense(team, False) == 1124
-        assert calc_defense(team, True) == 281
+        test_frame.crit = False
+        assert calc_defense(test_frame) == 1400
+        test_frame.crit = True
+        assert calc_defense(test_frame) == 350
 
         p1.stat_mod["defense"] = -6
-        assert calc_defense(team, False) == 70
-        assert calc_defense(team, True) == 70
+        test_frame.crit = False
+        assert calc_defense(test_frame) == 87
+        test_frame.crit = True
+        assert calc_defense(test_frame) == 87
 
-    def test_calc_sp_attack(self, test_pokemon):
-        p1 = test_pokemon
-        team = Player([p1])
-        assert calc_sp_attack(team, False) == 236
-        assert calc_sp_attack(team, True) == 236
+    def test_calc_sp_attack(self, test_frame):
+        p1 = test_frame.user
+        test_frame.attack = test_frame.user.moves[0]
+
+        assert calc_sp_attack(test_frame) == 236
+        test_frame.user.ability = "Blaze"
+        assert check_blaze(test_frame) == 1
+
+        test_frame.attack.type = "Fire"
+        test_frame.user.stat["hp"] = 1
+        assert calc_sp_attack(test_frame) == 354
+        test_frame.user.stat["hp"] = 300
+        test_frame.crit = True
+        assert calc_sp_attack(test_frame) == 236
         p1.item = "Choice Spec"
-        assert calc_sp_attack(team, False) == 354
-        assert calc_sp_attack(team, True) == 354
+        test_frame.crit = False
+        assert calc_sp_attack(test_frame) == 354
+        test_frame.crit = True
+        assert calc_sp_attack(test_frame) == 354
 
         p1.item = None
         p1.stat_mod["sp_attack"] = 6
-        assert calc_sp_attack(team, False) == 944
-        assert calc_sp_attack(team, True) == 944
+        test_frame.crit = False
+        assert calc_sp_attack(test_frame) == 944
+        test_frame.crit = True
+        assert calc_sp_attack(test_frame) == 944
         p1.item = "Choice Spec"
-        assert calc_sp_attack(team, False) == 1416
-        assert calc_sp_attack(team, True) == 1416
+        test_frame.crit = False
+        assert calc_sp_attack(test_frame) == 1416
+        test_frame.crit = True
+        assert calc_sp_attack(test_frame) == 1416
 
         p1.item = None
         p1.stat_mod["sp_attack"] = -6
-        assert calc_sp_attack(team, False) == 59
-        assert calc_sp_attack(team, True) == 236
+        test_frame.crit = False
+        assert calc_sp_attack(test_frame) == 59
+        test_frame.crit = True
+        assert calc_sp_attack(test_frame) == 236
         p1.item = "Choice Spec"
-        assert calc_sp_attack(team, False) == 88
-        assert calc_sp_attack(team, True) == 354
+        test_frame.crit = False
+        assert calc_sp_attack(test_frame) == 88
+        test_frame.crit = True
+        assert calc_sp_attack(test_frame) == 354
 
-    def test_calc_sp_defense(self, test_pokemon):
-        p1 = test_pokemon
-        team = Player([p1])
-        w = Weather()
+    def test_calc_sp_defense(self, test_frame):
+        p1 = test_frame.target
+        w = test_frame.weather
+
         p1.typing = ["Rock", "Psychic"]
-        assert calc_sp_defense(team, False, w) == 196
-        assert calc_sp_defense(team, True, w) == 196
+        assert calc_sp_defense(test_frame) == 197
+        test_frame.crit = True
+        assert calc_sp_defense(test_frame) == 197
         w.current_weather = "Sandstorm"
-        assert calc_sp_defense(team, False, w) == 294
-        assert calc_sp_defense(team, True, w) == 294
+        test_frame.crit = False
+        assert calc_sp_defense(test_frame) == 295
+        test_frame.crit = True
+        assert calc_sp_defense(test_frame) == 295
         w.current_weather = "Clear Skies"
         p1.stat_mod["sp_defense"] = 6
-        assert calc_sp_defense(team, False, w) == 784
-        assert calc_sp_defense(team, True, w) == 196
+        test_frame.crit = False
+        assert calc_sp_defense(test_frame) == 788
+        test_frame.crit = True
+        assert calc_sp_defense(test_frame) == 197
         w.current_weather = "Sandstorm"
-        assert calc_sp_defense(team, False, w) == 1176
-        assert calc_sp_defense(team, True, w) == 294
+        test_frame.crit = False
+        assert calc_sp_defense(test_frame) == 1182
+        test_frame.crit = True
+        assert calc_sp_defense(test_frame) == 295
         w.current_weather = "Clear Skies"
         p1.stat_mod["sp_defense"] = -6
-        assert calc_sp_defense(team, False, w) == 49
-        assert calc_sp_defense(team, True, w) == 49
+        test_frame.crit = False
+        assert calc_sp_defense(test_frame) == 49
+        test_frame.crit = True
+        assert calc_sp_defense(test_frame) == 49
         w.current_weather = "Sandstorm"
-        assert calc_sp_defense(team, False, w) == 73
-        assert calc_sp_defense(team, True, w) == 73
-        w.current_weather = "Clear Skies"
+        test_frame.crit = False
+        assert calc_sp_defense(test_frame) == 73
+        test_frame.crit = True
+        assert calc_sp_defense(test_frame) == 73
 
-    def test_calc_speed(self, test_pokemon):
-        p1 = test_pokemon
-        team = Player([p1])
-        assert calc_speed(team, False) == 86
+    def test_calc_speed(self, test_frame):
+        p1 = test_frame.user
+        assert calc_speed(test_frame) == 86
         p1.item = "Choice Scarf"
-        assert calc_speed(team, False) == 129
+        assert calc_speed(test_frame) == 129
         p1.item = None
         p1.ability = "Sand Rush"
-        assert calc_speed(team, False) == 86
-        assert calc_speed(team, False, "Sandstorm") == 172
+        assert calc_speed(test_frame) == 86
+        test_frame.weather.current_weather = "Sandstorm"
+        assert calc_speed(test_frame) == 172
         p1.ability = None
         p1.status = ["Paralyzed", 2]
-        assert calc_speed(team, False) == 43
+        assert calc_speed(test_frame) == 43
         p1.item = "Choice Scarf"
-        assert calc_speed(team, False) == 64
+        assert calc_speed(test_frame) == 64
 
         p1.item = None
         p1.status = None
         p1.stat_mod["speed"] = 6
-        assert calc_speed(team, False) == 344
+        assert calc_speed(test_frame) == 344
         p1.item = "Choice Scarf"
-        assert calc_speed(team, False) == 516
+        assert calc_speed(test_frame) == 516
         p1.item = None
         p1.status = ["Paralyzed", 2]
-        assert calc_speed(team, False) == 172
+        assert calc_speed(test_frame) == 172
         p1.item = "Choice Scarf"
-        assert calc_speed(team, False) == 258
+        assert calc_speed(test_frame) == 258
 
         p1.item = None
         p1.status = None
         p1.stat_mod["speed"] = -6
-        assert calc_speed(team, False) == 21
+        assert calc_speed(test_frame) == 21
         p1.item = "Choice Scarf"
-        assert calc_speed(team, False) == 31
+        assert calc_speed(test_frame) == 31
         p1.item = None
         p1.status = ["Paralyzed", 2]
-        assert calc_speed(team, False) == 10
+        assert calc_speed(test_frame) == 10
         p1.item = "Choice Scarf"
-        assert calc_speed(team, False) == 15
+        assert calc_speed(test_frame) == 15
+
+    def check_blaze(self, test_frame):
+        test_frame.user.ability = "Blaze"
+        assert check_blaze(test_frame) == 1
+        test_frame.attack = test_frame.user.moves[0]
+        test_frame.attack.type = "Fire"
+        test_frame.user.stat["hp"] = 1
+        assert check_blaze(test_frame) == 1.5
 
     # def test_calc_accuracy(self):
     #     pass
