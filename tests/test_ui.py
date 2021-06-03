@@ -1,5 +1,5 @@
 from ui import *
-from main import Frame
+from frame import Frame
 from pokemon import Pokemon
 from player import Player
 from weather import Weather

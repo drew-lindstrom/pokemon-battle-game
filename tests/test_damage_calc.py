@@ -3,7 +3,7 @@ from pokemon import Pokemon
 from move import Move
 from weather import Weather
 from terrain import Terrain
-from main import Frame
+from frame import Frame
 
 from damage_calc import *
 import pytest
@@ -42,9 +42,10 @@ class TestDamageCalc:
         test_frame = Frame(p1, p2, None, None, w, t)
         return test_frame
 
-    def test_roll_crit(self):
-        assert roll_crit(1) == 1.5
-        assert roll_crit(2) == 1
+    def test_roll_crit(self, test_frame):
+        assert roll_crit(test_frame, 1) == 1.5
+        assert test_frame.crit == True
+        assert roll_crit(test_frame, 2) == 1
 
     def test_check_stab(self, test_frame):
         test_frame.attack = test_frame.user.moves[0]

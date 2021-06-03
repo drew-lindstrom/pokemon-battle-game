@@ -7,13 +7,15 @@ from pokemon import Pokemon
 from player import Player
 
 
-def roll_crit(i=None):
+def roll_crit(frame, i=None):
     """Rolls to determine if a move lands a critical hit. Critical hits boost damage by 1.5 ignore the attacker's negative stat stages,
     the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil. Burn is not ignored."""
     if i is None or i < 0 or i > 24:
         i = random.randint(1, 24)
     if i == 1:
         print("A critical hit!")
+        print()
+        frame.crit = True
         return 1.5
     else:
         return 1
@@ -110,13 +112,13 @@ def calc_modified_damage():
 
 def calc_damage(frame, include_crit=True, include_random=True):
     """Returns damage from an attack for a given frame."""
-    #  TODO: Critical hit ignore thes attacker's negative stat stages, the defender's positive stat stages, and Light Screen/Reflect/Auorar Veil.
-    # print(f'{attacker.name} used {attacker.moves[n]["name"]}!')
     print(f"{frame.user.name} used {frame.attack.name}!")
+    print()
+
     crit, random = 1, 1
 
     if include_crit == True:
-        crit = roll_crit()
+        crit = roll_crit(frame)
     if include_random == True:
         random_mod = roll_random()
 
@@ -126,6 +128,7 @@ def calc_damage(frame, include_crit=True, include_random=True):
 
     attack_stat, defense_stat = check_attacking_and_defending_stats(frame)
 
+    # TODO: Implement attack, defense, sp_attack, and sp_defense calc.
     if frame.attack_name in modified_base_damage_list:
         # TODO: Implement modified_base_damage_list
         base_damage = calc_modified_base_damage

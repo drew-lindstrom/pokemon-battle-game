@@ -1,7 +1,7 @@
 from move_effects import *
 from pokemon import Pokemon
 from player import Player
-from main import Frame
+from frame import Frame
 from weather import Weather
 from terrain import Terrain
 import pytest

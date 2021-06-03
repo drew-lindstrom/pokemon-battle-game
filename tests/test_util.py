@@ -4,7 +4,7 @@ from move import Move
 from pokemon import Pokemon
 from weather import Weather
 from terrain import Terrain
-from main import Frame
+from frame import Frame
 
 import pytest
 

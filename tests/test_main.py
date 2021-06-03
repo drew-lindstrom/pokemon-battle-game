@@ -1,4 +1,4 @@
-from main import Frame
+from frame import Frame
 from player import Player
 from pokemon import Pokemon
 from weather import Weather
