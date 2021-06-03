@@ -38,8 +38,8 @@ def get_frame_order(frame1, frame2):
 def check_speed(frame1, frame2):
     """Checks the speed of both pokemon on field to determine who moves first.
     Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
-    p1_speed = calc_speed(frame1.attacking_team, frame1.weather)
-    p2_speed = calc_speed(frame2.attacking_team, frame2.weather)
+    p1_speed = calc_speed(frame1)
+    p2_speed = calc_speed(frame2)
 
     if p1_speed > p2_speed:
         return [frame1, frame2]
