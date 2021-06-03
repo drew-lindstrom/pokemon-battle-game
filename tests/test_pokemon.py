@@ -199,11 +199,9 @@ class TestPokemon:
 
     def test_check_choice_item(self, test_pokemon):
         p = test_pokemon
-        assert p.check_choice_item("Scald") == True
         p.prev_move = "Slack Off"
         p.item = "Choice Scarf"
-        assert p.check_choice_item("Scald") == False
-        assert p.check_choice_item("Slack Off") == True
+        p.check_choice_item()
         assert "Move Lock" in p.v_status
 
     def test_check_move_lock(self, test_pokemon):

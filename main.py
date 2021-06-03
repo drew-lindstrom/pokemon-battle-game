@@ -31,6 +31,9 @@ def main():
         frame2 = Frame(p2, p1, None, None, w, t)
         ui.print_pokemon_on_field(frame1.user, frame2.user)
 
+        frame1.user.check_choice_item()
+        frame2.user.check_choice_item()
+
         # Gets input on what each player wants to do before the given turn.
         frame1 = ui.get_choice(frame1)
         frame2 = ui.get_choice(frame2)

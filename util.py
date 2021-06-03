@@ -342,3 +342,6 @@ def apply_end_of_turn_effects(frame_order):
     for frame in frame_order:
         if frame.attack_name == "Wood Hammer":
             apply_recoil(frame.user, frame.attack_damage, 0.33)
+
+    for frame in frame_order:
+        frame.user.set_previous_move(frame.attack_name)

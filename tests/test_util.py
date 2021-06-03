@@ -592,3 +592,5 @@ class TestUtil:
         test_frame.attack_name = "Wood Hammer"
         test_frame.attack_damage = 100
         assert test_frame.user.stat["hp"] == 122
+        apply_end_of_turn_effects(frame_order)
+        assert test_frame.user.prev_move == "Wood Hammer"

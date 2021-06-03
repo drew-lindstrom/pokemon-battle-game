@@ -28,13 +28,21 @@ def get_choice(frame, input_list=[]):
         choice = int(choice)
 
         if choice >= 1 and choice <= 4:
-            if frame.user.moves[choice - 1].pp > 0:
+            if frame.user.moves[choice - 1].pp <= 0:
+                print(f"{frame.user.moves[choice-1].name} is out of PP.")
+                print()
+                choice = None
+            elif "Move Lock" in frame.user.v_status and (
+                frame.user.prev_move != None
+                and frame.user.prev_move != frame.attack_name
+            ):
+                print(f"{frame.user.name} must use {frame.user.prev_move}.")
+                print()
+                choice = None
+            else:
                 frame.attack = frame.user.moves[choice - 1]
                 frame.attack_name = frame.user.moves[choice - 1].name
                 return frame
-            else:
-                print(f"{frame.user.moves[choice-1].name} is out of PP.")
-                choice = None
 
         elif choice == 5:
             if len(input_list) > 0:
