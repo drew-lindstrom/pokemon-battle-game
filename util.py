@@ -155,6 +155,12 @@ def check_can_attack(frame, i=None):
         print()
         return False
 
+    if frame.attack.type == "Fire" and frame.target.ability == "Flash Fire":
+        print(f"{frame.target.name}s attack was boosted by Flash Fire!")
+        print()
+        frame.target.update_stat_modifier("attack", 1)
+        frame.target.update_stat_modifier("sp_attack", 1)
+        return False
     return True
 
 

@@ -365,6 +365,11 @@ class TestUtil:
         assert check_can_attack(test_frame) == False
         test_frame.target.typing[0] = "Water"
         assert check_can_attack(test_frame) == True
+        test_frame.target.ability = "Flash Fire"
+        test_frame.attack.type = "Fire"
+        assert check_can_attack(test_frame) == False
+        assert test_frame.target.stat_mod["attack"] == 1
+        assert test_frame.target.stat_mod["sp_attack"] == 1
 
     def test_check_attack_lands(self, test_frame, test_frame2):
         test_frame.attack = test_frame.user.moves[1]
