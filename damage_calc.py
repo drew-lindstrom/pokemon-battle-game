@@ -5,6 +5,7 @@ from move import Move
 from game_data import type_key, type_chart, modified_base_damage_list
 from pokemon import Pokemon
 from player import Player
+from stat_calc import *
 
 
 def roll_crit(frame, i=None):
@@ -72,14 +73,14 @@ def check_attacking_and_defending_stats(frame):
     """Checks if the attack for the given frame is Physical or Special. If physical, returns Attack and Defense for stats used in damage calc.
     If special, returns Special Attack and Special Defense. If the attack is Psyshock, returns Special Attack and Defense."""
     if frame.attack_name == "Psyshock":
-        attack_stat = frame.user.stat["sp_attack"]
-        defense_stat = frame.target.stat["defense"]
+        attack_stat = calc_sp_attack(frame)
+        defense_stat = calc_defense(frame)
     elif frame.attack.category == "Physical":
-        attack_stat = frame.user.stat["attack"]
-        defense_stat = frame.target.stat["defense"]
+        attack_stat = calc_attack(frame)
+        defense_stat = calc_defense(frame)
     elif frame.attack.category == "Special":
-        attack_stat = frame.user.stat["sp_attack"]
-        defense_stat = frame.target.stat["sp_defense"]
+        attack_stat = calc_sp_attack(frame)
+        defense_stat = calc_sp_defense(frame)
 
     return attack_stat, defense_stat
 
@@ -128,9 +129,7 @@ def calc_damage(frame, include_crit=True, include_random=True):
 
     attack_stat, defense_stat = check_attacking_and_defending_stats(frame)
 
-    # TODO: Implement attack, defense, sp_attack, and sp_defense calc.
     if frame.attack_name in modified_base_damage_list:
-        # TODO: Implement modified_base_damage_list
         base_damage = calc_modified_base_damage
     else:
         base_damage = frame.attack.power
