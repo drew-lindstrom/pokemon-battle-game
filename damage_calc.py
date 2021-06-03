@@ -116,7 +116,7 @@ def calc_damage(frame, include_crit=True, include_random=True):
     print(f"{frame.user.name} used {frame.attack.name}!")
     print()
 
-    crit, random = 1, 1
+    crit, random_mod = 1, 1
 
     if include_crit == True:
         crit = roll_crit(frame)
@@ -150,6 +150,7 @@ def calc_damage(frame, include_crit=True, include_random=True):
         * stab
         * typ
         * burn
+        * random_mod
     )
 
     return damage

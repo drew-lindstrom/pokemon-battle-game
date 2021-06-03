@@ -323,6 +323,10 @@ class TestUtil:
     def test_roll_confusion(self, test_pokemon):
         assert roll_confusion(test_pokemon, 2) == True
         assert roll_confusion(test_pokemon, 1) == False
+        assert test_pokemon.stat["hp"] == 375
+
+    def test_calc_confusion_damage(self, test_pokemon):
+        assert calc_confusion_damage(test_pokemon) == 19
 
     @pytest.mark.parametrize(
         "attack_type,target_type,expected",

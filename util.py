@@ -102,10 +102,33 @@ def roll_confusion(user, i=None):
         i = randint(1, 2)
 
     if i == 1:
-        # TODO: Implement confusion damage.
         print(f"{user.name} hit its self in confusion!")
+        user.apply_damage(calc_confusion_damage(user))
         return False
     return True
+
+
+def calc_confusion_damage(user):
+    """Returns damage inflicted by a pokemon to itself if they hit themselves in confusion."""
+    # TODO: Need to add random to damage calc. Probably better to combine this with calc_damage function.
+    random_mod = 1
+
+    damage = int(
+        (
+            int(
+                (
+                    (int(2 * user.level / 5) + 2)
+                    * 40
+                    * (user.stat["attack"] / user.stat["defense"])
+                )
+                / 50
+            )
+            + 2
+        )
+        * random_mod
+    )
+
+    return damage
 
 
 def check_immunity(frame):
