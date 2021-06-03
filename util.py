@@ -333,7 +333,7 @@ def apply_end_of_turn_effects(frame_order):
     """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
     for frame in frame_order:
         frame.user.decrement_statuses()
-        if frame.attack.name:
+        if frame.attack_name:
             frame.attack.decrement_pp()
 
     if (

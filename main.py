@@ -78,7 +78,7 @@ def main():
                     break
             # Prompts player to switch any fainted pokemon at end of turn.
             if player.cur_pokemon.status[0] == "Fainted":
-                player.switch(ui.get_switch(cur_frame).switch_choice)
+                switch(ui.get_switch(cur_frame))
 
 
 if __name__ == "__main__":

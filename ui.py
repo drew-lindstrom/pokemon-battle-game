@@ -34,7 +34,7 @@ def get_choice(frame, input_list=[]):
                 choice = None
             elif "Move Lock" in frame.user.v_status and (
                 frame.user.prev_move != None
-                and frame.user.prev_move != frame.attack_name
+                and frame.user.prev_move != frame.user.moves[choice - 1].name
             ):
                 print(f"{frame.user.name} must use {frame.user.prev_move}.")
                 print()
