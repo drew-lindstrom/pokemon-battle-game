@@ -119,7 +119,7 @@ priority_moves = {
 
 stat_alt_attacks = {
     "Close Combat": ("user", 100, "defense", -1, "sp_defense", -1),
-    "Crunch": ("target", 20, "defense"),
+    "Crunch": ("target", 20, "defense", -1),
     "Earth Power": ("target", 10, "sp_defense", -1),
     "Flash Cannon": ("target", 10, "sp_defense", -1),
     "Focus Blast": ("target", 10, "sp_defense", -1),

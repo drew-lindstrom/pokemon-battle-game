@@ -11,6 +11,7 @@ class Terrain:
         if self.current_terrain is None:
             self.current_terrain = terrain_name
             print(f"{terrain_name} has been activated!")
+            print()
             if pokemon.item == "Terrain Extender":
                 self.counter = 7
             else:

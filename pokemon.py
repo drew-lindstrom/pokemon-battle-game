@@ -99,7 +99,7 @@ class Pokemon:
             print(f"{self.name}s {stat} greatly increased!")
         if n == -1:
             print(f"{self.name}s {stat} decreased!")
-        if n > 1:
+        if n < -1:
             print(f"{self.name}s {stat} greatly decreased!")
         print()
 
@@ -123,15 +123,15 @@ class Pokemon:
         print(f"Ability: {self.ability}")
         print(f"Item: {self.item}")
         print(f"HP: {self.stat['hp']}/{self.stat['max_hp']}")
-        print(f"Attack: {self.calc_modified_stat('attack')/self.stat['attack']}")
-        print(f"Defense: {self.calc_modified_stat('defense')/self.stat['defense']}")
+        print(f"Attack: {self.calc_modified_stat('attack')}/{self.stat['attack']}")
+        print(f"Defense: {self.calc_modified_stat('defense')}/{self.stat['defense']}")
         print(
-            f"Special Attack: {self.calc_modified_stat('sp_attack')/self.stat['sp_attack']}"
+            f"Special Attack: {self.calc_modified_stat('sp_attack')}/{self.stat['sp_attack']}"
         )
         print(
-            f"Special Defense: {self.calc_modified_stat('sp_defense')/self.stat['sp_defense']}"
+            f"Special Defense: {self.calc_modified_stat('sp_defense')}/{self.stat['sp_defense']}"
         )
-        print(f"Speed: {self.calc_modified_stat('speed')/self.stat['speed']}")
+        print(f"Speed: {self.calc_modified_stat('speed')}/{self.stat['speed']}")
         print()
 
         for n in range(4):
