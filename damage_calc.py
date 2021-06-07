@@ -113,9 +113,6 @@ def calc_modified_damage():
 
 def calc_damage(frame, include_crit=True, include_random=True):
     """Returns damage from an attack for a given frame."""
-    print(f"{frame.user.name} used {frame.attack.name}!")
-    print()
-
     crit, random_mod = 1, 1
 
     if include_crit == True:

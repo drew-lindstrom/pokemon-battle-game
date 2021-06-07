@@ -38,6 +38,8 @@ def main():
         frame1 = ui.get_choice(frame1)
         frame2 = ui.get_choice(frame2)
 
+        ui.clear_screen()
+
         # Determines which player goes first for the turn (based on speed, priority moves, etc.)
         frame_order = get_frame_order(frame1, frame2)
 
@@ -51,6 +53,8 @@ def main():
                     cur_frame.can_attack = check_can_attack(cur_frame)
                     check_attack_lands(cur_frame)
                     if cur_frame.can_attack and cur_frame.attack_lands:
+                        print(f"{cur_frame.user.name} used {cur_frame.attack.name}!")
+                        print()
                         if (
                             cur_frame.attack.category == "Physical"
                             or cur_frame.attack.category == "Special"
