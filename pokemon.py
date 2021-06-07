@@ -92,6 +92,17 @@ class Pokemon:
     def update_stat_modifier(self, stat, n):
         """Updates a given stat modifier by n. Stat modifieres can not be greater than 6 or less than -6."""
         self.stat_mod[stat] += n
+
+        if n == 1:
+            print(f"{self.name}s {stat} increased!")
+        if n > 1:
+            print(f"{self.name}s {stat} greatly increased!")
+        if n == -1:
+            print(f"{self.name}s {stat} decreased!")
+        if n > 1:
+            print(f"{self.name}s {stat} greatly decreased!")
+        print()
+
         if self.stat_mod[stat] > 6:
             self.stat_mod[stat] = 6
         if self.stat_mod[stat] < -6:
@@ -104,17 +115,23 @@ class Pokemon:
             self.stat_mod[stat] = 0
 
     def show_stats(self):
-        """Prints the stats of the Pokemon with modifiers applied."""  # TODO: Add modifiers
+        """Prints the stats of the Pokemon with modifiers applied."""
         print(f"Pokemon: {self.name}")
         print(f"Type: {self.typing}")
         print(f"Level: {self.level}")
         print(f"Gender: {self.gender}")
+        print(f"Ability: {self.ability}")
+        print(f"Item: {self.item}")
         print(f"HP: {self.stat['hp']}/{self.stat['max_hp']}")
-        print(f"Attack: {self.stat['attack']}")
-        print(f"Defense: {self.stat['defense']}")
-        print(f"Special Attack: {self.stat['sp_attack']}")
-        print(f"Special Defense: {self.stat['sp_defense']}")
-        print(f"Speed: {self.stat['speed']}")
+        print(f"Attack: {self.calc_modified_stat('attack')/self.stat['attack']}")
+        print(f"Defense: {self.calc_modified_stat('defense')/self.stat['defense']}")
+        print(
+            f"Special Attack: {self.calc_modified_stat('sp_attack')/self.stat['sp_attack']}"
+        )
+        print(
+            f"Special Defense: {self.calc_modified_stat('sp_defense')/self.stat['sp_defense']}"
+        )
+        print(f"Speed: {self.calc_modified_stat('speed')/self.stat['speed']}")
         print()
 
         for n in range(4):
