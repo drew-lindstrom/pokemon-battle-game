@@ -49,21 +49,22 @@ def main():
                 frame1.update_cur_pokemon()
                 frame2.update_cur_pokemon()
             else:
+                print(f"{cur_frame.user.name} used {cur_frame.attack.name}!")
+                print()
                 if cur_frame.user.status != "Fainted":
                     cur_frame.can_attack = check_can_attack(cur_frame)
                     check_attack_lands(cur_frame)
                     if cur_frame.can_attack and cur_frame.attack_lands:
-                        print(f"{cur_frame.user.name} used {cur_frame.attack.name}!")
-                        print()
                         if (
                             cur_frame.attack.category == "Physical"
                             or cur_frame.attack.category == "Special"
                         ):
                             cur_frame.attack_damage = calc_damage(cur_frame)
                             cur_frame.target.apply_damage(cur_frame.attack_damage)
-                            apply_post_attack_effects(cur_frame)
+
                         else:
                             apply_non_damaging_move(cur_frame)
+                        apply_post_attack_effects(cur_frame)
 
         apply_end_of_turn_effects(frame_order)
 
