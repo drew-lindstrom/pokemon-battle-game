@@ -109,12 +109,12 @@ class Pokemon:
         print(f"Type: {self.typing}")
         print(f"Level: {self.level}")
         print(f"Gender: {self.gender}")
-        print(f"HP: {self.hp}/{self.max_hp}")
-        print(f"Attack: {self.attack}")
-        print(f"Defense: {self.defense}")
-        print(f"Special Attack: {self.sp_attack}")
-        print(f"Special Defense: {self.sp_defense}")
-        print(f"Speed: {self.speed}")
+        print(f"HP: {self.stat['hp']}/{self.stat['max_hp']}")
+        print(f"Attack: {self.stat['attack']}")
+        print(f"Defense: {self.stat['defense']}")
+        print(f"Special Attack: {self.stat['sp_attack']}")
+        print(f"Special Defense: {self.stat['sp_defense']}")
+        print(f"Speed: {self.stat['speed']}")
         print()
 
         for n in range(4):
