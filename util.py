@@ -230,11 +230,14 @@ def check_attack_lands(frame, i=None):
 
 def apply_non_damaging_move(frame):
     """Applies effect of current non damaging move being used."""
-    if frame.attack_name == "Stealth Rocks":
+    if frame.attack_name == "Stealth Rock":
         move_effects.set_stealth_rocks(frame)
 
     if frame.attack_name == "Defog":
         move_effects.activate_defog(frame)
+
+    if frame.attack_name == "Toxic":
+        frame.target.set_status("Badly Poisoned")
 
 
 def switch(frame):
@@ -333,7 +336,7 @@ def apply_end_of_turn_effects(frame_order):
     """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
     for frame in frame_order:
         frame.user.decrement_statuses()
-        if frame.attack:
+        if not frame.switch_choice:
             frame.attack.decrement_pp()
 
     if (

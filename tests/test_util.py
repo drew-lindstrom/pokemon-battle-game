@@ -390,12 +390,15 @@ class TestUtil:
 
     def test_apply_non_damaging_move(self, test_frame):
         test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack_name = "Stealth Rocks"
+        test_frame.attack_name = "Stealth Rock"
         apply_non_damaging_move(test_frame)
         assert test_frame.defending_team.stealth_rocks == True
         test_frame.attack_name = "Defog"
         apply_non_damaging_move(test_frame)
         assert test_frame.defending_team.stealth_rocks == False
+        test_frame.attack_name = "Toxic"
+        apply_non_damaging_move(test_frame)
+        assert test_frame.target.status[0] == "Badly Poisoned"
 
     def test_switch(self, test_frame):
         test_frame.user.prev_move = "Scald"

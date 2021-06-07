@@ -52,7 +52,7 @@ def main():
                     check_attack_lands(cur_frame)
                     if cur_frame.can_attack and cur_frame.attack_lands:
                         if (
-                            cur_frame.attack.category == "Pysical"
+                            cur_frame.attack.category == "Physical"
                             or cur_frame.attack.category == "Special"
                         ):
                             cur_frame.attack_damage = calc_damage(cur_frame)
