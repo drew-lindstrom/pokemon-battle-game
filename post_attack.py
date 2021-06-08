@@ -76,7 +76,7 @@ def apply_burn(pokemon):
     if pokemon.status[0] == "Burned":
         print(f"{pokemon.name} was damaged by its burn!")
         print()
-        pokemon.apply_damage_percentage(0.0625)
+        pokemon.apply_damage(None, 0.0625)
 
 
 def apply_poison(pokemon):
@@ -89,9 +89,9 @@ def apply_poison(pokemon):
         print(f"{pokemon.name} was hurt by the poison!")
         print()
         if pokemon.status[0] == "Badly Poisoned":
-            pokemon.apply_damage_percentage(0.0625 * (15 - pokemon.status[1]))
+            pokemon.apply_damage(None, 0.0625 * (15 - pokemon.status[1]))
         if pokemon.status[0] == "Poisoned":
-            pokemon.apply_damage_percentage(0.125)
+            pokemon.apply_damage(None, 0.125)
 
 
 def apply_recoil(pokemon, move_damage, n):

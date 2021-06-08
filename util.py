@@ -103,7 +103,7 @@ def roll_confusion(user, i=None):
 
     if i == 1:
         print(f"{user.name} hit its self in confusion!")
-        user.apply_damage(calc_confusion_damage(user))
+        user.apply_damage(calc_confusion_damage(user), None)
         return False
     return True
 
@@ -221,11 +221,12 @@ def check_attack_lands(frame, i=None):
         return
 
     print(f"{frame.user.name}s attack missed!")
+    print()
 
     # If high jump kick misses, it damages the user.
     if frame.attack_name == "High Jump Kick":
         print(f"{frame.user.name} came crashing down...")
-        frame.user.apply_damage_percentage(0.5)
+        frame.user.apply_damage(None, 0.5)
 
 
 def apply_non_damaging_move(frame):
@@ -319,9 +320,10 @@ def apply_stealth_rocks_damage(frame):
     except:
         mult_2 = 1
 
-    frame.user.apply_damage_percentage(0.125 * mult_1 * mult_2)
     print(f"Pointed stones dug into {frame.user.name}!")
     print()
+
+    frame.user.apply_damage(None, 0.125 * mult_1 * mult_2)
 
 
 def apply_post_attack_effects(frame, i=None):

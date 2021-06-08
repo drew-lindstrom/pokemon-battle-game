@@ -181,27 +181,22 @@ class Pokemon:
         print(f"{self.name} recovered {heal_amount} HP!")
         print()
 
-    def apply_damage(self, n):
-        """Damages pokemon by a specified amount. HP won't fall below 0. If HP is at 0, sets status to Fainted."""
-        if n > self.stat["hp"]:
-            damage = int(self.stat["hp"])
-        else:
-            damage = int(n)
-        self.stat["hp"] -= damage
-        print(f"{self.name} lost {damage} HP!")
-        print()
-        self.check_fainted()
-
-    def apply_damage_percentage(self, n):
-        """Damages pokemon by a specified percentage. HP won't fall below 0. Effects that indirectly cause damage (like Burn or Poison)
-        are calculated with a specific percetage of the pokemon's max HP."""
-        damage = n * self.stat["max_hp"]
+    def apply_damage(self, amount=None, percentage=None):
+        """Damages pokemon by a specified amount or percentage. HP won't fall below 0. If HP is at 0, sets status to Fainted."""
+        if amount:
+            damage = int(amount)
+        elif percentage:
+            damage = int(percentage * self.stat["max_hp"])
 
         if damage > self.stat["hp"]:
-            damage = self.stat["hp"]
-        self.stat["hp"] -= int(damage)
+            damage = int(self.stat["hp"])
+
+        self.stat["hp"] -= damage
+
         print(f"{self.name} lost {damage} HP!")
         print()
+
+        self.check_fainted()
 
     def check_fainted(self):
         """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""

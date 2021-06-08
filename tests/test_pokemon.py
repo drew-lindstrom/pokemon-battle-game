@@ -75,19 +75,18 @@ class TestPokemon:
     def test_apply_damage(self, test_pokemon):
         p = test_pokemon
         p.stat["hp"] = 200
-        p.apply_damage(50)
+        p.apply_damage(50, None)
         assert p.stat["hp"] == 150
         p.stat["hp"] = 35
-        p.apply_damage(50)
+        p.apply_damage(50, None)
         assert p.stat["hp"] == 0
         assert p.status[0] == "Fainted"
 
-    def test_apply_damage_percentage(self, test_pokemon):
-        p = test_pokemon
-        p.apply_damage_percentage(0.5)
+        p.stat["hp"] = p.stat["max_hp"]
+        p.apply_damage(None, 0.5)
         assert p.stat["hp"] == 197
         p.stat["hp"] = 35
-        p.apply_damage_percentage(0.5)
+        p.apply_damage(None, 0.5)
         assert p.stat["hp"] == 0
 
     def test_check_fainted(self, test_pokemon):

@@ -74,9 +74,12 @@ def apply_weather_damage(weather, pokemon):
         return False
     if pokemon.item == "Safety Goggles":
         return False
-    pokemon.apply_damage_percentage(1 / 16)
+
     print(f"{pokemon.name} was buffeted by the {weather.current_weather.lower()}!")
     print()
+
+    pokemon.apply_damage(None, 1 / 16)
+
     return True
 
 

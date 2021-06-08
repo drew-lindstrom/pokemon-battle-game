@@ -60,7 +60,7 @@ def main():
                             or cur_frame.attack.category == "Special"
                         ):
                             cur_frame.attack_damage = calc_damage(cur_frame)
-                            cur_frame.target.apply_damage(cur_frame.attack_damage)
+                            cur_frame.target.apply_damage(cur_frame.attack_damage, None)
 
                         else:
                             apply_non_damaging_move(cur_frame)
