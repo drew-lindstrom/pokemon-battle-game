@@ -10,10 +10,10 @@ def print_pokemon_on_field(frame1, frame2):
             f"{frame.user.name} - HP: {frame.user.stat['hp']}/{frame.user.stat['max_hp']}, Status: {frame.user.status[0]}"
         )
         print(
-            f"Attack: {stat_calc.calc_attack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calc_defense(frame)}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calc_sp_attack(frame)}/{frame.user.stat['sp_attack']}"
+            f"Attack: {stat_calc.calc_attack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calc_defense(frame, 'user')}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calc_sp_attack(frame)}/{frame.user.stat['sp_attack']}"
         )
         print(
-            f"Special Defense: {stat_calc.calc_sp_defense(frame)}/{frame.user.stat['sp_defense']}   Speed: {stat_calc.calc_speed(frame)}/{frame.user.stat['speed']}"
+            f"Special Defense: {stat_calc.calc_sp_defense(frame, 'user')}/{frame.user.stat['sp_defense']}   Speed: {stat_calc.calc_speed(frame)}/{frame.user.stat['speed']}"
         )
         print()
 

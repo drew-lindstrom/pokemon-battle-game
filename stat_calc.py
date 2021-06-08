@@ -19,15 +19,20 @@ def calc_attack(frame):
     return int(frame.user.calc_modified_stat("attack") * additional_modifier)
 
 
-def calc_defense(frame):
+def calc_defense(frame, pokemon=None):
     """Calculates the defense stat of the given pokemon by calculating its modified defense stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a positive defense stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
     additional_modifier = 1
 
-    if frame.crit == True and frame.target.stat_mod["defense"] > 0:
-        return int(frame.target.stat["defense"] * additional_modifier)
-    return int(frame.target.calc_modified_stat("defense") * additional_modifier)
+    if pokemon == "user":
+        pokemon = frame.user
+    else:
+        pokemon = frame.target
+
+    if frame.crit == True and pokemon.stat_mod["defense"] > 0:
+        return int(pokemon.stat["defense"] * additional_modifier)
+    return int(pokemon.calc_modified_stat("defense") * additional_modifier)
 
 
 def calc_sp_attack(frame):
@@ -44,7 +49,7 @@ def calc_sp_attack(frame):
     return int(frame.user.calc_modified_stat("sp_attack") * additional_modifier)
 
 
-def calc_sp_defense(frame):
+def calc_sp_defense(frame, pokemon=None):
     """Calculates the special defense stat of the given pokemon by calculating its modified sp_defense stat and mulitplying it with any additional modifiers.
     If the given attack roled a critical hit, a positive sp_defense stat_mod is ignored and calc_modified_stat is not called.
     Additional modifiers are still applied."""
@@ -53,9 +58,14 @@ def calc_sp_defense(frame):
         frame.weather, frame.user
     )
 
-    if frame.crit == True and frame.target.stat_mod["sp_defense"] > 0:
-        return int(frame.target.stat["sp_defense"] * additional_modifier)
-    return int(frame.target.calc_modified_stat("sp_defense") * additional_modifier)
+    if pokemon == "user":
+        pokemon = frame.user
+    else:
+        pokemon = frame.target
+
+    if frame.crit == True and pokemon.stat_mod["sp_defense"] > 0:
+        return int(pokemon.stat["sp_defense"] * additional_modifier)
+    return int(pokemon.calc_modified_stat("sp_defense") * additional_modifier)
 
 
 def calc_speed(frame):
