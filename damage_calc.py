@@ -92,10 +92,15 @@ def activate_eruption(frame):
 
 def activate_knock_off(frame):
     """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
-    print(f"{frame.target.name} lost their item!")
-    print()
+    if frame.target.item:
+        print(f"{frame.target.name} lost their item!")
+        print()
 
-    return int(65 * 1.5)
+        frame.target.item = None
+        return int(65 * 1.5)
+
+    else:
+        return 65
 
 
 def calc_modified_base_damage(frame):
