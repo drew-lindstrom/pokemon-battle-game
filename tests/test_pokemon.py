@@ -60,16 +60,16 @@ class TestPokemon:
         assert p.calc_modified_stat("accuracy") == int(7 / 3 * 100)
         assert p.calc_modified_stat("evasion") == int(3 / 7 * 100)
 
-    def test_heal(self, test_pokemon):
+    def test_apply_heal(self, test_pokemon):
         p = test_pokemon
         p.stat["hp"] = 150
-        p.heal(0.5)
+        p.apply_heal(0.5)
         assert p.stat["hp"] == 347
         p.stat["hp"] = 393
-        p.heal(0.5)
+        p.apply_heal(0.5)
         assert p.stat["hp"] == 394
         p.stat["hp"] = 0
-        p.heal(0)
+        p.apply_heal(0)
         assert p.stat["hp"] == 0
 
     def test_apply_damage(self, test_pokemon):

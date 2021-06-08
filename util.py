@@ -246,6 +246,7 @@ def switch(frame):
     n = int(frame.switch_choice)
     if frame.attacking_team.team[n].stat["hp"] == 0:
         print(f"{frame.attacking_team.team[n].name} has already fainted!")
+        print()
     else:
         # try:
         frame.attacking_team.team[0], frame.attacking_team.team[n] = (

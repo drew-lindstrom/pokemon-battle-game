@@ -386,7 +386,7 @@ class TestUtil:
         assert test_frame2.attack_lands == True
         test_frame2.attack_name = "High Jump Kick"
         check_attack_lands(test_frame2, 100)
-        assert test_frame2.user.stat["hp"] == 140
+        assert test_frame2.user.stat["hp"] == 141
 
     def test_apply_non_damaging_move(self, test_frame):
         test_frame.attack = test_frame.user.moves[0]
@@ -410,7 +410,7 @@ class TestUtil:
         switch(test_frame)
         test_frame.update_cur_pokemon()
         assert test_frame.user.name == "Tyranitar"
-        assert test_frame.user.stat["hp"] == 353
+        assert test_frame.user.stat["hp"] == 354
         assert test_frame.attacking_team[1].prev_move == None
         assert test_frame.attacking_team[1].stat_mod["attack"] == 0
         assert len(test_frame.attacking_team[1].v_status) == 0
@@ -442,10 +442,10 @@ class TestUtil:
     def test_apply_entry_hazards(self, test_frame):
         test_frame.attacking_team.stealth_rocks = True
         apply_entry_hazards(test_frame)
-        assert test_frame.user.stat["hp"] == 344
+        assert test_frame.user.stat["hp"] == 345
         test_frame.user.item = "Heavy Duty Boots"
         apply_entry_hazards(test_frame)
-        assert test_frame.user.stat["hp"] == 344
+        assert test_frame.user.stat["hp"] == 345
 
     def test_apply_stealth_rocks_damage(self):
         slowbro = Pokemon(
@@ -508,19 +508,19 @@ class TestUtil:
         test_player = Player([slowbro, aggron, steelix, fearow, charizard])
         test_frame = Frame(test_player, test_player, None, None, None, None)
         apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 289
+        assert test_frame.user.stat["hp"] == 290
         test_frame.user = aggron
         apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 263
+        assert test_frame.user.stat["hp"] == 264
         test_frame.user = steelix
         apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 281
+        assert test_frame.user.stat["hp"] == 282
         test_frame.user = fearow
         apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 203
+        assert test_frame.user.stat["hp"] == 204
         test_frame.user = charizard
         apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 148
+        assert test_frame.user.stat["hp"] == 149
 
     def test_apply_post_attack_effects(self):
         slowbro = Pokemon(
@@ -576,7 +576,7 @@ class TestUtil:
         test_frame.user.v_status["Flinched"] = [2]
         apply_end_of_turn_effects(frame_order)
         assert test_frame.user.moves[0].pp == 23
-        assert test_frame.user.stat["hp"] == 369
+        assert test_frame.user.stat["hp"] == 370
         assert test_frame.user.status[1] == 2
         assert test_frame.user.v_status["Flinched"] == [1]
         test_frame.user.stat["hp"] = 50
@@ -585,17 +585,17 @@ class TestUtil:
         test_frame2.user.status = ["Burned", 1]
         apply_end_of_turn_effects(frame_order)
         assert test_frame.user.stat["hp"] == 74
-        assert test_frame2.user.stat["hp"] == 263
+        assert test_frame2.user.stat["hp"] == 264
         test_frame.terrain.current_terrain = None
         test_frame.user.item = "Leftovers"
         test_frame2.user.status = ["Badly Poisoned", 3]
         apply_end_of_turn_effects(frame_order)
         assert test_frame.user.stat["hp"] == 98
-        assert test_frame2.user.stat["hp"] == 34
+        assert test_frame2.user.stat["hp"] == 36
         test_frame2.user.status = ["Poisoned", 4]
         test_frame2.user.stat["hp"] = 200
         apply_end_of_turn_effects(frame_order)
-        assert test_frame2.user.stat["hp"] == 164
+        assert test_frame2.user.stat["hp"] == 165
         test_frame.attack_name = "Wood Hammer"
         test_frame.attack_damage = 100
         assert test_frame.user.stat["hp"] == 122

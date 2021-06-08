@@ -165,7 +165,7 @@ class Pokemon:
             return calc_modified_stat_helper(stat_name, 3)
         return calc_modified_stat_helper(stat_name, 2)
 
-    def heal(self, n):
+    def apply_heal(self, n):
         """Heal pokemon by n percentage of it's max hp. Won't work on fainted Pokemon. HP won't exceed max hp.
         Ex: Slowbro's HP = 150 -> slowbro.heal(0.5) -> Slowbro's HP = 150 + 50% of max hp"""
         if self.stat["hp"] <= 0:

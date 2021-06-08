@@ -20,7 +20,7 @@ def activate_intimidate(user, target):
 def activate_regenerator(user):
     """Heals a pokemon by 1/3 of it's max hp if it's ability is regenerator and switches out."""
     if user.ability == "Regenerator":
-        user.heal(1 / 3)
+        user.apply_heal(1 / 3)
 
 
 def activate_psychic_surge(user, terrain):

@@ -111,7 +111,7 @@ class TestPostAttack:
         assert p.stat["hp"] == 394
         p.status = ["Burned"]
         apply_burn(p)
-        assert p.stat["hp"] == 369
+        assert p.stat["hp"] == 370
         p.stat["hp"] = 5
         apply_burn(p)
         assert p.stat["hp"] == 0
@@ -122,18 +122,18 @@ class TestPostAttack:
         assert p.stat["hp"] == 394
         p.status = ["Badly Poisoned", 14]
         apply_poison(p)
-        assert p.stat["hp"] == 369
+        assert p.stat["hp"] == 370
         p.status = ["Badly Poisoned", 13]
         apply_poison(p)
-        assert p.stat["hp"] == 319
+        assert p.stat["hp"] == 321
         p.stat["hp"] = 394
         p.status = ["Badly Poisoned", 0]
         apply_poison(p)
-        assert p.stat["hp"] == 24
+        assert p.stat["hp"] == 25
         p.status = ["Poisoned"]
         p.stat["hp"] = 300
         apply_poison(p)
-        assert p.stat["hp"] == 250
+        assert p.stat["hp"] == 251
 
     def test_apply_recoil(self, test_pokemon):
         p = test_pokemon

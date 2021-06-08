@@ -14,13 +14,13 @@ def activate_defog(frame):
 
 def activate_roost(frame):
     """Activates effects of roost. Heals user by 50% of max hp and adds temporary grounded to v_status for 1 turn."""
-    frame.user.heal(0.5)
+    frame.user.apply_heal(0.5)
     frame.user.v_status["Temporary Grounded"] = [1]
 
 
 def activate_slack_off(frame):
     """Activates effect of slack off. Heals user by 50% of max hp."""
-    frame.user.heal(0.5)
+    frame.user.apply_heal(0.5)
 
 
 def set_stealth_rocks(frame):
