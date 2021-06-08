@@ -291,8 +291,7 @@ class Pokemon:
         self.prev_move = None
 
     def check_choice_item(self):
-        """Checks if pokemon is holding a choice item, and if so, adds Move Lock to v_status if not already there.
-        Also checks to make sure current attack is same as prev_move."""
+        """Checks if pokemon is holding a choice item, and if so, adds Move Lock to v_status if not already there."""
         if (
             self.item == "Choice Scarf"
             or self.item == "Choice Band"

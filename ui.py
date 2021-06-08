@@ -1,14 +1,21 @@
 from player import Player
+import stat_calc
 
 
-def print_pokemon_on_field(pokemon1, pokemon2):
-    print(
-        f"{pokemon1.name} - HP: {pokemon1.stat['hp']}/{pokemon1.stat['max_hp']}, Status: {pokemon1.status[0]}"
-    )
-    print(
-        f"{pokemon2.name} - HP: {pokemon2.stat['hp']}/{pokemon2.stat['max_hp']}, Status: {pokemon2.status[0]}"
-    )
-    print()
+def print_pokemon_on_field(frame1, frame2):
+    frame_order = [frame1, frame2]
+
+    for frame in frame_order:
+        print(
+            f"{frame.user.name} - HP: {frame.user.stat['hp']}/{frame.user.stat['max_hp']}, Status: {frame.user.status[0]}"
+        )
+        print(
+            f"Attack: {stat_calc.calc_attack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calc_defense(frame)}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calc_sp_attack(frame)}/{frame.user.stat['sp_attack']}"
+        )
+        print(
+            f"Special Defense: {stat_calc.calc_sp_defense(frame)}/{frame.user.stat['sp_defense']}   Speed: {stat_calc.calc_speed(frame)}/{frame.user.stat['speed']}"
+        )
+        print()
 
 
 def get_choice(frame, input_list=[]):

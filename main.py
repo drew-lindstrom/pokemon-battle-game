@@ -29,7 +29,7 @@ def main():
     while True:
         frame1 = Frame(p1, p2, None, None, w, t)
         frame2 = Frame(p2, p1, None, None, w, t)
-        ui.print_pokemon_on_field(frame1.user, frame2.user)
+        ui.print_pokemon_on_field(frame1, frame2)
 
         frame1.user.check_choice_item()
         frame2.user.check_choice_item()
