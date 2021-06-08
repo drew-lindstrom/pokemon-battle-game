@@ -114,6 +114,9 @@ class Pokemon:
         for stat in self.stat_mod:
             self.stat_mod[stat] = 0
 
+        print(f"{self.name}s stats were reset!")
+        print()
+
     def show_stats(self):
         """Prints the stats of the Pokemon with modifiers applied."""
         print(f"Pokemon: {self.name}")
@@ -192,7 +195,13 @@ class Pokemon:
     def apply_damage_percentage(self, n):
         """Damages pokemon by a specified percentage. HP won't fall below 0. Effects that indirectly cause damage (like Burn or Poison)
         are calculated with a specific percetage of the pokemon's max HP."""
-        self.stat["hp"] = max(0, int(self.stat["hp"] - self.stat["max_hp"] * n))
+        damage = n * self.stat["max_hp"]
+
+        if damage > self.stat["hp"]:
+            damage = self.stat["hp"]
+        self.stat["hp"] -= int(damage)
+        print(f"{self.name} lost {damage} HP!")
+        print()
 
     def check_fainted(self):
         """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""
