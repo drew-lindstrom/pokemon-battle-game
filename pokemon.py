@@ -18,7 +18,7 @@ class Pokemon:
         self.prev_move = None
 
         for n in range(4):
-            self.moves[n] = Move(moves[n])
+            self.set_move(n, moves[n])
 
         self.ability = ability
         self.item = item
@@ -88,6 +88,10 @@ class Pokemon:
                 self.stat[stat_name] = int(
                     (stats_formula(n) + 5) * natures_dict[self.nature][n - 1]
                 )
+
+    def set_move(self, n, move_name):
+        """Sets the move of the given name for the move slot 'n' of the pokemon."""
+        self.moves[n] = Move(move_name)
 
     def update_stat_modifier(self, stat, n):
         """Updates a given stat modifier by n. Stat modifieres can not be greater than 6 or less than -6."""

@@ -28,6 +28,14 @@ class TestPokemon:
         assert p.stat["sp_defense"] == 197
         assert p.stat["speed"] == 86
 
+    def test_set_move(self, test_pokemon):
+        test_pokemon.set_move(0, "Close Combat")
+        assert test_pokemon.moves[0].name == "Close Combat"
+        assert test_pokemon.moves[0].type == "Fighting"
+        assert test_pokemon.moves[0].power == 120
+        assert test_pokemon.moves[0].accuracy == 100
+        assert test_pokemon.moves[0].category == "Physical"
+
     def test_update_stat_modifier(self, test_pokemon):
         p = test_pokemon
         p.update_stat_modifier("attack", 4)
