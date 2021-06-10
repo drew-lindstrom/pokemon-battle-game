@@ -72,7 +72,7 @@ def roll_random(i=None):
 def check_attacking_and_defending_stats(frame):
     """Checks if the attack for the given frame is Physical or Special. If physical, returns Attack and Defense for stats used in damage calc.
     If special, returns Special Attack and Special Defense. If the attack is Psyshock, returns Special Attack and Defense."""
-    if frame.attack_name == "Psyshock":
+    if frame.attack.name == "Psyshock":
         attack_stat = calc_sp_attack(frame)
         defense_stat = calc_defense(frame)
     elif frame.attack.category == "Physical":
@@ -105,10 +105,10 @@ def activate_knock_off(frame):
 
 def calc_modified_base_damage(frame):
     """Returns base power for various moves that have varying base powers based on different parameters."""
-    if frame.attack_name == "Eruption":
+    if frame.attack.name == "Eruption":
         return activate_eruption(frame)
 
-    if frame.attack_name == "Knock Off" and frame.target.item:
+    if frame.attack.name == "Knock Off" and frame.target.item:
         return activate_knock_off(frame)
 
 
@@ -131,7 +131,7 @@ def calc_damage(frame, include_crit=True, include_random=True):
 
     attack_stat, defense_stat = check_attacking_and_defending_stats(frame)
 
-    if frame.attack_name in modified_base_damage_list:
+    if frame.attack.name in modified_base_damage_list:
         base_damage = calc_modified_base_damage
     else:
         base_damage = frame.attack.power

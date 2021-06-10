@@ -14,14 +14,14 @@ def get_frame_order(frame1, frame2):
     With the exception of the effects from certian moves, items, or abilities,
     the faster pokemon always switches or attacks before the slower pokemon.
     Switching to a different pokemon always occurs before a pokemon attacks (unless the opposing pokemon uses the move Pursuit)."""
-    if frame1.attack_name == "Pursuit" and frame2.switch_choice:
+    if frame1.attack and frame1.attack.name == "Pursuit" and frame2.switch_choice:
         return [frame1, frame2]
-    elif frame2.attack_name == "Pursuit" and frame1.switch_choice:
+    elif frame2.attack and frame2.attack.name == "Pursuit" and frame1.switch_choice:
         return [frame1, frame2]
 
-    if frame1.switch_choice and frame2.attack_name:
+    if frame1.switch_choice and frame2.attack:
         return [frame1, frame2]
-    elif frame2.switch_choice and frame1.attack_name:
+    elif frame2.switch_choice and frame1.attack:
         return [frame2, frame1]
 
     priority_p1 = check_priority(frame1)
@@ -60,12 +60,12 @@ def check_priority(frame):
         return 0
     if (
         frame.terrain.current_terrain == "Grassy Terrain"
-        and frame.attack_name == "Grassy Glide"
+        and frame.attack.name == "Grassy Glide"
     ):
         return 1
 
     try:
-        return priority_moves[frame.attack_name]
+        return priority_moves[frame.attack.name]
     except Exception:
         return 0
 
@@ -224,20 +224,20 @@ def check_attack_lands(frame, i=None):
     print()
 
     # If high jump kick misses, it damages the user.
-    if frame.attack_name == "High Jump Kick":
+    if frame.attack.name == "High Jump Kick":
         print(f"{frame.user.name} came crashing down...")
         frame.user.apply_damage(None, 0.5)
 
 
 def apply_non_damaging_move(frame):
     """Applies effect of current non damaging move being used."""
-    if frame.attack_name == "Stealth Rock":
+    if frame.attack.name == "Stealth Rock":
         move_effects.set_stealth_rocks(frame)
 
-    if frame.attack_name == "Defog":
+    if frame.attack.name == "Defog":
         move_effects.activate_defog(frame)
 
-    if frame.attack_name == "Toxic":
+    if frame.attack.name == "Toxic":
         frame.target.set_status("Badly Poisoned")
 
 
@@ -369,8 +369,8 @@ def apply_end_of_turn_effects(frame_order):
             apply_poison(frame.user)
 
     for frame in frame_order:
-        if frame.attack_name == "Wood Hammer":
+        if frame.attack.name == "Wood Hammer":
             apply_recoil(frame.user, frame.attack_damage, 0.33)
 
     for frame in frame_order:
-        frame.user.set_previous_move(frame.attack_name)
+        frame.user.set_previous_move(frame.attack.name)

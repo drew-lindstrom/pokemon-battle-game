@@ -78,7 +78,7 @@ class TestDamageCalc:
         assert check_attacking_and_defending_stats(test_frame) == (236, 319)
         test_frame.user.moves[0].category = "Physical"
         assert check_attacking_and_defending_stats(test_frame) == (186, 256)
-        test_frame.attack_name = "Psyshock"
+        test_frame.attack.name = "Psyshock"
         assert check_attacking_and_defending_stats(test_frame) == (236, 256)
 
     def test_activate_eruption(self, test_frame):
@@ -94,7 +94,8 @@ class TestDamageCalc:
         assert activate_knock_off(test_frame) == 65
 
     def test_calc_modified_base_damage(self, test_frame):
-        test_frame.attack_name = "Eruption"
+        test_frame.user.set_move(0, "Eruption")
+        test_frame.attack = test_frame.user.moves[0]
         assert calc_modified_base_damage(test_frame) == 150
         test_frame.user.stat["hp"] = 1
         assert calc_modified_base_damage(test_frame) == 0
