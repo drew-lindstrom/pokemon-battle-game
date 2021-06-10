@@ -136,7 +136,7 @@ class TestUtil:
             "Slowbro",
             100,
             "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            ("Pursuit", "Tackle", "Teleport", "Extreme Speed"),
             None,
             None,
             (31, 31, 31, 31, 31, 31),
@@ -148,7 +148,7 @@ class TestUtil:
             "Slowbro",
             100,
             "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
+            ("Pursuit", "Tackle", "Teleport", "Extreme Speed"),
             None,
             None,
             (31, 31, 31, 31, 31, 31),
@@ -161,40 +161,40 @@ class TestUtil:
         f1 = Frame(player1, player2, None, None, None, t)
         f2 = Frame(player2, player1, None, None, None, t)
 
-        f1.attack_name = "Pursuit"
+        f1.attack = f1.user.moves[0]
         f2.switch_choice = 1
         assert get_frame_order(f1, f2) == [f1, f2]
-        f1.attack_name = "Tackle"
+        f1.attack = f1.user.moves[1]
         f2.switch_choice = None
-        f2.attack_name = "Pursuit"
+        f2.attack = f2.user.moves[0]
         assert get_frame_order(f1, f2) == [f1, f2]
-        f1.attack_name = None
+        f1.attack = None
         f1.switch_choice = 1
-        f2.attack_name = None
+        f2.attack = None
         f2.switch_choice = 1
         assert get_frame_order(f1, f2) == [f1, f2]
         f1.switch_choice = None
-        f1.attack_name = "Tackle"
+        f1.attack = f1.user.moves[1]
         assert get_frame_order(f1, f2) == [f2, f1]
         f2.switch_choice = None
-        f2.attack_name = "Extreme Speed"
+        f2.attack = f2.user.moves[3]
         assert get_frame_order(f1, f2) == [f2, f1]
-        f1.attack_name = "Teleport"
-        f2.attack_name = "Tackle"
+        f1.attack = f1.user.moves[2]
+        f2.attack = f2.user.moves[1]
         assert get_frame_order(f1, f2) == [f2, f1]
-        f1.attack_name = "Extreme Speed"
-        f2.attack_name = "Extreme Speed"
+        f1.attack = f1.user.moves[3]
+        f2.attack = f2.user.moves[3]
         assert get_frame_order(f1, f2) == [f1, f2]
         f1.user.status = ["Paralyzed"]
-        f1.attack_name = None
+        f1.attack = None
         f1.switch_choice = 1
-        f2.attack_name = None
+        f2.attack = None
         f2.switch_choice = 1
         assert get_frame_order(f1, f2) == [f2, f1]
         f1.switch_choice = None
-        f1.attack_name = "Tackle"
+        f1.attack = f1.user.moves[1]
         f2.switch_choice = None
-        f2.attack_name = "Tackle"
+        f2.attack = f2.user.moves[1]
         assert get_frame_order(f1, f2) == [f2, f1]
 
     def test_check_speed(self):
@@ -295,19 +295,21 @@ class TestUtil:
         f1.user.stat_mod["speed"] = -4
         assert check_speed(f1, f2) == [f2, f1]
 
-    def test_check_priority(self, test_frame):
-        test_frame.terrain.current_terrain = "Grassy Terrain"
-        test_frame.attack_name = "Ice Shard"
-        assert check_priority(test_frame) == 1
-        test_frame.attack_name = "Avalanche"
-        assert check_priority(test_frame) == -4
-        test_frame.attack_name = "Tackle"
-        assert check_priority(test_frame) == 0
-        test_frame.attack_name = "Grassy Glide"
-        assert check_priority(test_frame) == 1
-        test_frame.terrain.current_terrain = "Psychic Terrain"
-        test_frame.attack_name = "Ice Shard"
-        assert check_priority(test_frame) == 0
+    @pytest.mark.parametrize(
+        "terrain_name,attack_name,expected",
+        [
+            ("Grassy Terrain", "Ice Shard", 1),
+            ("Grassy Terrain", "Avalanche", -4),
+            ("Grassy Terrain", "Tackle", 0),
+            ("Grassy Terrain", "Grassy Glide", 1),
+            ("Psychic Terrain", "Ice Shard", 0),
+        ],
+    )
+    def test_check_priority(self, test_frame, terrain_name, attack_name, expected):
+        test_frame.terrain.current_terrain = terrain_name
+        test_frame.user.set_move(0, attack_name)
+        test_frame.attack = test_frame.user.moves[0]
+        assert check_priority(test_frame) == expected
 
     def test_roll_paralysis(self, test_pokemon):
         assert roll_paralysis(test_pokemon, 4) == True
@@ -384,19 +386,22 @@ class TestUtil:
         assert test_frame2.attack_lands == False
         check_attack_lands(test_frame2, 20)
         assert test_frame2.attack_lands == True
-        test_frame2.attack_name = "High Jump Kick"
+        test_frame2.user.set_move(0, "High Jump Kick")
+        test_frame2.attack = test_frame2.user.moves[0]
         check_attack_lands(test_frame2, 100)
         assert test_frame2.user.stat["hp"] == 141
 
     def test_apply_non_damaging_move(self, test_frame):
+        test_frame.user.set_move(0, "Stealth Rock")
         test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack_name = "Stealth Rock"
         apply_non_damaging_move(test_frame)
         assert test_frame.defending_team.stealth_rocks == True
-        test_frame.attack_name = "Defog"
+        test_frame.user.set_move(0, "Defog")
+        test_frame.attack = test_frame.user.moves[0]
         apply_non_damaging_move(test_frame)
         assert test_frame.defending_team.stealth_rocks == False
-        test_frame.attack_name = "Toxic"
+        test_frame.user.set_move(0, "Toxic")
+        test_frame.attack = test_frame.user.moves[0]
         apply_non_damaging_move(test_frame)
         assert test_frame.target.status[0] == "Badly Poisoned"
 
@@ -596,7 +601,8 @@ class TestUtil:
         test_frame2.user.stat["hp"] = 200
         apply_end_of_turn_effects(frame_order)
         assert test_frame2.user.stat["hp"] == 165
-        test_frame.attack_name = "Wood Hammer"
+        test_frame.user.set_move(0, "Wood Hammer")
+        test_frame.attack = test_frame.user.moves[0]
         test_frame.attack_damage = 100
         assert test_frame.user.stat["hp"] == 122
         apply_end_of_turn_effects(frame_order)

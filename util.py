@@ -155,7 +155,7 @@ def check_can_attack(frame, i=None):
         if not roll_paralysis(frame.user, i):
             return False
 
-    if frame.user.status[0] == "Asleep" and frame.attack_name != "Sleep Talk":
+    if frame.user.status[0] == "Asleep" and frame.attack.name != "Sleep Talk":
         print(f"{frame.user.name} is asleep.")
         print()
         return False
