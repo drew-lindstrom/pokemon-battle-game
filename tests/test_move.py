@@ -3,40 +3,49 @@ import pytest
 
 
 class TestMove:
-    def test_init_move(self):
-        earthquake = Move("Earthquake")
-        bulk_up = Move("Bulk Up")
+    @pytest.mark.parametrize(
+        "move_name,expected_type,expected_category,expected_power,expected_accuracy,expected_max_pp,expected_pp",
+        [
+            ("Earthquake", "Ground", "Physical", 100, 100, 16, 16),
+            ("Bulk Up", "Fighting", "Status", 0, 0, 32, 32),
+        ],
+    )
+    def test_init_move(
+        self,
+        move_name,
+        expected_type,
+        expected_category,
+        expected_power,
+        expected_accuracy,
+        expected_max_pp,
+        expected_pp,
+    ):
+        attack = Move(move_name)
 
-        assert earthquake.type == "Ground"
-        assert earthquake.category == "Physical"
-        assert earthquake.power == 100
-        assert earthquake.accuracy == 100
-        assert earthquake.max_pp == 16
-        assert earthquake.pp == 16
+        assert attack.type == expected_type
+        assert attack.category == expected_category
+        assert attack.power == expected_power
+        assert attack.accuracy == expected_accuracy
+        assert attack.max_pp == expected_max_pp
+        assert attack.pp == expected_pp
 
-        assert bulk_up.type == "Fighting"
-        assert bulk_up.category == "Status"
-        assert bulk_up.power == 0
-        assert bulk_up.accuracy == 0
-        assert bulk_up.max_pp == 32
-        assert bulk_up.pp == 32
+    @pytest.mark.parametrize(
+        "move_name,input_pp,expected_pp",
+        [("Earthquake", -5, 0), ("Earthquake", 99, 16), ("Earthquake", 7, 7)],
+    )
+    def test_pp(self, move_name, input_pp, expected_pp):
+        earthquake = Move(move_name)
+        earthquake.pp = input_pp
+        assert earthquake.pp == expected_pp
 
-    def test_pp(self):
-        earthquake = Move("Earthquake")
-        earthquake.pp = -5
-        assert earthquake.pp == 0
-        earthquake.pp = 99
-        assert earthquake.pp == 16
-        earthquake.pp = 7
-        assert earthquake.pp == 7
-
-    def test_check_pp(self):
-        earthquake = Move("Earthquake")
-        assert earthquake.check_pp() == True
-        earthquake.pp = 0
-        assert earthquake.check_pp() == False
-        earthquake.pp = -9
-        assert earthquake.check_pp() == False
+    @pytest.mark.parametrize(
+        "move_name,input_pp,expected_bool",
+        [("Earthquake", 10, True), ("Earthquake", 0, False), ("Earthquake", -9, False)],
+    )
+    def test_check_pp(self, move_name, input_pp, expected_bool):
+        earthquake = Move(move_name)
+        earthquake.pp = input_pp
+        assert earthquake.check_pp() == expected_bool
 
     def test_decrement_pp(self):
         earthquake = Move("Earthquake")
