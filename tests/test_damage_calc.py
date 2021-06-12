@@ -42,26 +42,22 @@ class TestDamageCalc:
         test_frame = Frame(p1, p2, None, None, w, t)
         return test_frame
 
-    def test_roll_crit(self, test_frame):
-        assert roll_crit(test_frame, 1) == 1.5
-        assert test_frame.crit == True
-        assert roll_crit(test_frame, 2) == 1
+    @pytest.mark.parametrize(
+        "i,expected_int,expected_bool", [(1, 1.5, True), (2, 1, False)]
+    )
+    def test_roll_crit(self, test_frame, i, expected_int, expected_bool):
+        assert roll_crit(test_frame, i) == expected_int
+        assert test_frame.crit == expected_bool
 
-    def test_check_stab(self, test_frame):
-        test_frame.attack = test_frame.user.moves[0]
-        assert check_stab(test_frame) == 1.5
-        test_frame.attack = test_frame.user.moves[2]
-        assert check_stab(test_frame) == 1.5
-        test_frame.attack = test_frame.user.moves[1]
-        assert check_stab(test_frame) == 1
+    @pytest.mark.parametrize("move_number,expected_int", [(0, 1.5), (2, 1.5), (1, 1)])
+    def test_check_stab(self, test_frame, move_number, expected_int):
+        test_frame.attack = test_frame.user.moves[move_number]
+        assert check_stab(test_frame) == expected_int
 
-    def test_check_type_effectiveness(self, test_frame):
-        test_frame.attack = test_frame.user.moves[0]
-        assert check_type_effectiveness(test_frame) == 2
-        test_frame.attack = test_frame.user.moves[2]
-        assert check_type_effectiveness(test_frame) == 0
-        test_frame.attack = test_frame.user.moves[1]
-        assert check_type_effectiveness(test_frame) == 0.5
+    @pytest.mark.parametrize("move_number,expected_int", [(0, 2), (2, 0), (1, 0.5)])
+    def test_check_type_effectiveness(self, test_frame, move_number, expected_int):
+        test_frame.attack = test_frame.user.moves[move_number]
+        assert check_type_effectiveness(test_frame) == expected_int
 
     def test_check_burn(self, test_frame):
         test_frame.user.status = ["Burn"]
@@ -73,7 +69,17 @@ class TestDamageCalc:
     def test_roll_random(self):
         assert roll_random(85) == 0.85
 
-    def test_check_attacking_and_defending_stats(self, test_frame):
+    @pytest.mark.parametrize(
+        "input_category,input_name,expected_result",
+        [
+            ("Special", "Tackle", (236, 319)),
+            ("Physical", "Tackle", (236, 256)),
+            ("Special", "Psyshock", (236, 256)),
+        ],
+    )
+    def test_check_attacking_and_defending_stats(
+        self, test_frame, input_category, input_name, expected_result
+    ):
         test_frame.attack = test_frame.user.moves[0]
         assert check_attacking_and_defending_stats(test_frame) == (236, 319)
         test_frame.user.moves[0].category = "Physical"
@@ -81,10 +87,10 @@ class TestDamageCalc:
         test_frame.attack.name = "Psyshock"
         assert check_attacking_and_defending_stats(test_frame) == (236, 256)
 
-    def test_activate_eruption(self, test_frame):
-        assert activate_eruption(test_frame) == 150
-        test_frame.user.stat["hp"] = 1
-        assert activate_eruption(test_frame) == 0
+    @pytest.mark.parametrize("input_hp,expected_int", [(394, 150), (1, 0)])
+    def test_activate_eruption(self, test_frame, input_hp, expected_int):
+        test_frame.user.stat["hp"] = input_hp
+        assert activate_eruption(test_frame) == expected_int
 
     def test_activate_knock_off(self, test_frame):
         test_frame.target.item = "Leftovers"
@@ -93,12 +99,17 @@ class TestDamageCalc:
         assert test_frame.target.item == None
         assert activate_knock_off(test_frame) == 65
 
-    def test_calc_modified_base_damage(self, test_frame):
-        test_frame.user.set_move(0, "Eruption")
+    @pytest.mark.parametrize(
+        "number,name,input_hp,expected_int",
+        [(0, "Eruption", 394, 150), (0, "Eruption", 1, 0)],
+    )
+    def test_calc_modified_base_damage(
+        self, test_frame, number, name, input_hp, expected_int
+    ):
+        test_frame.user.set_move(number, name)
         test_frame.attack = test_frame.user.moves[0]
-        assert calc_modified_base_damage(test_frame) == 150
-        test_frame.user.stat["hp"] = 1
-        assert calc_modified_base_damage(test_frame) == 0
+        test_frame.user.stat["hp"] = input_hp
+        assert calc_modified_base_damage(test_frame) == expected_int
 
     def test_calc_modified_damage(self, test_frame):
         pass
