@@ -20,40 +20,120 @@ class TestAttackVerification:
 
         return test_pokemon
 
-    def test_check_flinched(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
+        [(None, None, "Scald", 0, False), ("Flinched", 1, "Scald", 0, True)],
+    )
+    def test_check_flinched(
+        self,
+        test_pokemon,
+        input_status_name,
+        input_status_number,
+        input_attack_name,
+        move_number,
+        expected_bool,
+    ):
         p = test_pokemon
-        assert attack_verification.check_flinched(p, "Scald", 0) == False
-        p.v_status["Flinched"] = 1
-        assert attack_verification.check_flinched(p, "Scald", 0) == True
+        p.v_status[input_status_name] = input_status_number
+        assert (
+            attack_verification.check_flinched(p, input_attack_name, move_number)
+            == expected_bool
+        )
 
-    def test_choice_item(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_status_name,input_status_number,input_attack_name,move_number,previous_move,expected_bool",
+        [
+            (None, None, "Scald", 0, None, False),
+            ("Choice Locked", float("inf"), "Scald", 0, None, False),
+            ("Choice Locked", float("inf"), "Scald", 0, "Scald", False),
+            ("Choice Locked", float("inf"), "Slack Off", 1, "Scald", True),
+        ],
+    )
+    def test_choice_item(
+        self,
+        test_pokemon,
+        input_status_name,
+        input_status_number,
+        input_attack_name,
+        move_number,
+        previous_move,
+        expected_bool,
+    ):
         p = test_pokemon
-        assert attack_verification.check_choice_item(p, "Scald", 0) == False
-        p.v_status["Choice Locked"] = float("inf")
-        assert attack_verification.check_choice_item(p, "Scald", 0) == False
-        p.prev_move = "Scald"
-        assert attack_verification.check_choice_item(p, "Scald", 0) == False
-        assert attack_verification.check_choice_item(p, "Slack Off", 1) == True
+        p.v_status[input_status_name] = input_status_number
+        p.prev_move = previous_move
+        assert (
+            attack_verification.check_choice_item(p, input_attack_name, move_number)
+            == expected_bool
+        )
 
-    def test_check_encored(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_status_name,input_status_number,input_attack_name,move_number,previous_move,expected_bool",
+        [
+            (None, None, "Scald", 0, None, False),
+            ("Encored", 1, "Scald", 0, None, False),
+            ("Encored", 1, "Scald", 0, "Scald", False),
+            ("Encored", 1, "Slack Off", 1, "Scald", True),
+        ],
+    )
+    def test_check_encored(
+        self,
+        test_pokemon,
+        input_status_name,
+        input_status_number,
+        input_attack_name,
+        move_number,
+        previous_move,
+        expected_bool,
+    ):
         p = test_pokemon
-        assert attack_verification.check_encored(p, "Scald", 0) == False
-        p.v_status["Encored"] = 1
-        assert attack_verification.check_encored(p, "Scald", 0) == False
-        p.prev_move = "Scald"
-        assert attack_verification.check_encored(p, "Scald", 0) == False
-        assert attack_verification.check_encored(p, "Slack Off", 1) == True
+        p.v_status[input_status_name] = input_status_number
+        p.prev_move = previous_move
+        assert (
+            attack_verification.check_encored(p, input_attack_name, move_number)
+            == expected_bool
+        )
 
-    def test_check_taunted(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
+        [(None, None, "Scald", 0, False), ("Taunted", 1, "Slack Off", 0, True)],
+    )
+    def test_check_taunted(
+        self,
+        test_pokemon,
+        input_status_name,
+        input_status_number,
+        input_attack_name,
+        move_number,
+        expected_bool,
+    ):
         p = test_pokemon
-        assert attack_verification.check_taunted(p, "Slack Off", 1) == False
-        p.v_status["Taunted"] = 1
-        assert attack_verification.check_taunted(p, "Slack Off", 1) == True
-        assert attack_verification.check_taunted(p, "Scald", 0) == False
+        p.v_status[input_status_name] = input_status_number
+        assert (
+            attack_verification.check_taunted(p, input_attack_name, move_number)
+            == expected_bool
+        )
 
-    def check_disabled(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
+        [
+            (None, None, "Scald", 0, False),
+            ("Disabled", (1, "Scald", 0), "Scald", 0, True),
+            ("Disabled", (1, "Scald", 0), "Slack Off", 0, False),
+        ],
+    )
+    def test_check_disabled(
+        self,
+        test_pokemon,
+        input_status_name,
+        input_status_number,
+        input_attack_name,
+        move_number,
+        expected_bool,
+    ):
         p = test_pokemon
-        assert attack_verification.check_disabled(p, "Scald", 0) == False
-        p.v_status["Disabled"] = (1, "Scald", 0)
-        assert attack_verification.check_disabled(p, "Scald", 0) == True
-        assert attack_verification.check_disabled(p, "Slack Off", 1) == False
+        p.v_status[input_status_name] = input_status_number
+        assert (
+            attack_verification.check_disabled(p, input_attack_name, move_number)
+            == expected_bool
+        )
