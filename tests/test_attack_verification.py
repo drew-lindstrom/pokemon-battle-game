@@ -96,7 +96,7 @@ class TestAttackVerification:
 
     @pytest.mark.parametrize(
         "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
-        [(None, None, "Scald", 0, False), ("Taunted", 1, "Slack Off", 0, True)],
+        [(None, None, "Scald", 0, False), ("Taunted", 1, "Slack Off", 1, True)],
     )
     def test_check_taunted(
         self,
