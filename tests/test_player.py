@@ -32,13 +32,16 @@ class TestPlayer:
         test_player = Player([slowbro, tyranitar])
         return test_player
 
-    def test_game_over_check(self, test_player):
-
-        assert test_player.check_game_over() == False
-        test_player[1].stat["hp"] = 0
-        assert test_player.check_game_over() == False
-        test_player[0].stat["hp"] = 0
-        assert test_player.check_game_over() == True
+    @pytest.mark.parametrize(
+        "pokemon_1_hp,pokemon_2_hp,expected_output",
+        [(100, 100, False), (0, 100, False), (0, 0, True)],
+    )
+    def test_game_over_check(
+        self, test_player, pokemon_1_hp, pokemon_2_hp, expected_output
+    ):
+        test_player[1].stat["hp"] = pokemon_1_hp
+        test_player[0].stat["hp"] = pokemon_2_hp
+        assert test_player.check_game_over() == expected_output
 
     def test_clear_hazards(self, test_player):
         test_player.spikes = 2
