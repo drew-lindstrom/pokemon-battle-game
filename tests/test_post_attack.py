@@ -96,65 +96,57 @@ class TestPostAttack:
         apply_v_status_inflicting_attack(None, p, "Dark Pulse", 20)
         assert p.v_status["Flinched"] == [1]
 
-    def test_apply_leftovers(self, test_pokemon):
+    @pytest.mark.parametrize("input_hp,expected_hp", [(360, 384), (380, 394)])
+    def test_apply_leftovers(self, test_pokemon, input_hp, expected_hp):
         slowbro = test_pokemon
-        slowbro.stat["hp"] = 360
+        slowbro.stat["hp"] = input_hp
         apply_leftovers(slowbro)
-        assert slowbro.stat["hp"] == 384
-        slowbro.hp = 380
-        apply_leftovers(slowbro)
-        assert slowbro.stat["hp"] == 394
+        assert slowbro.stat["hp"] == expected_hp
 
-    def test_apply_burn(self, test_pokemon):
+    @pytest.mark.parametrize("input_hp,expected_hp", [(394, 370), (5, 0)])
+    def test_apply_burn(self, test_pokemon, input_hp, expected_hp):
         p = test_pokemon
-        apply_burn(p)
-        assert p.stat["hp"] == 394
+        p.stat["hp"] = input_hp
         p.status = ["Burned"]
         apply_burn(p)
-        assert p.stat["hp"] == 370
-        p.stat["hp"] = 5
-        apply_burn(p)
-        assert p.stat["hp"] == 0
+        assert p.stat["hp"] == expected_hp
 
-    def test_apply_poison(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_hp,input_status,expected_hp",
+        [
+            (394, ["Badly Poisoned", 14], 370),
+            (370, ["Badly Poisoned", 13], 321),
+            (394, ["Badly Poisoned", 0], 25),
+            (300, ["Poisoned"], 251),
+        ],
+    )
+    def test_apply_poison(self, test_pokemon, input_hp, input_status, expected_hp):
         p = test_pokemon
         apply_poison(p)
-        assert p.stat["hp"] == 394
-        p.status = ["Badly Poisoned", 14]
+        p.stat["hp"] = input_hp
+        p.status = input_status
         apply_poison(p)
-        assert p.stat["hp"] == 370
-        p.status = ["Badly Poisoned", 13]
-        apply_poison(p)
-        assert p.stat["hp"] == 321
-        p.stat["hp"] = 394
-        p.status = ["Badly Poisoned", 0]
-        apply_poison(p)
-        assert p.stat["hp"] == 25
-        p.status = ["Poisoned"]
-        p.stat["hp"] = 300
-        apply_poison(p)
-        assert p.stat["hp"] == 251
+        assert p.stat["hp"] == expected_hp
 
-    def test_apply_recoil(self, test_pokemon):
+    @pytest.mark.parametrize("input_hp,expected_hp", [(394, 344), (35, 0)])
+    def test_apply_recoil(self, test_pokemon, input_hp, expected_hp):
         p = test_pokemon
+        p.stat["hp"] = input_hp
         apply_recoil(p, 100, 0.5)
-        assert p.stat["hp"] == 344
-        p.stat["hp"] = 35
-        apply_recoil(p, 100, 0.5)
-        assert p.stat["hp"] == 0
+        assert p.stat["hp"] == expected_hp
 
-    def test_apply_static(self, test_frame):
+    @pytest.mark.parametrize(
+        "input_name,i,item,expected_result",
+        [
+            ("Close Combat", 100, None, None),
+            ("Close Combat", 20, "Protective Pads", None),
+            ("Close Combat", 20, None, "Paralyzed"),
+            ("Surf", 20, None, None),
+        ],
+    )
+    def test_apply_static(self, test_frame, input_name, i, item, expected_result):
         test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack_name = "Close Combat"
-        apply_static(test_frame, 100)
-        assert test_frame.user.status[0] == None
-        test_frame.user.item = "Protective Pads"
-        apply_static(test_frame, 20)
-        assert test_frame.user.status[0] == None
-        test_frame.user.item = None
-        apply_static(test_frame, 20)
-        assert test_frame.user.status[0] == "Paralyzed"
-        test_frame.user.status[0] = None
-        test_frame.attack_name = "Surf"
-        apply_static(test_frame, 20)
-        assert test_frame.user.status[0] == None
+        test_frame.attack_name = input_name
+        test_frame.user.item = item
+        apply_static(test_frame, i)
+        assert test_frame.user.status[0] == expected_result
