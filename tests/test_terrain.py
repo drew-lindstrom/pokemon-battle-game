@@ -106,7 +106,8 @@ class Test_Terrain:
     ):
         slowbro = test_pokemon
         t = Terrain()
+        t.current_terrain = terrain_name
         slowbro.stat["hp"] = hp
-        slowbro.gounded = grounded_bool
+        slowbro.grounded = grounded_bool
         heal_from_grassy_terrain(t, slowbro)
         assert slowbro.stat["hp"] == expected_int
