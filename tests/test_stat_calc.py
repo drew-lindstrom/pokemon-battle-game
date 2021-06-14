@@ -29,179 +29,155 @@ class TestStatCalc:
         test_frame = Frame(p1, p2, None, None, w, t)
         return test_frame
 
-    def test_calc_attack(self, test_frame):
+    @pytest.mark.parametrize(
+        "attack_type,item,ability,hp,crit_bool,stat_mod,expected_int",
+        [
+            ("Water", None, None, 300, False, 0, 186),
+            ("Fire", None, "Blaze", 1, False, 0, 279),
+            ("Fire", None, "Blaze", 300, True, 0, 186),
+            ("Fire", "Choice Band", "Blaze", 300, False, 0, 279),
+            ("Normal", None, None, 300, False, 6, 744),
+            ("Normal", None, None, 300, True, 6, 744),
+            ("Normal", "Choice Band", None, 300, False, 6, 744),
+            ("Normal", None, None, 300, False, -6, 46),
+            ("Normal", None, None, 300, True, -6, 186),
+            ("Normal", "Choice Band", None, 300, False, -6, 69),
+        ],
+    )
+    def test_calc_attack(
+        self,
+        test_frame,
+        attack_type,
+        item,
+        ability,
+        hp,
+        crit_bool,
+        stat_mod,
+        expected_int,
+    ):
         p1 = test_frame.user
         test_frame.attack = test_frame.user.moves[0]
-        assert calc_attack(test_frame) == 186
-        test_frame.user.ability = "Blaze"
-        assert check_blaze(test_frame) == 1
+        test_frame.attack.type = attack_type
+        p1.item = item
+        p1.ability = ability
+        p1.stat["hp"] = hp
+        test_frame.crit = crit_bool
+        p1.stat_mod["attack"] = stat_mod
+        assert calc_attack(test_frame) == expected_int
 
-        test_frame.attack.type = "Fire"
-        test_frame.user.stat["hp"] = 1
-        assert calc_attack(test_frame) == 279
-        test_frame.user.stat["hp"] = 300
-        test_frame.crit = True
-        assert calc_attack(test_frame) == 186
-        p1.item = "Choice Band"
-        test_frame.crit = False
-        assert calc_attack(test_frame) == 279
-
-        p1.item = None
-        p1.stat_mod["attack"] = 6
-        assert calc_attack(test_frame) == 744
-        test_frame.crit = True
-        assert calc_attack(test_frame) == 744
-        p1.item = "Choice Band"
-        test_frame.crit = False
-        assert calc_attack(test_frame) == 1116
-
-        p1.item = None
-        p1.stat_mod["attack"] = -6
-        assert calc_attack(test_frame) == 46
-        test_frame.crit = True
-        assert calc_attack(test_frame) == 186
-        p1.item = "Choice Band"
-        test_frame.crit = False
-        assert calc_attack(test_frame) == 69
-
-    def test_calc_defense(self, test_frame):
+    @pytest.mark.parametrize(
+        "stat_mod,crit_bool,expected_int",
+        [
+            (0, False, 350),
+            (0, True, 350),
+            (6, False, 1400),
+            (6, True, 350),
+            (-6, False, 87),
+            (-6, True, 87),
+        ],
+    )
+    def test_calc_defense(self, test_frame, stat_mod, crit_bool, expected_int):
         p1 = test_frame.target
+        p1.stat_mod["defense"] = stat_mod
+        test_frame.crit = crit_bool
+        assert calc_defense(test_frame) == expected_int
 
-        assert calc_defense(test_frame) == 350
-        test_frame.crit = True
-        assert calc_defense(test_frame) == 350
-
-        p1.stat_mod["defense"] = 6
-        test_frame.crit = False
-        assert calc_defense(test_frame) == 1400
-        test_frame.crit = True
-        assert calc_defense(test_frame) == 350
-
-        p1.stat_mod["defense"] = -6
-        test_frame.crit = False
-        assert calc_defense(test_frame) == 87
-        test_frame.crit = True
-        assert calc_defense(test_frame) == 87
-
-    def test_calc_sp_attack(self, test_frame):
+    @pytest.mark.parametrize(
+        "attack_type,item,ability,hp,crit_bool,stat_mod,expected_int",
+        [
+            ("Water", None, None, 300, False, 0, 236),
+            ("Fire", None, "Blaze", 1, False, 0, 354),
+            ("Fire", None, "Blaze", 300, True, 0, 236),
+            ("Fire", "Choice Specs", "Blaze", 300, False, 0, 354),
+            ("Fire", "Choice Specs", "Blaze", 300, True, 0, 354),
+            ("Normal", None, None, 300, False, 6, 944),
+            ("Normal", None, None, 300, True, 6, 944),
+            ("Normal", "Choice Spec", None, 300, False, 6, 1416),
+            ("Normal", "Choice Spec", None, 300, True, 6, 1416),
+            ("Normal", None, None, 300, False, -6, 59),
+            ("Normal", None, None, 300, True, -6, 236),
+            ("Normal", "Choice Spec", None, 300, False, -6, 88),
+            ("Normal", "Choice Spec", None, 300, True, -6, 354),
+        ],
+    )
+    def test_calc_sp_attack(
+        self,
+        test_frame,
+        attack_type,
+        item,
+        ability,
+        hp,
+        crit_bool,
+        stat_mod,
+        expected_int,
+    ):
         p1 = test_frame.user
         test_frame.attack = test_frame.user.moves[0]
+        test_frame.attack.type = attack_type
+        p1.item = item
+        p1.ability = ability
+        p1.stat["hp"] = hp
+        test_frame.crit = crit_bool
+        p1.stat_mod["sp_attack"] = stat_mod
+        assert calc_sp_attack(test_frame) == expected_int
 
-        assert calc_sp_attack(test_frame) == 236
-        test_frame.user.ability = "Blaze"
-        assert check_blaze(test_frame) == 1
-
-        test_frame.attack.type = "Fire"
-        test_frame.user.stat["hp"] = 1
-        assert calc_sp_attack(test_frame) == 354
-        test_frame.user.stat["hp"] = 300
-        test_frame.crit = True
-        assert calc_sp_attack(test_frame) == 236
-        p1.item = "Choice Spec"
-        test_frame.crit = False
-        assert calc_sp_attack(test_frame) == 354
-        test_frame.crit = True
-        assert calc_sp_attack(test_frame) == 354
-
-        p1.item = None
-        p1.stat_mod["sp_attack"] = 6
-        test_frame.crit = False
-        assert calc_sp_attack(test_frame) == 944
-        test_frame.crit = True
-        assert calc_sp_attack(test_frame) == 944
-        p1.item = "Choice Spec"
-        test_frame.crit = False
-        assert calc_sp_attack(test_frame) == 1416
-        test_frame.crit = True
-        assert calc_sp_attack(test_frame) == 1416
-
-        p1.item = None
-        p1.stat_mod["sp_attack"] = -6
-        test_frame.crit = False
-        assert calc_sp_attack(test_frame) == 59
-        test_frame.crit = True
-        assert calc_sp_attack(test_frame) == 236
-        p1.item = "Choice Spec"
-        test_frame.crit = False
-        assert calc_sp_attack(test_frame) == 88
-        test_frame.crit = True
-        assert calc_sp_attack(test_frame) == 354
-
-    def test_calc_sp_defense(self, test_frame):
+    @pytest.mark.parametrize(
+        "type,weather,crit,stat_mod,expected_int",
+        [
+            (["Rock", "Psychic"], "Clear Skies", False, 0, 197),
+            (["Rock", "Psychic"], "Clear Skies", True, 0, 197),
+            (["Rock", "Psychic"], "Sandstorm", False, 0, 295),
+            (["Rock", "Psychic"], "Sandstorm", True, 0, 295),
+            (["Rock", "Psychic"], "Clear Skies", False, 6, 788),
+            (["Rock", "Psychic"], "Clear Skies", False, 6, 197),
+            (["Rock", "Psychic"], "Sandstorm", False, 6, 1182),
+            (["Rock", "Psychic"], "Sandstorm", True, 6, 295),
+            (["Rock", "Psychic"], "Clear Skies", False, -6, 49),
+            (["Rock", "Psychic"], "Clear Skies", True, -6, 49),
+            (["Rock", "Psychic"], "Sandstorm", False, -6, 73),
+            (["Rock", "Psychic"], "Sandstorm", True, -6, 73),
+        ],
+    )
+    def test_calc_sp_defense(
+        self, test_frame, type, weather, crit, stat_mod, expected_int
+    ):
         p1 = test_frame.target
         w = test_frame.weather
+        p1.typing = type
+        p1.stat_mod["sp_defense"] = stat_mod
+        w.current_weather = weather
+        test_frame.crit = crit
+        assert calc_sp_defense(test_frame) == expected_int
 
-        p1.typing = ["Rock", "Psychic"]
-        assert calc_sp_defense(test_frame) == 197
-        test_frame.crit = True
-        assert calc_sp_defense(test_frame) == 197
-        w.current_weather = "Sandstorm"
-        test_frame.crit = False
-        assert calc_sp_defense(test_frame) == 295
-        test_frame.crit = True
-        assert calc_sp_defense(test_frame) == 295
-        w.current_weather = "Clear Skies"
-        p1.stat_mod["sp_defense"] = 6
-        test_frame.crit = False
-        assert calc_sp_defense(test_frame) == 788
-        test_frame.crit = True
-        assert calc_sp_defense(test_frame) == 197
-        w.current_weather = "Sandstorm"
-        test_frame.crit = False
-        assert calc_sp_defense(test_frame) == 1182
-        test_frame.crit = True
-        assert calc_sp_defense(test_frame) == 295
-        w.current_weather = "Clear Skies"
-        p1.stat_mod["sp_defense"] = -6
-        test_frame.crit = False
-        assert calc_sp_defense(test_frame) == 49
-        test_frame.crit = True
-        assert calc_sp_defense(test_frame) == 49
-        w.current_weather = "Sandstorm"
-        test_frame.crit = False
-        assert calc_sp_defense(test_frame) == 73
-        test_frame.crit = True
-        assert calc_sp_defense(test_frame) == 73
-
-    def test_calc_speed(self, test_frame):
+    @pytest.mark.parametrize(
+        "item,ability,weather,status,stat_mod,expected_int",
+        [
+            (None, None, "Clear Skies", [None], 0, 86),
+            ("Choice Scarf", None, "Clear Skies", [None], 0, 129),
+            (None, "Sand Rush", "Clear Skies", [None], 0, 86),
+            (None, "Sand Rush", "Sandstorm", [None], 0, 172),
+            (None, None, "Clear Skies", ["Paralyzed"], 0, 43),
+            ("Choice Scarf", None, "Clear Skies", ["Paralyzed"], 0, 64),
+            (None, None, "Clear Skies", [None], 6, 344),
+            ("Choice Scarf", None, "Clear Skies", [None], 6, 516),
+            (None, None, "Clear Skies", ["Paralyzed"], 6, 172),
+            ("Choice Scarf", None, "Clear Skies", ["Paralyzed"], 6, 258),
+            (None, None, "Clear Skies", [None], -6, 21),
+            ("Choice Scarf", None, "Clear Skies", [None], -6, 31),
+            (None, None, "Clear Skies", ["Paralyzed"], -6, 10),
+            ("Choice Scarf", None, "Clear Skies", ["Paralyzed"], -6, 15),
+        ],
+    )
+    def test_calc_speed(
+        self, test_frame, item, ability, weather, status, stat_mod, expected_int
+    ):
         p1 = test_frame.user
-        assert calc_speed(test_frame) == 86
-        p1.item = "Choice Scarf"
-        assert calc_speed(test_frame) == 129
-        p1.item = None
-        p1.ability = "Sand Rush"
-        assert calc_speed(test_frame) == 86
-        test_frame.weather.current_weather = "Sandstorm"
-        assert calc_speed(test_frame) == 172
-        p1.ability = None
-        p1.status = ["Paralyzed", 2]
-        assert calc_speed(test_frame) == 43
-        p1.item = "Choice Scarf"
-        assert calc_speed(test_frame) == 64
-
-        p1.item = None
-        p1.status = None
-        p1.stat_mod["speed"] = 6
-        assert calc_speed(test_frame) == 344
-        p1.item = "Choice Scarf"
-        assert calc_speed(test_frame) == 516
-        p1.item = None
-        p1.status = ["Paralyzed", 2]
-        assert calc_speed(test_frame) == 172
-        p1.item = "Choice Scarf"
-        assert calc_speed(test_frame) == 258
-
-        p1.item = None
-        p1.status = None
-        p1.stat_mod["speed"] = -6
-        assert calc_speed(test_frame) == 21
-        p1.item = "Choice Scarf"
-        assert calc_speed(test_frame) == 31
-        p1.item = None
-        p1.status = ["Paralyzed", 2]
-        assert calc_speed(test_frame) == 10
-        p1.item = "Choice Scarf"
-        assert calc_speed(test_frame) == 15
+        p1.item = item
+        p1.ability = ability
+        p1.status = status
+        p1.stat_mod["speed"] = stat_mod
+        test_frame.current_weather = weather
+        assert calc_speed(test_frame) == expected_int
 
     def check_blaze(self, test_frame):
         test_frame.user.ability = "Blaze"
