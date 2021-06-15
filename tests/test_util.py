@@ -131,7 +131,30 @@ class TestUtil:
         test_frame = Frame(p1, p2, None, None, w, t)
         return test_frame
 
-    def test_get_frame_order(self):
+    @pytest.mark.parametrize(
+        "f1_move,f2_move,f1_switch,f2_switch,f1_status,terrain,expected_result",
+        [
+            (0, None, None, 1, [None], None, ["f1", "f2"]),
+            (1, 0, None, None, [None], None, ["f1", "f2"]),
+            (None, None, 1, 1, [None], None, ["f1", "f2"]),
+            (1, None, None, 1, [None], None, ["f2", "f1"]),
+            (1, 3, None, None, [None], None, ["f2", "f1"]),
+            (2, 1, None, None, [None], None, ["f2", "f1"]),
+            (3, 3, None, None, [None], None, ["f1", "f2"]),
+            (None, None, 1, 1, ["Paralyzed"], None, ["f2", "f1"]),
+            (1, 1, None, None, ["Paralyzed"], None, ["f2", "f1"]),
+        ],
+    )
+    def test_get_frame_order(
+        self,
+        f1_move,
+        f2_move,
+        f1_switch,
+        f2_switch,
+        f1_status,
+        terrain,
+        expected_result,
+    ):
         test_pokemon_1 = Pokemon(
             "Slowbro",
             100,
@@ -161,43 +184,41 @@ class TestUtil:
         f1 = Frame(player1, player2, None, None, None, t)
         f2 = Frame(player2, player1, None, None, None, t)
 
-        f1.attack = f1.user.moves[0]
-        f2.switch_choice = 1
-        assert get_frame_order(f1, f2) == [f1, f2]
-        f1.attack = f1.user.moves[1]
-        f2.switch_choice = None
-        f2.attack = f2.user.moves[0]
-        assert get_frame_order(f1, f2) == [f1, f2]
-        f1.attack = None
-        f1.switch_choice = 1
-        f2.attack = None
-        f2.switch_choice = 1
-        assert get_frame_order(f1, f2) == [f1, f2]
-        f1.switch_choice = None
-        f1.attack = f1.user.moves[1]
-        assert get_frame_order(f1, f2) == [f2, f1]
-        f2.switch_choice = None
-        f2.attack = f2.user.moves[3]
-        assert get_frame_order(f1, f2) == [f2, f1]
-        f1.attack = f1.user.moves[2]
-        f2.attack = f2.user.moves[1]
-        assert get_frame_order(f1, f2) == [f2, f1]
-        f1.attack = f1.user.moves[3]
-        f2.attack = f2.user.moves[3]
-        assert get_frame_order(f1, f2) == [f1, f2]
-        f1.user.status = ["Paralyzed"]
-        f1.attack = None
-        f1.switch_choice = 1
-        f2.attack = None
-        f2.switch_choice = 1
-        assert get_frame_order(f1, f2) == [f2, f1]
-        f1.switch_choice = None
-        f1.attack = f1.user.moves[1]
-        f2.switch_choice = None
-        f2.attack = f2.user.moves[1]
-        assert get_frame_order(f1, f2) == [f2, f1]
+        if f1_move is not None:
+            f1.attack = f1.user.moves[f1_move]
+        f1.switch_choice = f1_switch
+        if f2_move is not None:
+            f2.attack = f2.user.moves[f2_move]
+        f2.switch_choice = f2_switch
+        f1.status = f1_status
+        t.current_terrain = terrain
+        result = get_frame_order(f1, f2)
+        if result == [f1, f2]:
+            result = ["f1", "f2"]
+        else:
+            result = ["f2", "f1"]
+        assert result == expected_result
 
-    def test_check_speed(self):
+    @pytest.mark.parametrize(
+        "f1_speed_ev,f2_speed_ev,speed_mod,status,expected_result",
+        [
+            (0, 0, 0, None, ["f2", "f1"]),
+            (0, 0, 0, "Paralyzed", ["f2", "f1"]),
+            (0, 0, 4, None, ["f1", "f2"]),
+            (0, 0, 4, "Paralyzed", ["f1", "f2"]),
+            (0, 0, -4, None, ["f2", "f1"]),
+            (252, 0, 0, None, ["f1", "f2"]),
+            (252, 0, 0, "Paralyzed", ["f2", "f1"]),
+            (252, 0, 4, None, ["f1", "f2"]),
+            (252, 0, -4, None, ["f2", "f1"]),
+            (0, 252, 0, None, ["f2", "f1"]),
+            (0, 252, 4, None, ["f1", "f2"]),
+            (0, 252, -4, None, ["f2", "f1"]),
+        ],
+    )
+    def test_check_speed(
+        self, f1_speed_ev, f2_speed_ev, speed_mod, status, expected_result
+    ):
         test_pokemon_1 = Pokemon(
             "Slowbro",
             100,
@@ -206,7 +227,7 @@ class TestUtil:
             None,
             None,
             (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
+            (252, 0, 252, 0, 4, f1_speed_ev),
             "Relaxed",
         )
 
@@ -218,82 +239,24 @@ class TestUtil:
             None,
             None,
             (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
+            (252, 0, 252, 0, 4, f2_speed_ev),
             "Relaxed",
         )
         player1 = Player([test_pokemon_1])
         player2 = Player([test_pokemon_2])
         f1 = Frame(player1, player2, None, None, None, None)
         f2 = Frame(player2, player1, None, None, None, None)
-        assert check_speed(f1, f2) == [f2, f1]
-        f1.user.status[0] = "Paralyzed"
-        assert check_speed(f1, f2) == [f2, f1]
-        f1.user.status[0] = None
-        f1.user.stat_mod["speed"] = 4
-        assert check_speed(f1, f2) == [f1, f2]
-        f1.user.status[0] = "Paralyzed"
-        assert check_speed(f1, f2) == [f1, f2]
-        f1.user.status[0] = None
-        f1.user.stat_mod["speed"] = -4
-        assert check_speed(f1, f2) == [f2, f1]
 
-        test_pokemon_1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (0, 0, 252, 0, 0, 252),
-            "Relaxed",
-        )
-        player1 = Player([test_pokemon_1])
-        player2 = Player([test_pokemon_2])
-        f1 = Frame(player1, player2, None, None, None, None)
-        f2 = Frame(player2, player1, None, None, None, None)
-        f1.user.stat_mod["speed"] = 0
-        assert check_speed(f1, f2) == [f1, f2]
-        f1.user.status[0] = "Paralyzed"
-        assert check_speed(f1, f2) == [f2, f1]
-        f1.user.status[0] = None
-        f1.user.stat_mod["speed"] = 4
-        assert check_speed(f1, f2) == [f1, f2]
-        f1.user.stat_mod["speed"] = -4
-        assert check_speed(f1, f2) == [f2, f1]
+        f1.user.stat_mod["speed"] = speed_mod
+        f1.user.status[0] = status
+        result = check_speed(f1, f2)
 
-        test_pokemon_1 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 0),
-            "Relaxed",
-        )
-        test_pokemon_2 = Pokemon(
-            "Slowbro",
-            100,
-            "Male",
-            ("Scald", "Slack Off", "Future Sight", "Teleport"),
-            None,
-            None,
-            (31, 31, 31, 31, 31, 31),
-            (252, 0, 252, 0, 4, 252),
-            "Relaxed",
-        )
-        player1 = Player([test_pokemon_1])
-        player2 = Player([test_pokemon_2])
-        f1 = Frame(player1, player2, None, None, None, None)
-        f2 = Frame(player2, player1, None, None, None, None)
-        f1.user.stat_mod["speed"] = 0
-        assert check_speed(f1, f2) == [f2, f1]
-        f1.user.stat_mod["speed"] = 4
-        assert check_speed(f1, f2) == [f1, f2]
-        f1.user.stat_mod["speed"] = -4
-        assert check_speed(f1, f2) == [f2, f1]
+        if result == [f1, f2]:
+            result = ["f1", "f2"]
+        else:
+            result = ["f2", "f1"]
+
+        assert result == expected_result
 
     @pytest.mark.parametrize(
         "terrain_name,attack_name,expected",
@@ -311,21 +274,25 @@ class TestUtil:
         test_frame.attack = test_frame.user.moves[0]
         assert check_priority(test_frame) == expected
 
-    def test_roll_paralysis(self, test_pokemon):
-        assert roll_paralysis(test_pokemon, 4) == True
-        assert roll_paralysis(test_pokemon, 1) == False
+    @pytest.mark.parametrize("input_int,expected_bool", [(4, True), (1, False)])
+    def test_roll_paralysis(self, test_pokemon, input_int, expected_bool):
+        assert roll_paralysis(test_pokemon, input_int) == expected_bool
 
-    def test_roll_frozen(self, test_pokemon):
+    @pytest.mark.parametrize(
+        "input_int,expected_bool,expected_status",
+        [(4, False, "Frozen"), (1, True, None)],
+    )
+    def test_roll_frozen(self, test_pokemon, input_int, expected_bool, expected_status):
         test_pokemon.status[0] = "Frozen"
-        assert roll_frozen(test_pokemon, 4) == False
-        assert test_pokemon.status[0] == "Frozen"
-        assert roll_frozen(test_pokemon, 1) == True
-        assert test_pokemon.status[0] == None
+        assert roll_frozen(test_pokemon, input_int) == expected_bool
+        assert test_pokemon.status[0] == expected_status
 
-    def test_roll_confusion(self, test_pokemon):
-        assert roll_confusion(test_pokemon, 2) == True
-        assert roll_confusion(test_pokemon, 1) == False
-        assert test_pokemon.stat["hp"] == 375
+    @pytest.mark.parametrize(
+        "input_int,expected_bool,expected_hp", [(2, True, 394), (1, False, 375)]
+    )
+    def test_roll_confusion(self, test_pokemon, input_int, expected_bool, expected_hp):
+        assert roll_confusion(test_pokemon, input_int) == expected_bool
+        assert test_pokemon.stat["hp"] == expected_hp
 
     def test_calc_confusion_damage(self, test_pokemon):
         assert calc_confusion_damage(test_pokemon) == 19
@@ -391,19 +358,23 @@ class TestUtil:
         check_attack_lands(test_frame2, 100)
         assert test_frame2.user.stat["hp"] == 141
 
-    def test_apply_non_damaging_move(self, test_frame):
-        test_frame.user.set_move(0, "Stealth Rock")
+    @pytest.mark.parametrize(
+        "move_name,stealth_rocks,expected_bool,expected_status",
+        [
+            ("Stealth Rock", False, True, None),
+            ("Defog", True, False, None),
+            ("Toxic", False, False, "Badly Poisoned"),
+        ],
+    )
+    def test_apply_non_damaging_move(
+        self, test_frame, move_name, stealth_rocks, expected_bool, expected_status
+    ):
+        test_frame.user.set_move(0, move_name)
         test_frame.attack = test_frame.user.moves[0]
+        test_frame.defending_team.stealth_rocks = stealth_rocks
         apply_non_damaging_move(test_frame)
-        assert test_frame.defending_team.stealth_rocks == True
-        test_frame.user.set_move(0, "Defog")
-        test_frame.attack = test_frame.user.moves[0]
-        apply_non_damaging_move(test_frame)
-        assert test_frame.defending_team.stealth_rocks == False
-        test_frame.user.set_move(0, "Toxic")
-        test_frame.attack = test_frame.user.moves[0]
-        apply_non_damaging_move(test_frame)
-        assert test_frame.target.status[0] == "Badly Poisoned"
+        assert test_frame.defending_team.stealth_rocks == expected_bool
+        assert test_frame.target.status[0] == expected_status
 
     def test_switch(self, test_frame):
         test_frame.user.prev_move = "Scald"
@@ -425,34 +396,48 @@ class TestUtil:
         test_frame.update_cur_pokemon()
         assert test_frame.user.name == "Tyranitar"
 
-    def test_apply_switch_effect(self, test_frame):
-        test_frame.user.ability = "Grassy Surge"
-        apply_switch_effect(test_frame, 0, "In")
-        assert test_frame.terrain.current_terrain == "Grassy Terrain"
-        test_frame.terrain.current_terrain = None
-        test_frame.user.ability = "Psychic Surge"
-        apply_switch_effect(test_frame, 0, "In")
-        assert test_frame.terrain.current_terrain == "Psychic Terrain"
-        test_frame.user.ability = "Intimidate"
-        apply_switch_effect(test_frame, 0, "In")
-        assert test_frame.target.stat_mod["attack"] == -1
-        test_frame.user.ability = "Sand Stream"
-        apply_switch_effect(test_frame, 0, "In")
-        assert test_frame.weather.current_weather == "Sandstorm"
-        test_frame.user.stat["hp"] = 50
-        test_frame.user.ability = "Regenerator"
-        apply_switch_effect(test_frame, 0, "Out")
-        assert test_frame.user.stat["hp"] == 181
+    @pytest.mark.parametrize(
+        "ability_name,switch_direction,hp,expected_terrain,expected_weather,expected_attack_mod,expected_hp",
+        [
+            ("Grassy Surge", "In", 300, "Grassy Terrain", "Clear Skies", 0, 300),
+            ("Psychic Surge", "In", 300, "Psychic Terrain", "Clear Skies", 0, 300),
+            ("Intimidate", "In", 300, None, "Clear Skies", -1, 300),
+            ("Sand Stream", "In", 300, None, "Sandstorm", 0, 300),
+            ("Regenerator", "Out", 50, None, "Clear Skies", 0, 181),
+        ],
+    )
+    def test_apply_switch_effect(
+        self,
+        test_frame,
+        ability_name,
+        switch_direction,
+        hp,
+        expected_terrain,
+        expected_weather,
+        expected_attack_mod,
+        expected_hp,
+    ):
+        test_frame.user.ability = ability_name
+        test_frame.user.stat["hp"] = hp
+        apply_switch_effect(test_frame, 0, switch_direction)
+        assert test_frame.terrain.current_terrain == expected_terrain
+        assert test_frame.target.stat_mod["attack"] == expected_attack_mod
+        assert test_frame.weather.current_weather == expected_weather
+        assert test_frame.user.stat["hp"] == expected_hp
 
-    def test_apply_entry_hazards(self, test_frame):
+    @pytest.mark.parametrize(
+        "item,expected_hp", [(None, 345), ("Heavy Duty Boots", 394)]
+    )
+    def test_apply_entry_hazards(self, test_frame, item, expected_hp):
         test_frame.attacking_team.stealth_rocks = True
+        test_frame.user.item = item
         apply_entry_hazards(test_frame)
-        assert test_frame.user.stat["hp"] == 345
-        test_frame.user.item = "Heavy Duty Boots"
-        apply_entry_hazards(test_frame)
-        assert test_frame.user.stat["hp"] == 345
+        assert test_frame.user.stat["hp"] == expected_hp
 
-    def test_apply_stealth_rocks_damage(self):
+    @pytest.mark.parametrize(
+        "position,expected_hp", [(0, 290), (1, 264), (2, 282), (3, 204), (4, 149)]
+    )
+    def test_apply_stealth_rocks_damage(self, position, expected_hp):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -512,20 +497,9 @@ class TestUtil:
         )
         test_player = Player([slowbro, aggron, steelix, fearow, charizard])
         test_frame = Frame(test_player, test_player, None, None, None, None)
+        test_frame.user = test_frame.attacking_team[position]
         apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 290
-        test_frame.user = aggron
-        apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 264
-        test_frame.user = steelix
-        apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 282
-        test_frame.user = fearow
-        apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 204
-        test_frame.user = charizard
-        apply_stealth_rocks_damage(test_frame)
-        assert test_frame.user.stat["hp"] == 149
+        assert test_frame.user.stat["hp"] == expected_hp
 
     def test_apply_post_attack_effects(self):
         slowbro = Pokemon(
