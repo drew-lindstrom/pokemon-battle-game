@@ -328,8 +328,8 @@ class TestUtil:
         [
             (["Paralyzed", 2], None, None, 1, False, "Steel", None, "Steel", 0, 0),
             (["Paralyzed", 2], None, None, 2, True, "Steel", None, "Steel", 0, 0),
-            (["Asleep", 3], None, None, None, False, "Steel", None, "Steel", 0, 0),
-            (["Frozen", 3], None, None, None, False, "Steel", None, "Steel", 0, 0),
+            (["Asleep", 3], None, None, 2, False, "Steel", None, "Steel", 0, 0),
+            (["Frozen", 3], None, None, 2, False, "Steel", None, "Steel", 0, 0),
             ([None], "Flinched", [2], None, False, "Steel", None, "Steel", 0, 0),
             ([None], "Confusion", [1], 1, False, "Steel", None, "Steel", 0, 0),
             ([None], None, None, None, False, "Steel", None, "Poison", 0, 0),
