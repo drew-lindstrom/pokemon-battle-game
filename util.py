@@ -133,6 +133,7 @@ def calc_confusion_damage(user):
 
 def check_immunity(frame):
     """Returns boolean if current attack isn't able to land due to target being immune to the attack's type."""
+    frame.target.check_grounded()
     if (
         (frame.attack.type == "Poison" and "Steel" in frame.target.typing)
         or (frame.attack.type == "Dragon" and "Fairy" in frame.target.typing)
@@ -143,6 +144,8 @@ def check_immunity(frame):
         or (frame.attack.type == "Ghost" and "Normal" in frame.target.typing)
         or (frame.attack.type == "Electric" and "Ground" in frame.target.typing)
         or (frame.attack.type == "Psychic" and "Dark" in frame.target.typing)
+        or (frame.attack.type == "Ground" and frame.target.grounded == False)
+        # TODO: Update test to check for ground and grounded.
     ):
         return False
     return True
