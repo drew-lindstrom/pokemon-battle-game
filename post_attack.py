@@ -66,9 +66,8 @@ def apply_leftovers(pokemon):
         and pokemon.stat["hp"] != pokemon.stat["max_hp"]
         and pokemon.status[0] != "Fainted"
     ):
-        pokemon.apply_heal(0.0625)
         print(f"{pokemon.name} healed some of it's HP with it's leftovers.")
-        print()
+        pokemon.apply_heal(0.0625)
 
 
 def apply_burn(pokemon):

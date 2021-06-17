@@ -240,6 +240,12 @@ def apply_non_damaging_move(frame):
     if frame.attack.name == "Toxic":
         frame.target.set_status("Badly Poisoned")
 
+    if frame.attack.name == "Roost":
+        move_effects.activate_roost(frame)
+
+    if frame.attack.name == "Slack Off":
+        move_effects.activate_slack_off(frame)
+
 
 def switch(frame):
     """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
@@ -254,18 +260,18 @@ def switch(frame):
             frame.attacking_team.team[n],
             frame.attacking_team.team[0],
         )
-        apply_switch_effect(frame, n, "Out")
-        apply_switch_effect(frame, 0, "In")
         frame.user = frame.attacking_team[0]
         frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
-        apply_entry_hazards(frame)
-        frame.attacking_team.team[n].reset_previous_move()
-        frame.attacking_team.team[n].reset_stat_modifier()
-        frame.attacking_team.team[n].reset_statuses()
         print(
             f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}."
         )
         print()
+        frame.attacking_team.team[n].reset_previous_move()
+        frame.attacking_team.team[n].reset_stat_modifier()
+        frame.attacking_team.team[n].reset_statuses()
+        apply_switch_effect(frame, n, "Out")
+        apply_switch_effect(frame, 0, "In")
+        apply_entry_hazards(frame)
         # except Exception:
         #     print(f"Can't switch out {frame.attacking_team.cur_pokemon.name}...")
     # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
@@ -369,8 +375,9 @@ def apply_end_of_turn_effects(frame_order):
             apply_poison(frame.user)
 
     for frame in frame_order:
-        if frame.attack.name == "Wood Hammer":
+        if frame.attack and frame.attack.name == "Wood Hammer":
             apply_recoil(frame.user, frame.attack_damage, 0.33)
 
     for frame in frame_order:
-        frame.user.set_previous_move(frame.attack.name)
+        if frame.attack:
+            frame.user.set_previous_move(frame.attack.name)

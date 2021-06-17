@@ -15,6 +15,9 @@ import ui
 def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
     and calls appropriate functions to apply damage and various effects."""
+    ui.clear_screen()
+    game_over_bool = False
+
     w = Weather()
     t = Terrain()
 
@@ -26,7 +29,7 @@ def main():
     switch(opening_frame_1)
     switch(opening_frame_2)
 
-    while True:
+    while game_over_bool is False:
         frame1 = Frame(p1, p2, None, None, w, t)
         frame2 = Frame(p2, p1, None, None, w, t)
         ui.print_pokemon_on_field(frame1, frame2)
@@ -48,23 +51,23 @@ def main():
                 switch(cur_frame)
                 frame1.update_cur_pokemon()
                 frame2.update_cur_pokemon()
-            else:
+            elif cur_frame.user.status[0] != "Fainted":
                 print(f"{cur_frame.user.name} used {cur_frame.attack.name}!")
                 print()
-                if cur_frame.user.status != "Fainted":
-                    cur_frame.can_attack = check_can_attack(cur_frame)
-                    check_attack_lands(cur_frame)
-                    if cur_frame.can_attack and cur_frame.attack_lands:
-                        if (
-                            cur_frame.attack.category == "Physical"
-                            or cur_frame.attack.category == "Special"
-                        ):
-                            cur_frame.attack_damage = calc_damage(cur_frame)
-                            cur_frame.target.apply_damage(cur_frame.attack_damage, None)
 
-                        else:
-                            apply_non_damaging_move(cur_frame)
-                        apply_post_attack_effects(cur_frame)
+                cur_frame.can_attack = check_can_attack(cur_frame)
+                check_attack_lands(cur_frame)
+                if cur_frame.can_attack and cur_frame.attack_lands:
+                    if (
+                        cur_frame.attack.category == "Physical"
+                        or cur_frame.attack.category == "Special"
+                    ):
+                        cur_frame.attack_damage = calc_damage(cur_frame)
+                        cur_frame.target.apply_damage(cur_frame.attack_damage, None)
+
+                    else:
+                        apply_non_damaging_move(cur_frame)
+                    apply_post_attack_effects(cur_frame)
 
         apply_end_of_turn_effects(frame_order)
 
@@ -77,10 +80,10 @@ def main():
             if player.check_game_over():
                 if player == p1:
                     print("Player 2 Wins!")
-                    break
                 elif player == p2:
                     print("Player 1 Wins!")
-                    break
+                game_over_bool = True
+                break
             # Prompts player to switch any fainted pokemon at end of turn.
             if player.cur_pokemon.status[0] == "Fainted":
                 switch(ui.get_switch(cur_frame))

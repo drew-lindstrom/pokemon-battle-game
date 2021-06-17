@@ -161,7 +161,7 @@ contact_attacks = {
     "U-turn",
 }
 
-modified_base_damage_list = ["Eruption"]
+modified_base_damage_list = ["Eruption", "Knock Off"]
 
 # TODO : Darmanitan's different forms are named incorrectly.
 pokemon_dict = {
