@@ -20,8 +20,7 @@ class Frame:
         self.user = attacking_team.cur_pokemon
         self.defending_team = defending_team
         self.target = defending_team.cur_pokemon
-        if attack:
-            self.attack = self.user.moves[n]
+        self.attack = None
         if switch_choice:
             self.switch_choice = switch_choice
         else:

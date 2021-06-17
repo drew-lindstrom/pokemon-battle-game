@@ -188,16 +188,21 @@ class TestUtil:
         if f1_move is not None:
             f1.attack = f1.user.moves[f1_move]
         f1.switch_choice = f1_switch
+
         if f2_move is not None:
             f2.attack = f2.user.moves[f2_move]
         f2.switch_choice = f2_switch
-        f1.status = f1_status
+
+        f1.user.status = f1_status
         t.current_terrain = terrain
+
         result = get_frame_order(f1, f2)
+
         if result == [f1, f2]:
             result = ["f1", "f2"]
         else:
             result = ["f2", "f1"]
+
         assert result == expected_result
 
     @pytest.mark.parametrize(
