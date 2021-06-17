@@ -124,6 +124,7 @@ class TestUtil:
             (0, 252, 0, 0, 4, 252),
             "Jolly",
         )
+
         p1 = Player([tapu_lele, cinderace])
         p2 = Player([slowbro, tyranitar])
         w = Weather()
@@ -242,6 +243,7 @@ class TestUtil:
             (252, 0, 252, 0, 4, f2_speed_ev),
             "Relaxed",
         )
+
         player1 = Player([test_pokemon_1])
         player2 = Player([test_pokemon_2])
         f1 = Frame(player1, player2, None, None, None, None)
@@ -316,33 +318,43 @@ class TestUtil:
         test_frame.target.typing[0] = target_type
         assert check_immunity(test_frame) == expected
 
-    def test_check_can_attack(self, test_frame):
+    @pytest.mark.parametrize(
+        "status,v_status,v_status_value,number,expected_bool,typing,ability,attack_type,attack_mod,sp_attack_mod",
+        [
+            (["Paralyzed", 2], None, None, 1, False, "Steel", None, "Steel", 0, 0),
+            (["Paralyzed", 2], None, None, 2, True, "Steel", None, "Steel", 0, 0),
+            (["Asleep", 3], None, None, None, False, "Steel", None, "Steel", 0, 0),
+            (["Frozen", 3], None, None, None, False, "Steel", None, "Steel", 0, 0),
+            ([None], "Flinched", [2], None, False, "Steel", None, "Steel", 0, 0),
+            ([None], "Confusion", [1], 1, False, "Steel", None, "Steel", 0, 0),
+            ([None], None, None, None, False, "Steel", None, "Poison", 0, 0),
+            ([None], None, None, None, True, "Steel", None, "Water", 0, 0),
+            ([None], None, None, None, False, "Steel", "Flash Fire", "Fire", 1, 1),
+        ],
+    )
+    def test_check_can_attack(
+        self,
+        test_frame,
+        status,
+        v_status,
+        v_status_value,
+        number,
+        expected_bool,
+        typing,
+        ability,
+        attack_type,
+        attack_mod,
+        sp_attack_mod,
+    ):
         test_frame.attack = test_frame.user.moves[0]
-        test_frame.user.status = ["Paralyzed", 2]
-        assert check_can_attack(test_frame, 1) == False
-        assert check_can_attack(test_frame, 2) == True
-        test_frame.user.status = ["Asleep", 3]
-        assert check_can_attack(test_frame) == False
-        test_frame.user.status = ["Frozen", 3]
-        assert check_can_attack(test_frame, 2) == False
-
-        test_frame.user.status = [None]
-        test_frame.user.v_status["Flinched"] = [2]
-        assert check_can_attack(test_frame) == False
-        del test_frame.user.v_status["Flinched"]
-        test_frame.user.v_status["Confusion"] = [1]
-        assert check_can_attack(test_frame, 1) == False
-        del test_frame.user.v_status["Confusion"]
-        test_frame.attack.type = "Poison"
-        test_frame.target.typing[0] = "Steel"
-        assert check_can_attack(test_frame) == False
-        test_frame.target.typing[0] = "Water"
-        assert check_can_attack(test_frame) == True
-        test_frame.target.ability = "Flash Fire"
-        test_frame.attack.type = "Fire"
-        assert check_can_attack(test_frame) == False
-        assert test_frame.target.stat_mod["attack"] == 1
-        assert test_frame.target.stat_mod["sp_attack"] == 1
+        test_frame.user.status = status
+        test_frame.user.v_status[v_status] = v_status_value
+        test_frame.target.ability = ability
+        test_frame.target.typing[0] = typing
+        test_frame.attack.type = attack_type
+        assert check_can_attack(test_frame, number) == expected_bool
+        assert test_frame.target.stat_mod["attack"] == attack_mod
+        assert test_frame.target.stat_mod["sp_attack"] == sp_attack_mod
 
     def test_check_attack_lands(self, test_frame, test_frame2):
         test_frame.attack = test_frame.user.moves[1]
@@ -449,6 +461,7 @@ class TestUtil:
             (0, 0, 0, 0, 0, 0),
             "Relaxed",
         )
+
         charizard = Pokemon(
             "Charizard",
             100,
@@ -460,6 +473,7 @@ class TestUtil:
             (0, 0, 0, 0, 0, 0),
             "Relaxed",
         )
+
         fearow = Pokemon(
             "Fearow",
             100,
@@ -495,6 +509,7 @@ class TestUtil:
             (0, 0, 0, 0, 0, 0),
             "Relaxed",
         )
+
         test_player = Player([slowbro, aggron, steelix, fearow, charizard])
         test_frame = Frame(test_player, test_player, None, None, None, None)
         test_frame.user = test_frame.attacking_team[position]
