@@ -38,7 +38,7 @@ class TestStatCalc:
             ("Fire", "Choice Band", "Blaze", 300, False, 0, 279),
             ("Normal", None, None, 300, False, 6, 744),
             ("Normal", None, None, 300, True, 6, 744),
-            ("Normal", "Choice Band", None, 300, False, 6, 744),
+            ("Normal", "Choice Band", None, 300, False, 6, 1116),
             ("Normal", None, None, 300, False, -6, 46),
             ("Normal", None, None, 300, True, -6, 186),
             ("Normal", "Choice Band", None, 300, False, -6, 69),
@@ -88,8 +88,8 @@ class TestStatCalc:
             ("Water", None, None, 300, False, 0, 236),
             ("Fire", None, "Blaze", 1, False, 0, 354),
             ("Fire", None, "Blaze", 300, True, 0, 236),
-            ("Fire", "Choice Specs", "Blaze", 300, False, 0, 354),
-            ("Fire", "Choice Specs", "Blaze", 300, True, 0, 354),
+            ("Fire", "Choice Spec", "Blaze", 300, False, 0, 354),
+            ("Fire", "Choice Spec", "Blaze", 300, True, 0, 354),
             ("Normal", None, None, 300, False, 6, 944),
             ("Normal", None, None, 300, True, 6, 944),
             ("Normal", "Choice Spec", None, 300, False, 6, 1416),
@@ -129,7 +129,7 @@ class TestStatCalc:
             (["Rock", "Psychic"], "Sandstorm", False, 0, 295),
             (["Rock", "Psychic"], "Sandstorm", True, 0, 295),
             (["Rock", "Psychic"], "Clear Skies", False, 6, 788),
-            (["Rock", "Psychic"], "Clear Skies", False, 6, 197),
+            (["Rock", "Psychic"], "Clear Skies", False, 6, 788),
             (["Rock", "Psychic"], "Sandstorm", False, 6, 1182),
             (["Rock", "Psychic"], "Sandstorm", True, 6, 295),
             (["Rock", "Psychic"], "Clear Skies", False, -6, 49),
@@ -176,7 +176,7 @@ class TestStatCalc:
         p1.ability = ability
         p1.status = status
         p1.stat_mod["speed"] = stat_mod
-        test_frame.current_weather = weather
+        test_frame.weather.current_weather = weather
         assert calc_speed(test_frame) == expected_int
 
     def check_blaze(self, test_frame):
