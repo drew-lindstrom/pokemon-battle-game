@@ -79,11 +79,10 @@ def get_switch(frame, input_list=[]):
     team_list = []
     switch_choice = ""
 
-    print(f"Switch {frame.user.name} with...?")
-
-    printSwitchChoices(frame, team_list)
-
     while switch_choice not in team_list:
+        print(f"Switch {frame.user.name} with...?")
+        printSwitchChoices(frame, team_list)
+
         if len(input_list) == 0:
             switch_choice = input()
         else:
@@ -91,8 +90,9 @@ def get_switch(frame, input_list=[]):
 
         if frame.attacking_team[int(switch_choice)].status[0] == "Fainted":
             print(
-                f"{frame.attacking_team[int(switch_choice)]} has fainted and cannot be switched in!"
+                f"{frame.attacking_team[int(switch_choice)].name} has fainted and cannot be switched in!"
             )
+            switch_choice = ""
         print()
 
     frame.switch_choice = switch_choice

@@ -32,6 +32,7 @@ def main():
     while game_over_bool is False:
         frame1 = Frame(p1, p2, None, None, w, t)
         frame2 = Frame(p2, p1, None, None, w, t)
+
         ui.print_pokemon_on_field(frame1, frame2)
 
         frame1.user.check_choice_item()
