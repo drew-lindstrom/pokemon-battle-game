@@ -104,7 +104,7 @@ def apply_static(frame, i=None):
     """30% to paralyze attacking pokemon if attack made contact."""
     if (
         frame.user.item != "Protective Pads"
-        and frame.attack_name in contact_attacks
+        and frame.attack.name in contact_attacks
         and frame.user.status[0] == None
     ):
         if i is None:

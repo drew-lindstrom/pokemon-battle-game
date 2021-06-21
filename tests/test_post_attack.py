@@ -145,8 +145,8 @@ class TestPostAttack:
         ],
     )
     def test_apply_static(self, test_frame, input_name, i, item, expected_result):
+        test_frame.user.set_move(0, input_name)
         test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack_name = input_name
         test_frame.user.item = item
         apply_static(test_frame, i)
         assert test_frame.user.status[0] == expected_result

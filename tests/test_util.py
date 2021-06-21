@@ -562,7 +562,7 @@ class TestUtil:
         apply_post_attack_effects(test_frame)
         assert test_frame.target.v_status["Flinched"] == [1]
         test_frame.target.ability = "Static"
-        test_frame.attack_name = "Close Combat"
+        test_frame.attack.name = "Close Combat"
         apply_post_attack_effects(test_frame, 20)
         assert test_frame.user.status[0] == "Paralyzed"
 
