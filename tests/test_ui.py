@@ -65,6 +65,11 @@ class TestUI:
         get_switch(test_frame, ["3", "a", "1"])
         assert test_frame.switch_choice == "1"
 
+    def testPrintSwitchChoices(self, test_frame):
+        team_list = []
+        printSwitchChoices(test_frame, team_list)
+        assert team_list == ["1"]
+
     def test_get_choice(self, test_frame):
         get_choice(test_frame, ["8", "-4", "b", "2"])
         assert test_frame.attack == test_frame.user.moves[1]

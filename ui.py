@@ -81,22 +81,31 @@ def get_switch(frame, input_list=[]):
 
     print(f"Switch {frame.user.name} with...?")
 
-    for n in range(1, len(frame.attacking_team)):
-        print(
-            f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status[0]}"
-        )
-        team_list.append(str(n))
-    print()
+    printSwitchChoices(frame, team_list)
 
     while switch_choice not in team_list:
         if len(input_list) == 0:
             switch_choice = input()
         else:
             switch_choice = input_list.pop(0)
+
+        if frame.attacking_team[int(switch_choice)].status[0] == "Fainted":
+            print(
+                f"{frame.attacking_team[int(switch_choice)]} has fainted and cannot be switched in!"
+            )
         print()
 
     frame.switch_choice = switch_choice
     return frame
+
+
+def printSwitchChoices(frame, team_list):
+    for n in range(1, len(frame.attacking_team)):
+        print(
+            f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status[0]}"
+        )
+        team_list.append(str(n))
+    print()
 
 
 def clear_screen():
