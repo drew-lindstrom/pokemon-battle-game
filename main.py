@@ -10,6 +10,7 @@ from post_attack import *
 from switch_effects import *
 from util import *
 import ui
+import ai
 
 
 def main():
@@ -40,7 +41,7 @@ def main():
 
         # Gets input on what each player wants to do before the given turn.
         frame1 = ui.get_choice(frame1)
-        frame2 = ui.get_choice(frame2)
+        frame2 = ai.choose_highest_damaging_attack(frame2)
 
         ui.clear_screen()
 
@@ -87,7 +88,10 @@ def main():
                 break
             # Prompts player to switch any fainted pokemon at end of turn.
             if player.cur_pokemon.status[0] == "Fainted":
-                switch(ui.get_switch(cur_frame))
+                if player == p1:
+                    switch(ui.get_switch(cur_frame))
+                if player == p2:
+                    switch(ai.choose_next_pokemon(cur_frame))
 
 
 if __name__ == "__main__":

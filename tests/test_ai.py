@@ -15,12 +15,34 @@ class TestAI:
             "Slowbro",
             100,
             "Male",
-            ("Slack Off", "Scald", "Future Sight", "Teleport"),
+            ("Slack Off", "Scald", "Tackle", "Teleport"),
             None,
             None,
             (31, 31, 31, 31, 31, 31),
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
+        )
+        tapu_lele = Pokemon(
+            "Tapu Lele",
+            100,
+            None,
+            ("Psychic", "Moonblast", "Focus Blast", "Psyshock"),
+            "Psychic Surge",
+            "Choice Specs",
+            (31, 0, 31, 31, 31, 31),
+            (0, 0, 0, 252, 4, 252),
+            "Timid",
+        )
+        cinderace = Pokemon(
+            "Cinderace",
+            100,
+            "Male",
+            ("Pyro Ball", "Blaze Kick", "Gunk Shot", "High Jump Kick"),
+            "Libero",
+            "Heavy Duty Boots",
+            (31, 31, 31, 31, 31, 31),
+            (0, 252, 0, 0, 4, 252),
+            "Jolly",
         )
         tyranitar = Pokemon(
             "Tyranitar",
@@ -34,7 +56,7 @@ class TestAI:
             "Careful",
         )
 
-        p1 = Player([slowbro])
+        p1 = Player([slowbro, tapu_lele, cinderace])
         p2 = Player([tyranitar])
         w = Weather()
         t = Terrain()
@@ -42,5 +64,11 @@ class TestAI:
         return test_frame
 
     def test_choose_highest_damaging_attack(self, test_frame):
-        assert choose_highest_damaging_attack(test_frame) == 1
+        choose_highest_damaging_attack(test_frame)
+        assert test_frame.attack == test_frame.user.moves[1]
         # TODO: Test with move lock.
+
+    def test_choose_next_pokemon(self, test_frame):
+        test_frame.attacking_team[1].stat["hp"] = 0
+        test_frame.attacking_team[1].check_fainted()
+        assert choose_next_pokemon(test_frame) == 2

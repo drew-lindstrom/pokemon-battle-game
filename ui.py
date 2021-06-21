@@ -47,8 +47,8 @@ def get_choice(frame, input_list=[]):
                 print()
                 choice = None
             else:
+                # TODO: Turn into function as it shares same code as ai module.
                 frame.attack = frame.user.moves[choice - 1]
-                frame.attack_name = frame.user.moves[choice - 1].name
                 return frame
 
         elif choice == 5:

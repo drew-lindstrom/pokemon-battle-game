@@ -5,6 +5,7 @@ import damage_calc
 def choose_highest_damaging_attack(frame):
     """Returns a move index for user's highest damaging attack against the current target."""
     # TODO: Account for move lock.
+    # TODO: Account for type immunity.
     highest_damage = -float("inf")
     move_number = 0
     for n in range(len(frame.user.moves)):
@@ -18,4 +19,11 @@ def choose_highest_damaging_attack(frame):
                 highest_damage = damage
                 move_number = n
 
-    return move_number
+    frame.attack = frame.user.moves[move_number]
+    return frame
+
+
+def choose_next_pokemon(frame):
+    for n in range(1, 6):
+        if frame.attacking_team[n].status[0] != "Fainted":
+            return n
