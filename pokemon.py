@@ -232,6 +232,8 @@ class Pokemon:
                 self.status = [status_name, random.randint(1, 3)]
             else:
                 self.status = [status_name, 0]
+            print(f"{self.name} was inflicted with {status_name}!")
+            print()
 
     def cure_status(self):
         """Cures the non-volatile status for the Pokemon."""
