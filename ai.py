@@ -3,7 +3,8 @@ import damage_calc
 
 
 def choose_highest_damaging_attack(frame):
-    """Returns an int for user's highest damaging attack against the current target."""
+    """Returns a move index for user's highest damaging attack against the current target."""
+    # TODO: Account for move lock.
     highest_damage = -float("inf")
     move_number = 0
     for n in range(len(frame.user.moves)):
