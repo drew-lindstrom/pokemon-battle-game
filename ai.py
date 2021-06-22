@@ -1,11 +1,11 @@
 from frame import Frame
+import ui
+import util
 import damage_calc
 
 
 def choose_highest_damaging_attack(frame):
     """Returns a move index for user's highest damaging attack against the current target."""
-    # TODO: Account for move lock.
-    # TODO: Account for type immunity.
     highest_damage = -float("inf")
     move_number = 0
     include_crit = False
@@ -15,12 +15,13 @@ def choose_highest_damaging_attack(frame):
         if (
             frame.user.moves[n].category == "Physical"
             or frame.user.moves[n].category == "Special"
-        ) and frame.user.moves[n].pp > 0:
+        ) and ui.checkIfValidChoice(frame, n):
             frame.attack = frame.user.moves[n]
-            damage = damage_calc.calc_damage(frame, include_crit, include_random)
-            if damage > highest_damage:
-                highest_damage = damage
-                move_number = n
+            if util.check_immunity(frame):
+                damage = damage_calc.calc_damage(frame, include_crit, include_random)
+                if damage > highest_damage:
+                    highest_damage = damage
+                    move_number = n
 
     frame.attack = frame.user.moves[move_number]
     return frame
