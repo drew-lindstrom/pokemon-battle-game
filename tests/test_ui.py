@@ -70,6 +70,21 @@ class TestUI:
         printSwitchChoices(test_frame, team_list)
         assert team_list == ["1"]
 
+    def testGetSwitchChoice(self, test_frame):
+        input_list = [1]
+        assert getSwitchChoice(test_frame, input_list) == 1
+
+    @pytest.mark.parametrize(
+        "inputSwitchChoice,inputStatus,expectedResult",
+        [("1", None, "1"), ("1", "Fainted", "")],
+    )
+    def testCheckIfSwitchChoiceHasFainted(
+        self, test_frame, inputSwitchChoice, inputStatus, expectedResult
+    ):
+        switchChoice = inputSwitchChoice
+        test_frame.attacking_team[1].status[0] = inputStatus
+        assert checkIfSwitchChoiceHasFainted(test_frame, switchChoice) == expectedResult
+
     def test_get_choice(self, test_frame):
         get_choice(test_frame, ["8", "-4", "b", "2"])
         assert test_frame.attack == test_frame.user.moves[1]

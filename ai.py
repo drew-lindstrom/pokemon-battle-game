@@ -8,13 +8,16 @@ def choose_highest_damaging_attack(frame):
     # TODO: Account for type immunity.
     highest_damage = -float("inf")
     move_number = 0
+    include_crit = False
+    include_random = False
+
     for n in range(len(frame.user.moves)):
         if (
             frame.user.moves[n].category == "Physical"
             or frame.user.moves[n].category == "Special"
         ) and frame.user.moves[n].pp > 0:
             frame.attack = frame.user.moves[n]
-            damage = damage_calc.calc_damage(frame, False, False)
+            damage = damage_calc.calc_damage(frame, include_crit, include_random)
             if damage > highest_damage:
                 highest_damage = damage
                 move_number = n

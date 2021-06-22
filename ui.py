@@ -47,7 +47,6 @@ def get_choice(frame, input_list=[]):
                 print()
                 choice = None
             else:
-                # TODO: Turn into function as it shares same code as ai module.
                 frame.attack = frame.user.moves[choice - 1]
                 return frame
 
@@ -80,32 +79,40 @@ def get_switch(frame, input_list=[]):
     switch_choice = ""
 
     while switch_choice not in team_list:
-        print(f"Switch {frame.user.name} with...?")
         printSwitchChoices(frame, team_list)
-
-        if len(input_list) == 0:
-            switch_choice = input()
-        else:
-            switch_choice = input_list.pop(0)
-
-        if frame.attacking_team[int(switch_choice)].status[0] == "Fainted":
-            print(
-                f"{frame.attacking_team[int(switch_choice)].name} has fainted and cannot be switched in!"
-            )
-            switch_choice = ""
-        print()
+        switch_choice = getSwitchChoice(frame, input_list)
+        switch_choice = checkIfSwitchChoiceHasFainted(frame, switch_choice)
 
     frame.switch_choice = switch_choice
     return frame
 
 
 def printSwitchChoices(frame, team_list):
+    print(f"Switch {frame.user.name} with...?")
     for n in range(1, len(frame.attacking_team)):
         print(
             f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status[0]}"
         )
         team_list.append(str(n))
     print()
+
+
+def getSwitchChoice(frame, input_list):
+    if len(input_list) == 0:
+        switch_choice = input()
+    else:
+        switch_choice = input_list.pop(0)
+    return switch_choice
+
+
+def checkIfSwitchChoiceHasFainted(frame, switch_choice):
+    if frame.attacking_team[int(switch_choice)].status[0] == "Fainted":
+        print(
+            f"{frame.attacking_team[int(switch_choice)].name} has fainted and cannot be switched in!"
+        )
+        switch_choice = ""
+    print()
+    return switch_choice
 
 
 def clear_screen():
