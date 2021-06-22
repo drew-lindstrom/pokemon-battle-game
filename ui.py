@@ -2,7 +2,7 @@ from player import Player
 import stat_calc
 
 
-def print_pokemon_on_field(frame1, frame2):
+def printPokemonOnField(frame1, frame2):
     frame_order = [frame1, frame2]
 
     for frame in frame_order:
@@ -18,50 +18,90 @@ def print_pokemon_on_field(frame1, frame2):
         print()
 
 
-def get_choice(frame, input_list=[]):
+def getChoice(frame, inputList=[], printTextBool=False):
     choice = None
 
-    while choice not in range(1, 7):
-        print_options(frame.attacking_team)
-        choice_options = ["1", "2", "3", "4", "5", "6"]
+    while choice is None and choice not in range(1, 7):
+        printOptions(frame.attacking_team)
+        choice = getNextChoice(frame, inputList)
+
+        if callAppropriateFunctionBasedOnChoice(
+            frame, choice, inputList, printTextBool
+        ):
+            return frame
         choice = None
-        while choice is None or choice not in choice_options:
-            if len(input_list) == 0:
-                choice = input()
-            else:
-                choice = input_list.pop(0)
+
+
+def getNextChoice(frame, inputList=[]):
+    if len(inputList) == 0:
+        choice = input()
+    else:
+        choice = inputList.pop(0)
+    print()
+
+    try:
+        return int(choice)
+    except Exception:
+        return 0
+
+
+def callAppropriateFunctionBasedOnChoice(
+    frame, choice, inputList=[], printTextBool=False
+):
+    if choice >= 1 and choice <= 4:
+        if checkIfValidChoice(frame, choice, printTextBool):
+            return True
+
+    elif choice == 5:
+        callGetSwitchFunction(frame, inputList)
+        return True
+
+    elif choice == 6:
+        printUserStats(frame)
+    return False
+
+
+def checkIfValidChoice(frame, choice, printTextBool=False):
+    if checkIfChoiceHasEnoughPP(
+        frame, choice, printTextBool
+    ) and checkIfUserHasMoveLock(frame, choice, printTextBool):
+        frame.attack = frame.user.moves[choice - 1]
+        return True
+    return False
+
+
+def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
+    if frame.user.moves[choice - 1].pp <= 0:
+        if printTextBool:
+            print(f"{frame.user.moves[choice-1].name} is out of PP.")
             print()
-
-        choice = int(choice)
-
-        if choice >= 1 and choice <= 4:
-            if frame.user.moves[choice - 1].pp <= 0:
-                print(f"{frame.user.moves[choice-1].name} is out of PP.")
-                print()
-                choice = None
-            elif "Move Lock" in frame.user.v_status and (
-                frame.user.prev_move != None
-                and frame.user.prev_move != frame.user.moves[choice - 1].name
-            ):
-                print(f"{frame.user.name} must use {frame.user.prev_move}.")
-                print()
-                choice = None
-            else:
-                frame.attack = frame.user.moves[choice - 1]
-                return frame
-
-        elif choice == 5:
-            if len(input_list) > 0:
-                return get_switch(frame, input_list)
-            return get_switch(frame)
-
-        elif choice == 6:
-            frame.user.show_stats()
-            choice = None
-            continue
+        return False
+    return True
 
 
-def print_options(team):
+def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
+    if "Move Lock" in frame.user.v_status and (
+        frame.user.prev_move != None
+        and frame.user.prev_move != frame.user.moves[choice - 1].name
+    ):
+        if printTextBool:
+            print(f"{frame.user.name} must use {frame.user.prev_move}.")
+            print()
+        return False
+    return True
+
+
+def callGetSwitchFunction(frame, inputList=[]):
+    if len(inputList) > 0:
+        getSwitch(frame, inputList)
+    getSwitch(frame)
+
+
+def printUserStats(frame):
+    frame.user.show_stats()
+
+
+def printOptions(team):
     print(f"What will {team.cur_pokemon.name} do?")
     print()
     for n in range(len(team.cur_pokemon.moves)):
@@ -74,47 +114,55 @@ def print_options(team):
     print()
 
 
-def get_switch(frame, input_list=[]):
-    team_list = []
-    switch_choice = ""
+def getSwitch(frame, inputList=[]):
+    teamList = []
+    switchChoice = ""
 
-    while switch_choice not in team_list:
-        printSwitchChoices(frame, team_list)
-        switch_choice = getSwitchChoice(frame, input_list)
-        switch_choice = checkIfSwitchChoiceHasFainted(frame, switch_choice)
+    for n in range(1, len(frame.attacking_team)):
+        teamList.append(n)
 
-    frame.switch_choice = switch_choice
-    return frame
+    while switchChoice not in teamList:
+        printSwitchChoices(frame)
+        switchChoice = getNextSwitchChoice(frame, inputList)
+        switchChoice = checkIfSwitchChoiceHasFainted(frame, switchChoice)
+
+    frame.switch_choice = switchChoice
 
 
-def printSwitchChoices(frame, team_list):
+def printSwitchChoices(frame):
     print(f"Switch {frame.user.name} with...?")
     for n in range(1, len(frame.attacking_team)):
         print(
             f"({n}) {frame.attacking_team[n].name} - {frame.attacking_team[n].stat['hp']}/{frame.attacking_team[n].stat['max_hp']} HP, Status: {frame.attacking_team[n].status[0]}"
         )
-        team_list.append(str(n))
     print()
 
 
-def getSwitchChoice(frame, input_list):
-    if len(input_list) == 0:
-        switch_choice = input()
+def getNextSwitchChoice(frame, inputList=[]):
+    if len(inputList) == 0:
+        switchChoice = input()
     else:
-        switch_choice = input_list.pop(0)
-    return switch_choice
+        switchChoice = inputList.pop(0)
+
+    try:
+        return int(switchChoice)
+    except Exception:
+        return 0
 
 
-def checkIfSwitchChoiceHasFainted(frame, switch_choice):
-    if frame.attacking_team[int(switch_choice)].status[0] == "Fainted":
-        print(
-            f"{frame.attacking_team[int(switch_choice)].name} has fainted and cannot be switched in!"
-        )
-        switch_choice = ""
-    print()
-    return switch_choice
+def checkIfSwitchChoiceHasFainted(frame, switchChoice):
+    try:
+        if frame.attacking_team[switchChoice].status[0] == "Fainted":
+            print(
+                f"{frame.attacking_team[switchChoice].name} has fainted and cannot be switched in!"
+            )
+            switchChoice = 0
+        print()
+    except Exception:
+        switchChoice = 0
+    return switchChoice
 
 
-def clear_screen():
+def clearScreen():
     for n in range(17):
         print()

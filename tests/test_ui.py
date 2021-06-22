@@ -9,7 +9,7 @@ import pytest
 
 class TestUI:
     @pytest.fixture
-    def test_frame(self):
+    def testFrame(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -58,35 +58,82 @@ class TestUI:
         p2 = Player([tapu_lele, cinderace])
         w = Weather()
         t = Terrain()
-        test_frame = Frame(p1, p2, None, None, w, t)
-        return test_frame
+        testFrame = Frame(p1, p2, None, None, w, t)
+        return testFrame
 
-    def test_get_switch(self, test_frame):
-        get_switch(test_frame, ["3", "a", "1"])
-        assert test_frame.switch_choice == "1"
+    def testGetChoice(self, testFrame):
+        getChoice(testFrame, ["8", "-4", "b", "2"])
+        assert testFrame.attack == testFrame.user.moves[1]
+        getChoice(testFrame, ["5", "1"])
+        assert testFrame.switch_choice == 1
 
-    def testPrintSwitchChoices(self, test_frame):
-        team_list = []
-        printSwitchChoices(test_frame, team_list)
-        assert team_list == ["1"]
+    def testGetNextChoice(self, testFrame):
+        inputList = [1]
+        assert getNextChoice(testFrame, inputList) == 1
 
-    def testGetSwitchChoice(self, test_frame):
-        input_list = [1]
-        assert getSwitchChoice(test_frame, input_list) == 1
+    def testCallAppropriateFunctionBasedOnChoice(self, testFrame):
+        callAppropriateFunctionBasedOnChoice(testFrame, 2, None)
+        assert testFrame.attack == testFrame.user.moves[1]
+        callAppropriateFunctionBasedOnChoice(testFrame, 5, ["1"])
+        assert testFrame.switch_choice == "1"
+
+    @pytest.mark.parametrize(
+        "inputPP,inputVStatus,inputPrevMove,inputChoice,expectedBool",
+        [
+            (5, None, None, 1, True),
+            (0, None, None, 1, False),
+            (5, "Move Lock", "Slack Off", 1, False),
+        ],
+    )
+    def testCheckIfValidChoice(
+        self, testFrame, inputPP, inputVStatus, inputPrevMove, inputChoice, expectedBool
+    ):
+        testFrame.user.moves[inputChoice - 1].pp = inputPP
+        testFrame.user.v_status[inputVStatus] = None
+        testFrame.user.prev_move = inputPrevMove
+        assert checkIfValidChoice(testFrame, inputChoice) == expectedBool
+
+    @pytest.mark.parametrize(
+        "inputPP,inputChoice,expectedBool", [(5, 1, True), (0, 1, False)]
+    )
+    def testCheckIfChoiceHasEnoughPP(
+        self, testFrame, inputPP, inputChoice, expectedBool
+    ):
+        testFrame.user.moves[inputChoice - 1].pp = inputPP
+        assert checkIfChoiceHasEnoughPP(testFrame, inputChoice) == expectedBool
+
+    @pytest.mark.parametrize(
+        "inputVStatus,inputPrevMove,inputChoice,expectedBool",
+        [
+            (None, None, 1, True),
+            ("Move Lock", None, 1, True),
+            (None, "Slack Off", 1, True),
+            ("Move Lock", "Scald", 1, True),
+            ("Move Lock", "Slack Off", 1, False),
+        ],
+    )
+    def testCheckIfUserHasMoveLock(
+        self, testFrame, inputVStatus, inputPrevMove, inputChoice, expectedBool
+    ):
+        testFrame.user.v_status[inputVStatus] = None
+        testFrame.user.prev_move = inputPrevMove
+        assert checkIfUserHasMoveLock(testFrame, inputChoice) == expectedBool
+
+    def testGetSwitch(self, testFrame):
+        getSwitch(testFrame, ["3", "a", "1"])
+        assert testFrame.switch_choice == 1
+
+    def testGetNextSwitchChoice(self, testFrame):
+        inputList = [1]
+        assert getNextSwitchChoice(testFrame, inputList) == 1
 
     @pytest.mark.parametrize(
         "inputSwitchChoice,inputStatus,expectedResult",
-        [("1", None, "1"), ("1", "Fainted", "")],
+        [(1, None, 1), (1, "Fainted", 0)],
     )
     def testCheckIfSwitchChoiceHasFainted(
-        self, test_frame, inputSwitchChoice, inputStatus, expectedResult
+        self, testFrame, inputSwitchChoice, inputStatus, expectedResult
     ):
         switchChoice = inputSwitchChoice
-        test_frame.attacking_team[1].status[0] = inputStatus
-        assert checkIfSwitchChoiceHasFainted(test_frame, switchChoice) == expectedResult
-
-    def test_get_choice(self, test_frame):
-        get_choice(test_frame, ["8", "-4", "b", "2"])
-        assert test_frame.attack == test_frame.user.moves[1]
-        get_choice(test_frame, ["5", "1"])
-        assert test_frame.switch_choice == "1"
+        testFrame.attacking_team[1].status[0] = inputStatus
+        assert checkIfSwitchChoiceHasFainted(testFrame, switchChoice) == expectedResult
