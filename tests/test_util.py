@@ -305,22 +305,27 @@ class TestUtil:
         assert calc_confusion_damage(test_pokemon) == 19
 
     @pytest.mark.parametrize(
-        "attack_type,target_type,expected",
+        "attack_type,target_type,input_grounded,expected",
         [
-            ("Poison", "Steel", False),
-            ("Dragon", "Fairy", False),
-            ("Normal", "Ghost", False),
-            ("Fighting", "Ghost", False),
-            ("Ghost", "Normal", False),
-            ("Electric", "Ground", False),
-            ("Psychic", "Dark", False),
-            ("Poison", "Fire", True),
+            ("Poison", "Steel", True, False),
+            ("Dragon", "Fairy", True, False),
+            ("Normal", "Ghost", True, False),
+            ("Fighting", "Ghost", True, False),
+            ("Ghost", "Normal", True, False),
+            ("Electric", "Ground", True, False),
+            ("Psychic", "Dark", True, False),
+            ("Poison", "Fire", True, True),
+            ("Ground", "Water", False, False),
+            ("Ground", "Water", True, True),
         ],
     )
-    def test_check_immunity(self, test_frame, attack_type, target_type, expected):
+    def test_check_immunity(
+        self, test_frame, attack_type, target_type, input_grounded, expected
+    ):
         test_frame.attack = test_frame.user.moves[0]
         test_frame.attack.type = attack_type
         test_frame.target.typing[0] = target_type
+        test_frame.target.grounded = input_grounded
         assert check_immunity(test_frame) == expected
 
     @pytest.mark.parametrize(

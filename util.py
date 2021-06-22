@@ -145,7 +145,6 @@ def check_immunity(frame):
         or (frame.attack.type == "Electric" and "Ground" in frame.target.typing)
         or (frame.attack.type == "Psychic" and "Dark" in frame.target.typing)
         or (frame.attack.type == "Ground" and frame.target.grounded == False)
-        # TODO: Update test to check for ground and grounded.
     ):
         return False
     return True
