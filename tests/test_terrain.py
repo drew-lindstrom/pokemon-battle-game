@@ -1,12 +1,12 @@
 from pokemon import Pokemon
-from terrain import Terrain, check_damage_mod_from_terrain, heal_from_grassy_terrain
+from terrain import Terrain, checkDamageModFromTerrain, healFromGrassyTerrain
 import pytest
 
 
-class Test_Terrain:
+class TestTerrain:
     @pytest.fixture
-    def test_pokemon(self):
-        test_pokemon = Pokemon(
+    def testPokemon(self):
+        testPokemon = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -18,65 +18,65 @@ class Test_Terrain:
             "Relaxed",
         )
 
-        return test_pokemon
+        return testPokemon
 
     @pytest.mark.parametrize(
-        "terrain_name_1,terrain_name_2,item,expected_terrain,expected_int",
+        "terrainName1,terrainName2,item,expectedTerrain,expectedInt",
         [
             (None, "Psychic Terrain", None, "Psychic Terrain", 4),
             ("Psychic Terrain", "Grassy Terrain", None, "Psychic Terrain", 4),
             (None, "Grassy Terrain", "Terrain Extender", "Grassy Terrain", 7),
         ],
     )
-    def test_set_terrain(
+    def testSetTerrain(
         self,
-        test_pokemon,
-        terrain_name_1,
-        terrain_name_2,
+        testPokemon,
+        terrainName1,
+        terrainName2,
         item,
-        expected_terrain,
-        expected_int,
+        expectedTerrain,
+        expectedInt,
     ):
-        slowbro = test_pokemon
+        slowbro = testPokemon
         terrain = Terrain()
         slowbro.item = item
-        terrain.set_terrain(terrain_name_1, slowbro)
-        terrain.set_terrain(terrain_name_2, slowbro)
-        terrain.set_terrain("Psychic Terrain", slowbro)
-        assert terrain.current_terrain == expected_terrain
-        assert terrain.counter == expected_int
+        terrain.setTerrain(terrainName1, slowbro)
+        terrain.setTerrain(terrainName2, slowbro)
+        terrain.setTerrain("Psychic Terrain", slowbro)
+        assert terrain.currentTerrain == expectedTerrain
+        assert terrain.counter == expectedInt
 
     @pytest.mark.parametrize(
-        "terrain_name,counter,expected_terrain,expected_int",
+        "terrainName,counter,expectedTerrain,expectedInt",
         [("Psychic Terrain", 4, "Psychic Terrain", 3), ("Psychic Terrain", 0, None, 0)],
     )
-    def test_decrement_terrain(
-        self, test_pokemon, terrain_name, counter, expected_terrain, expected_int
+    def testDecrementTerrain(
+        self, testPokemon, terrainName, counter, expectedTerrain, expectedInt
     ):
-        slowbro = test_pokemon
+        slowbro = testPokemon
         terrain = Terrain()
-        terrain.set_terrain(terrain_name, slowbro)
+        terrain.setTerrain(terrainName, slowbro)
         terrain.counter = counter
-        terrain.decrement_terrain()
-        assert terrain.current_terrain == expected_terrain
-        assert terrain.counter == expected_int
+        terrain.decrementTerrain()
+        assert terrain.currentTerrain == expectedTerrain
+        assert terrain.counter == expectedInt
 
     @pytest.mark.parametrize(
-        "terrain_name,counter,expected_terrain",
+        "terrainName,counter,expectedTerrain",
         [
             ("Psychic Terrain", 3, None),
         ],
     )
-    def test_clear_terrain(self, test_pokemon, terrain_name, counter, expected_terrain):
-        slowbro = test_pokemon
+    def testClearTerrain(self, testPokemon, terrainName, counter, expectedTerrain):
+        slowbro = testPokemon
         terrain = Terrain()
-        terrain.set_terrain(terrain_name, slowbro)
+        terrain.setTerrain(terrainName, slowbro)
         terrain.counter = counter
-        terrain.clear_terrain()
-        assert terrain.current_terrain == expected_terrain
+        terrain.clearTerrain()
+        assert terrain.currentTerrain == expectedTerrain
 
     @pytest.mark.parametrize(
-        "move_type,terrain_name,expected_int",
+        "moveType,terrainName,expectedInt",
         [
             ("Electric", "Electric Terrain", 1.3),
             ("Grass", "Electric Terrain", 1),
@@ -88,26 +88,26 @@ class Test_Terrain:
             ("Electric", "Psychic Terrain", 1),
         ],
     )
-    def test_check_damage_mod_from_terrain(
-        self, test_pokemon, move_type, terrain_name, expected_int
+    def testCheckDamageModFromTerrain(
+        self, testPokemon, moveType, terrainName, expectedInt
     ):
-        slowbro = test_pokemon
-        slowbro.moves[0].type = move_type
+        slowbro = testPokemon
+        slowbro.moves[0].type = moveType
         terrain = Terrain()
-        terrain.current_terrain = terrain_name
-        assert check_damage_mod_from_terrain(terrain, slowbro, 0) == expected_int
+        terrain.currentTerrain = terrainName
+        assert checkDamageModFromTerrain(terrain, slowbro, 0) == expectedInt
 
     @pytest.mark.parametrize(
-        "hp,terrain_name,grounded_bool,expected_int",
+        "hp,terrainName,groundedBool,expectedInt",
         [(100, "Grassy Terrain", True, 124), (100, "Grassy Terrain", False, 100)],
     )
-    def test_heal_from_grassy_terrain(
-        self, test_pokemon, hp, terrain_name, grounded_bool, expected_int
+    def testHealFromGrassyTerrain(
+        self, testPokemon, hp, terrainName, groundedBool, expectedInt
     ):
-        slowbro = test_pokemon
+        slowbro = testPokemon
         t = Terrain()
-        t.current_terrain = terrain_name
+        t.currentTerrain = terrainName
         slowbro.stat["hp"] = hp
-        slowbro.grounded = grounded_bool
-        heal_from_grassy_terrain(t, slowbro)
-        assert slowbro.stat["hp"] == expected_int
+        slowbro.grounded = groundedBool
+        healFromGrassyTerrain(t, slowbro)
+        assert slowbro.stat["hp"] == expectedInt

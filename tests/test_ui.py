@@ -32,7 +32,7 @@ class TestUI:
             (252, 0, 0, 0, 216, 40),
             "Careful",
         )
-        tapu_lele = Pokemon(
+        tapuLele = Pokemon(
             "Tapu Lele",
             100,
             None,
@@ -55,7 +55,7 @@ class TestUI:
             "Jolly",
         )
         p1 = Player([slowbro, tyranitar])
-        p2 = Player([tapu_lele, cinderace])
+        p2 = Player([tapuLele, cinderace])
         w = Weather()
         t = Terrain()
         testFrame = Frame(p1, p2, None, None, w, t)
@@ -65,7 +65,7 @@ class TestUI:
         getChoice(testFrame, ["8", "-4", "b", "2"])
         assert testFrame.attack == testFrame.user.moves[1]
         getChoice(testFrame, ["5", "1"])
-        assert testFrame.switch_choice == 1
+        assert testFrame.switchChoice == 1
 
     def testGetNextChoice(self, testFrame):
         inputList = [1]
@@ -75,7 +75,7 @@ class TestUI:
         callAppropriateFunctionBasedOnChoice(testFrame, 2, None)
         assert testFrame.attack == testFrame.user.moves[1]
         callAppropriateFunctionBasedOnChoice(testFrame, 5, ["1"])
-        assert testFrame.switch_choice == "1"
+        assert testFrame.switchChoice == "1"
 
     @pytest.mark.parametrize(
         "inputPP,inputVStatus,inputPrevMove,inputChoice,expectedBool",
@@ -89,8 +89,8 @@ class TestUI:
         self, testFrame, inputPP, inputVStatus, inputPrevMove, inputChoice, expectedBool
     ):
         testFrame.user.moves[inputChoice - 1].pp = inputPP
-        testFrame.user.v_status[inputVStatus] = None
-        testFrame.user.prev_move = inputPrevMove
+        testFrame.user.vStatus[inputVStatus] = None
+        testFrame.user.prevMove = inputPrevMove
         assert checkIfValidChoice(testFrame, inputChoice) == expectedBool
 
     @pytest.mark.parametrize(
@@ -115,13 +115,13 @@ class TestUI:
     def testCheckIfUserHasMoveLock(
         self, testFrame, inputVStatus, inputPrevMove, inputChoice, expectedBool
     ):
-        testFrame.user.v_status[inputVStatus] = None
-        testFrame.user.prev_move = inputPrevMove
+        testFrame.user.vStatus[inputVStatus] = None
+        testFrame.user.prevMove = inputPrevMove
         assert checkIfUserHasMoveLock(testFrame, inputChoice) == expectedBool
 
     def testGetSwitch(self, testFrame):
         getSwitch(testFrame, ["3", "a", "1"])
-        assert testFrame.switch_choice == 1
+        assert testFrame.switchChoice == 1
 
     def testGetNextSwitchChoice(self, testFrame):
         inputList = [1]
@@ -135,5 +135,5 @@ class TestUI:
         self, testFrame, inputSwitchChoice, inputStatus, expectedResult
     ):
         switchChoice = inputSwitchChoice
-        testFrame.attacking_team[1].status[0] = inputStatus
+        testFrame.attackingTeam[1].status[0] = inputStatus
         assert checkIfSwitchChoiceHasFainted(testFrame, switchChoice) == expectedResult

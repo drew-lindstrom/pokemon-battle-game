@@ -7,7 +7,7 @@ import pytest
 
 class TestSwitchEffects:
     @pytest.fixture
-    def test_pokemon(self):
+    def testPokemon(self):
         tyranitar = Pokemon(
             "Tyranitar",
             100,
@@ -32,38 +32,38 @@ class TestSwitchEffects:
         )
         return tyranitar, slowbro
 
-    def test_activate_grassy_surge(self, test_pokemon):
-        tyranitar, slowbro = test_pokemon
+    def testActivateGrassySurge(self, testPokemon):
+        tyranitar, slowbro = testPokemon
         tyranitar.ability = "Grassy Surge"
         terrain = Terrain()
-        assert terrain.current_terrain == None
-        switch_effects.activate_grassy_surge(tyranitar, terrain)
-        assert terrain.current_terrain == "Grassy Terrain"
+        assert terrain.currentTerrain == None
+        switch_effects.activateGrassySurge(tyranitar, terrain)
+        assert terrain.currentTerrain == "Grassy Terrain"
 
-    def test_activate_intimidate(self, test_pokemon):
-        tyranitar, slowbro = test_pokemon
+    def testActivateIntimidate(self, testPokemon):
+        tyranitar, slowbro = testPokemon
         slowbro.ability = "Intimidate"
-        switch_effects.activate_intimidate(slowbro, tyranitar)
-        assert tyranitar.stat_mod["attack"] == -1
+        switch_effects.activateIntimidate(slowbro, tyranitar)
+        assert tyranitar.statMod["attack"] == -1
 
-    @pytest.mark.parametrize("input_hp,expected_hp", [(100, 231), (0, 0)])
-    def test_activate_regenerator(self, test_pokemon, input_hp, expected_hp):
-        tyranitar, slowbro = test_pokemon
-        slowbro.stat["hp"] = input_hp
-        switch_effects.activate_regenerator(slowbro)
-        assert slowbro.stat["hp"] == expected_hp
+    @pytest.mark.parametrize("inputHp,expectedHp", [(100, 231), (0, 0)])
+    def testActivateRegenerator(self, testPokemon, inputHp, expectedHp):
+        tyranitar, slowbro = testPokemon
+        slowbro.stat["hp"] = inputHp
+        switch_effects.activateRegenerator(slowbro)
+        assert slowbro.stat["hp"] == expectedHp
 
-    def test_activate_psychic_surge(self, test_pokemon):
-        tyranitar, slowbro = test_pokemon
+    def testActivatePsychicSurge(self, testPokemon):
+        tyranitar, slowbro = testPokemon
         tyranitar.ability = "Psychic Surge"
         terrain = Terrain()
-        assert terrain.current_terrain == None
-        switch_effects.activate_psychic_surge(tyranitar, terrain)
-        assert terrain.current_terrain == "Psychic Terrain"
+        assert terrain.currentTerrain == None
+        switch_effects.activatePsychicSurge(tyranitar, terrain)
+        assert terrain.currentTerrain == "Psychic Terrain"
 
-    def test_activate_sand_stream(self, test_pokemon):
-        tyranitar, slowbro = test_pokemon
+    def testActivateSandStream(self, testPokemon):
+        tyranitar, slowbro = testPokemon
         weather = Weather()
-        assert weather.current_weather == "Clear Skies"
-        switch_effects.activate_sand_stream(tyranitar, weather)
-        assert weather.current_weather == "Sandstorm"
+        assert weather.currentWeather == "Clear Skies"
+        switch_effects.activateSandStream(tyranitar, weather)
+        assert weather.currentWeather == "Sandstorm"

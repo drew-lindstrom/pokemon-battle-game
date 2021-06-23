@@ -5,7 +5,7 @@ import pytest
 
 class TestPlayer:
     @pytest.fixture
-    def test_player(self):
+    def testPlayer(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -29,27 +29,25 @@ class TestPlayer:
             "Careful",
         )
 
-        test_player = Player([slowbro, tyranitar])
-        return test_player
+        testPlayer = Player([slowbro, tyranitar])
+        return testPlayer
 
     @pytest.mark.parametrize(
-        "pokemon_1_hp,pokemon_2_hp,expected_output",
+        "pokemon1Hp,pokemon2Hp,expectedOutput",
         [(100, 100, False), (0, 100, False), (0, 0, True)],
     )
-    def test_game_over_check(
-        self, test_player, pokemon_1_hp, pokemon_2_hp, expected_output
-    ):
-        test_player[1].stat["hp"] = pokemon_1_hp
-        test_player[0].stat["hp"] = pokemon_2_hp
-        assert test_player.check_game_over() == expected_output
+    def testGameOverCheck(self, testPlayer, pokemon1Hp, pokemon2Hp, expectedOutput):
+        testPlayer[1].stat["hp"] = pokemon1Hp
+        testPlayer[0].stat["hp"] = pokemon2Hp
+        assert testPlayer.checkGameOver() == expectedOutput
 
-    def test_clear_hazards(self, test_player):
-        test_player.spikes = 2
-        test_player.tspikes = 2
-        test_player.stealth_rocks = True
-        test_player.sticky_web = True
-        test_player.clear_hazards()
-        assert test_player.spikes == 0
-        assert test_player.tspikes == 0
-        assert test_player.stealth_rocks == False
-        assert test_player.stealth_rocks == False
+    def testClearHazards(self, testPlayer):
+        testPlayer.spikes = 2
+        testPlayer.tspikes = 2
+        testPlayer.stealthRocks = True
+        testPlayer.stickyWeb = True
+        testPlayer.clearHazards()
+        assert testPlayer.spikes == 0
+        assert testPlayer.tspikes == 0
+        assert testPlayer.stealthRocks == False
+        assert testPlayer.stealthRocks == False

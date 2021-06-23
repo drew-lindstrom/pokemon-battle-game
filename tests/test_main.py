@@ -8,7 +8,7 @@ import pytest
 
 class TestMain:
     @pytest.fixture
-    def test_frame(self):
+    def testFrame(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -31,7 +31,7 @@ class TestMain:
             (252, 0, 0, 0, 216, 40),
             "Careful",
         )
-        tapu_lele = Pokemon(
+        tapuLele = Pokemon(
             "Tapu Lele",
             100,
             None,
@@ -54,22 +54,22 @@ class TestMain:
             "Jolly",
         )
         p1 = Player([slowbro, tyranitar])
-        p2 = Player([tapu_lele, cinderace])
+        p2 = Player([tapuLele, cinderace])
         w = Weather()
         t = Terrain()
-        test_frame = Frame(p1, p2, None, None, w, t)
-        return test_frame, slowbro, tyranitar, tapu_lele, cinderace
+        testFrame = Frame(p1, p2, None, None, w, t)
+        return testFrame, slowbro, tyranitar, tapuLele, cinderace
 
-    def test_update_cur_pokemon(self, test_frame):
-        frame = test_frame[0]
-        slowbro = test_frame[1]
-        tyranitar = test_frame[2]
-        tapu_lele = test_frame[3]
-        cinderace = test_frame[4]
+    def testUpdateCurPokemon(self, testFrame):
+        frame = testFrame[0]
+        slowbro = testFrame[1]
+        tyranitar = testFrame[2]
+        tapuLele = testFrame[3]
+        cinderace = testFrame[4]
         assert frame.user == slowbro
-        assert frame.target == tapu_lele
-        frame.attacking_team.cur_pokemon = tyranitar
-        frame.defending_team.cur_pokemon = cinderace
-        frame.update_cur_pokemon()
+        assert frame.target == tapuLele
+        frame.attackingTeam.curPokemon = tyranitar
+        frame.defendingTeam.curPokemon = cinderace
+        frame.updateCurPokemon()
         assert frame.user == tyranitar
         assert frame.target == cinderace

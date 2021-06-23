@@ -9,7 +9,7 @@ import pytest
 
 class TestStatCalc:
     @pytest.fixture
-    def test_frame(self):
+    def testFrame(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -26,11 +26,11 @@ class TestStatCalc:
         p2 = Player([slowbro])
         w = Weather()
         t = Terrain()
-        test_frame = Frame(p1, p2, None, None, w, t)
-        return test_frame
+        testFrame = Frame(p1, p2, None, None, w, t)
+        return testFrame
 
     @pytest.mark.parametrize(
-        "attack_type,item,ability,hp,crit_bool,stat_mod,expected_int",
+        "attackType,item,ability,hp,critBool,statMod,expectedInt",
         [
             ("Water", None, None, 300, False, 0, 186),
             ("Fire", None, "Blaze", 1, False, 0, 279),
@@ -44,29 +44,29 @@ class TestStatCalc:
             ("Normal", "Choice Band", None, 300, False, -6, 69),
         ],
     )
-    def test_calc_attack(
+    def testCalcAttack(
         self,
-        test_frame,
-        attack_type,
+        testFrame,
+        attackType,
         item,
         ability,
         hp,
-        crit_bool,
-        stat_mod,
-        expected_int,
+        critBool,
+        statMod,
+        expectedInt,
     ):
-        p1 = test_frame.user
-        test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack.type = attack_type
+        p1 = testFrame.user
+        testFrame.attack = testFrame.user.moves[0]
+        testFrame.attack.type = attackType
         p1.item = item
         p1.ability = ability
         p1.stat["hp"] = hp
-        test_frame.crit = crit_bool
-        p1.stat_mod["attack"] = stat_mod
-        assert calc_attack(test_frame) == expected_int
+        testFrame.crit = critBool
+        p1.statMod["attack"] = statMod
+        assert calcAttack(testFrame) == expectedInt
 
     @pytest.mark.parametrize(
-        "stat_mod,crit_bool,expected_int",
+        "statMod,critBool,expectedInt",
         [
             (0, False, 350),
             (0, True, 350),
@@ -76,14 +76,14 @@ class TestStatCalc:
             (-6, True, 87),
         ],
     )
-    def test_calc_defense(self, test_frame, stat_mod, crit_bool, expected_int):
-        p1 = test_frame.target
-        p1.stat_mod["defense"] = stat_mod
-        test_frame.crit = crit_bool
-        assert calc_defense(test_frame) == expected_int
+    def testCalcDefense(self, testFrame, statMod, critBool, expectedInt):
+        p1 = testFrame.target
+        p1.statMod["defense"] = statMod
+        testFrame.crit = critBool
+        assert calcDefense(testFrame) == expectedInt
 
     @pytest.mark.parametrize(
-        "attack_type,item,ability,hp,crit_bool,stat_mod,expected_int",
+        "attackType,item,ability,hp,critBool,statMod,expectedInt",
         [
             ("Water", None, None, 300, False, 0, 236),
             ("Fire", None, "Blaze", 1, False, 0, 354),
@@ -100,29 +100,29 @@ class TestStatCalc:
             ("Normal", "Choice Spec", None, 300, True, -6, 354),
         ],
     )
-    def test_calc_sp_attack(
+    def testCalcSpAttack(
         self,
-        test_frame,
-        attack_type,
+        testFrame,
+        attackType,
         item,
         ability,
         hp,
-        crit_bool,
-        stat_mod,
-        expected_int,
+        critBool,
+        statMod,
+        expectedInt,
     ):
-        p1 = test_frame.user
-        test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack.type = attack_type
+        p1 = testFrame.user
+        testFrame.attack = testFrame.user.moves[0]
+        testFrame.attack.type = attackType
         p1.item = item
         p1.ability = ability
         p1.stat["hp"] = hp
-        test_frame.crit = crit_bool
-        p1.stat_mod["sp_attack"] = stat_mod
-        assert calc_sp_attack(test_frame) == expected_int
+        testFrame.crit = critBool
+        p1.statMod["spAttack"] = statMod
+        assert calcSpAttack(testFrame) == expectedInt
 
     @pytest.mark.parametrize(
-        "type,weather,crit,stat_mod,expected_int",
+        "type,weather,crit,statMod,expectedInt",
         [
             (["Rock", "Psychic"], "Clear Skies", False, 0, 197),
             (["Rock", "Psychic"], "Clear Skies", True, 0, 197),
@@ -138,19 +138,17 @@ class TestStatCalc:
             (["Rock", "Psychic"], "Sandstorm", True, -6, 73),
         ],
     )
-    def test_calc_sp_defense(
-        self, test_frame, type, weather, crit, stat_mod, expected_int
-    ):
-        p1 = test_frame.target
-        w = test_frame.weather
+    def testCalcSpDefense(self, testFrame, type, weather, crit, statMod, expectedInt):
+        p1 = testFrame.target
+        w = testFrame.weather
         p1.typing = type
-        p1.stat_mod["sp_defense"] = stat_mod
-        w.current_weather = weather
-        test_frame.crit = crit
-        assert calc_sp_defense(test_frame) == expected_int
+        p1.statMod["spDefense"] = statMod
+        w.currentWeather = weather
+        testFrame.crit = crit
+        assert calcSpDefense(testFrame) == expectedInt
 
     @pytest.mark.parametrize(
-        "item,ability,weather,status,stat_mod,expected_int",
+        "item,ability,weather,status,statMod,expectedInt",
         [
             (None, None, "Clear Skies", [None], 0, 86),
             ("Choice Scarf", None, "Clear Skies", [None], 0, 129),
@@ -168,27 +166,21 @@ class TestStatCalc:
             ("Choice Scarf", None, "Clear Skies", ["Paralyzed"], -6, 15),
         ],
     )
-    def test_calc_speed(
-        self, test_frame, item, ability, weather, status, stat_mod, expected_int
+    def testCalcSpeed(
+        self, testFrame, item, ability, weather, status, statMod, expectedInt
     ):
-        p1 = test_frame.user
+        p1 = testFrame.user
         p1.item = item
         p1.ability = ability
         p1.status = status
-        p1.stat_mod["speed"] = stat_mod
-        test_frame.weather.current_weather = weather
-        assert calc_speed(test_frame) == expected_int
+        p1.statMod["speed"] = statMod
+        testFrame.weather.currentWeather = weather
+        assert calcSpeed(testFrame) == expectedInt
 
-    def check_blaze(self, test_frame):
-        test_frame.user.ability = "Blaze"
-        assert check_blaze(test_frame) == 1
-        test_frame.attack = test_frame.user.moves[0]
-        test_frame.attack.type = "Fire"
-        test_frame.user.stat["hp"] = 1
-        assert check_blaze(test_frame) == 1.5
-
-    # def test_calc_accuracy(self):
-    #     pass
-
-    # def test_calc_evasion(self):
-    #     pass
+    def checkBlaze(self, testFrame):
+        testFrame.user.ability = "Blaze"
+        assert checkBlaze(testFrame) == 1
+        testFrame.attack = testFrame.user.moves[0]
+        testFrame.attack.type = "Fire"
+        testFrame.user.stat["hp"] = 1
+        assert checkBlaze(testFrame) == 1.5

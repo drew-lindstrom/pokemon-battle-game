@@ -9,8 +9,8 @@ import pytest
 
 class TestMoveEffects:
     @pytest.fixture
-    def test_frame(self):
-        tapu_lele = Pokemon(
+    def testFrame(self):
+        tapuLele = Pokemon(
             "Tapu Lele",
             100,
             None,
@@ -33,37 +33,37 @@ class TestMoveEffects:
             "Jolly",
         )
 
-        p1 = Player([tapu_lele])
+        p1 = Player([tapuLele])
         p2 = Player([cinderace])
         w = Weather()
         t = Terrain()
-        test_frame = Frame(p1, p2, None, None, w, t)
-        return test_frame
+        testFrame = Frame(p1, p2, None, None, w, t)
+        return testFrame
 
-    def test_activate_defog(self, test_frame):
-        test_frame.attacking_team.stealth_rocks == True
-        test_frame.defending_team.stealth_rocks == True
-        activate_defog(test_frame)
-        assert test_frame.attacking_team.stealth_rocks == False
-        assert test_frame.defending_team.stealth_rocks == False
-        assert test_frame.target.stat_mod["evasion"] == -1
+    def testActivateDefog(self, testFrame):
+        testFrame.attackingTeam.stealthRocks == True
+        testFrame.defendingTeam.stealthRocks == True
+        activateDefog(testFrame)
+        assert testFrame.attackingTeam.stealthRocks == False
+        assert testFrame.defendingTeam.stealthRocks == False
+        assert testFrame.target.statMod["evasion"] == -1
 
-    def test_activate_roost(self, test_frame):
-        test_frame.user.stat["hp"] = 30
-        activate_roost(test_frame)
-        assert test_frame.user.stat["hp"] == 170
-        assert test_frame.user.v_status["Temporary Grounded"][0] == 1
+    def testActivateRoost(self, testFrame):
+        testFrame.user.stat["hp"] = 30
+        activateRoost(testFrame)
+        assert testFrame.user.stat["hp"] == 170
+        assert testFrame.user.vStatus["Temporary Grounded"][0] == 1
 
-    def test_activate_slack_off(self, test_frame):
-        test_frame.user.stat["hp"] = 30
-        activate_slack_off(test_frame)
-        assert test_frame.user.stat["hp"] == 170
+    def testActivateSlackOff(self, testFrame):
+        testFrame.user.stat["hp"] = 30
+        activateSlackOff(testFrame)
+        assert testFrame.user.stat["hp"] == 170
 
-    def test_set_stealth_rocks(self, test_frame):
-        set_stealth_rocks(test_frame)
-        assert test_frame.defending_team.stealth_rocks == True
+    def testSetStealthRocks(self, testFrame):
+        setStealthRocks(testFrame)
+        assert testFrame.defendingTeam.stealthRocks == True
 
-    # def test_set_light_screen_and_reset_light_screen(self):
+    # def testSetLightScreenAndResetLightScreen(self):
     #     slowbro = Pokemon(
     #         "Slowbro",
     #         100,
@@ -75,19 +75,19 @@ class TestMoveEffects:
     #         (252, 0, 252, 0, 4, 0),
     #         "Relaxed",
     #     )
-    #     test_player = Player([slowbro])
+    #     testPlayer = Player([slowbro])
 
-    #     set_light_screen(test_player)
-    #     assert test_player.light_screen == True
-    #     assert test_player.light_screen_counter == 5
-    #     test_player.light_screen_counter = 0
-    #     reset_light_screen(test_player)
-    #     assert test_player.light_screen == False
+    #     setLightScreen(testPlayer)
+    #     assert testPlayer.lightScreen == True
+    #     assert testPlayer.lightScreenCounter == 5
+    #     testPlayer.lightScreenCounter = 0
+    #     resetLightScreen(testPlayer)
+    #     assert testPlayer.lightScreen == False
     #     slowbro.item = "Light Clay"
-    #     set_light_screen(test_player)
-    #     assert test_player.light_screen_counter == 8
+    #     setLightScreen(testPlayer)
+    #     assert testPlayer.lightScreenCounter == 8
 
-    # def test_set_reflect_and_reset_reflect(self):
+    # def testSetReflectAndResetReflect(self):
     #     slowbro = Pokemon(
     #         "Slowbro",
     #         100,
@@ -99,19 +99,19 @@ class TestMoveEffects:
     #         (252, 0, 252, 0, 4, 0),
     #         "Relaxed",
     #     )
-    #     test_player = Player([slowbro])
+    #     testPlayer = Player([slowbro])
 
-    #     set_reflect(test_player)
-    #     assert test_player.reflect == True
-    #     assert test_player.reflect_counter == 5
-    #     test_player.reflect_counter = 0
-    #     reset_reflect(test_player)
-    #     assert test_player.reflect == False
+    #     setReflect(testPlayer)
+    #     assert testPlayer.reflect == True
+    #     assert testPlayer.reflectCounter == 5
+    #     testPlayer.reflectCounter = 0
+    #     resetReflect(testPlayer)
+    #     assert testPlayer.reflect == False
     #     slowbro.item = "Light Clay"
-    #     set_reflect(test_player)
-    #     assert test_player.reflect_counter == 8
+    #     setReflect(testPlayer)
+    #     assert testPlayer.reflectCounter == 8
 
-    # def test_set_spike(self):
+    # def testSetSpike(self):
     #     slowbro = Pokemon(
     #         "Slowbro",
     #         100,
@@ -123,17 +123,17 @@ class TestMoveEffects:
     #         (252, 0, 252, 0, 4, 0),
     #         "Relaxed",
     #     )
-    #     test_player = Player([slowbro])
+    #     testPlayer = Player([slowbro])
 
-    #     set_spike(test_player)
-    #     assert test_player.spikes == 1
-    #     set_spike(test_player)
-    #     assert test_player.spikes == 2
-    #     set_spike(test_player)
-    #     set_spike(test_player)
-    #     assert test_player.spikes == 3
+    #     setSpike(testPlayer)
+    #     assert testPlayer.spikes == 1
+    #     setSpike(testPlayer)
+    #     assert testPlayer.spikes == 2
+    #     setSpike(testPlayer)
+    #     setSpike(testPlayer)
+    #     assert testPlayer.spikes == 3
 
-    # def test_set_tspike(self):
+    # def testSetTspike(self):
     #     slowbro = Pokemon(
     #         "Slowbro",
     #         100,
@@ -146,16 +146,16 @@ class TestMoveEffects:
     #         "Relaxed",
     #     )
 
-    #     test_player = Player([slowbro])
+    #     testPlayer = Player([slowbro])
 
-    #     set_tspike(test_player)
-    #     assert test_player.tspikes == 1
-    #     set_tspike(test_player)
-    #     assert test_player.tspikes == 2
-    #     set_tspike(test_player)
-    #     assert test_player.tspikes == 2
+    #     setTspike(testPlayer)
+    #     assert testPlayer.tspikes == 1
+    #     setTspike(testPlayer)
+    #     assert testPlayer.tspikes == 2
+    #     setTspike(testPlayer)
+    #     assert testPlayer.tspikes == 2
 
-    # def test_set_sticky_web(self):
+    # def testSetStickyWeb(self):
     #     slowbro = Pokemon(
     #         "Slowbro",
     #         100,
@@ -167,7 +167,7 @@ class TestMoveEffects:
     #         (252, 0, 252, 0, 4, 0),
     #         "Relaxed",
     #     )
-    #     test_player = Player([slowbro])
+    #     testPlayer = Player([slowbro])
 
-    #     set_sticky_web(test_player)
-    #     assert test_player.sticky_web == True
+    #     setStickyWeb(testPlayer)
+    #     assert testPlayer.stickyWeb == True

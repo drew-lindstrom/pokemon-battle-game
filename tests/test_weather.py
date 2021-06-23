@@ -1,17 +1,17 @@
 from pokemon import Pokemon
 from weather import (
     Weather,
-    apply_weather_damage,
-    check_sandstorm_sp_def_boost,
-    check_damage_mod_from_weather,
+    applyWeatherDamage,
+    checkSandstormSpDefBoost,
+    checkDamageModFromWeather,
 )
 import pytest
 
 
-class Test_Weather:
+class TestWeather:
     @pytest.fixture
-    def test_pokemon(self):
-        test_pokemon = Pokemon(
+    def testPokemon(self):
+        testPokemon = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -22,70 +22,70 @@ class Test_Weather:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        return test_pokemon
+        return testPokemon
 
     @pytest.mark.parametrize(
-        "weather_name_1,weather_name_2,expected_weather,weather_counter",
+        "weatherName1,weatherName2,expectedWeather,weatherCounter",
         [
             ("Clear Skies", "Rain", "Rain", 4),
             ("Rain", "Harsh Sunlight", "Rain", 4),
             ("Clear Skies", "Harsh Sunlight", "Harsh Sunlight", 7),
         ],
     )
-    def test_set_weather(
+    def testSetWeather(
         self,
-        test_pokemon,
-        weather_name_1,
-        weather_name_2,
-        expected_weather,
-        weather_counter,
+        testPokemon,
+        weatherName1,
+        weatherName2,
+        expectedWeather,
+        weatherCounter,
     ):
-        slowbro = test_pokemon
+        slowbro = testPokemon
         weather = Weather()
-        weather.set_weather(weather_name_1, slowbro)
-        weather.set_weather(weather_name_2, slowbro)
-        assert weather.current_weather == expected_weather
-        assert weather.counter == weather_counter
+        weather.setWeather(weatherName1, slowbro)
+        weather.setWeather(weatherName2, slowbro)
+        assert weather.currentWeather == expectedWeather
+        assert weather.counter == weatherCounter
 
     @pytest.mark.parametrize(
-        "weather_name,weather_counter,expected_weather,expected_weather_counter",
+        "weatherName,weatherCounter,expectedWeather,expectedWeatherCounter",
         [
             ("Rain", 4, "Rain", 3),
             ("Rain", 0, "Clear Skies", 0),
         ],
     )
-    def test_decrement_weather(
+    def testDecrementWeather(
         self,
-        test_pokemon,
-        weather_name,
-        weather_counter,
-        expected_weather,
-        expected_weather_counter,
+        testPokemon,
+        weatherName,
+        weatherCounter,
+        expectedWeather,
+        expectedWeatherCounter,
     ):
-        slowbro = test_pokemon
+        slowbro = testPokemon
         weather = Weather()
-        weather.set_weather(weather_name, slowbro)
-        weather.counter = weather_counter
-        weather.decrement_weather()
-        assert weather.current_weather == expected_weather
-        assert weather.counter == expected_weather_counter
+        weather.setWeather(weatherName, slowbro)
+        weather.counter = weatherCounter
+        weather.decrementWeather()
+        assert weather.currentWeather == expectedWeather
+        assert weather.counter == expectedWeatherCounter
 
     @pytest.mark.parametrize(
-        "weather_name,expected_weather,expected_counter",
+        "weatherName,expectedWeather,expectedCounter",
         [("Harsh Sunlight", "Clear Skies", 0)],
     )
-    def test_clear_weather(
-        self, test_pokemon, weather_name, expected_weather, expected_counter
+    def testClearWeather(
+        self, testPokemon, weatherName, expectedWeather, expectedCounter
     ):
         weather = Weather()
-        slowbro = test_pokemon
-        weather.set_weather(weather_name, slowbro)
-        weather.clear_weather()
-        assert weather.current_weather == expected_weather
-        assert weather.counter == expected_counter
+        slowbro = testPokemon
+        weather.setWeather(weatherName, slowbro)
+        weather.clearWeather()
+        assert weather.currentWeather == expectedWeather
+        assert weather.counter == expectedCounter
 
     @pytest.mark.parametrize(
-        "weather_name,ability,item,typing,expected_bool",
+        "weatherName,ability,item,typing,expectedBool",
         [
             ("Sandstorm", None, None, ["Water", "Psychic"], True),
             ("Sandstorm", "Sand Force", None, ["Water", "Psychic"], False),
@@ -101,34 +101,34 @@ class Test_Weather:
             ("Rain", None, None, ["Steel"], False),
         ],
     )
-    def test_apply_weather_damage(
-        self, test_pokemon, weather_name, ability, item, typing, expected_bool
+    def testApplyWeatherDamage(
+        self, testPokemon, weatherName, ability, item, typing, expectedBool
     ):
-        weather = Weather(weather_name, 5)
-        slowbro = test_pokemon
+        weather = Weather(weatherName, 5)
+        slowbro = testPokemon
         slowbro.item = item
         slowbro.ability = ability
         slowbro.typing = typing
-        assert apply_weather_damage(weather, slowbro) == expected_bool
+        assert applyWeatherDamage(weather, slowbro) == expectedBool
 
     @pytest.mark.parametrize(
-        "weather_name,typing,expected_int",
+        "weatherName,typing,expectedInt",
         [
             ("Sandstorm", ["Water", "Psychic"], 1),
             ("Sandstorm", ["Rock", "Fire"], 1.5),
             ("Sandstorm", ["Dark", "Rock"], 1.5),
         ],
     )
-    def test_check_sandstorm_sp_def_boost(
-        self, test_pokemon, weather_name, typing, expected_int
+    def testCheckSandstormSpDefBoost(
+        self, testPokemon, weatherName, typing, expectedInt
     ):
-        weather = Weather(weather_name, 5)
-        slowbro = test_pokemon
+        weather = Weather(weatherName, 5)
+        slowbro = testPokemon
         slowbro.typing = typing
-        assert check_sandstorm_sp_def_boost(weather, slowbro) == expected_int
+        assert checkSandstormSpDefBoost(weather, slowbro) == expectedInt
 
     @pytest.mark.parametrize(
-        "weather_name,move_type,expected_int",
+        "weatherName,moveType,expectedInt",
         [
             ("Harsh Sunlight", "Water", 0.5),
             ("Harsh Sunlight", "Fire", 1.5),
@@ -136,10 +136,10 @@ class Test_Weather:
             ("Rain", "Fire", 0.5),
         ],
     )
-    def test_check_damage_mod_from_weather(
-        self, test_pokemon, weather_name, move_type, expected_int
+    def testCheckDamageModFromWeather(
+        self, testPokemon, weatherName, moveType, expectedInt
     ):
-        weather = Weather(weather_name, 5)
-        slowbro = test_pokemon
-        slowbro.moves[0].type = move_type
-        assert check_damage_mod_from_weather(weather, slowbro, 0) == expected_int
+        weather = Weather(weatherName, 5)
+        slowbro = testPokemon
+        slowbro.moves[0].type = moveType
+        assert checkDamageModFromWeather(weather, slowbro, 0) == expectedInt

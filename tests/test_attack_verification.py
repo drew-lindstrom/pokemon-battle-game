@@ -5,8 +5,8 @@ import attack_verification
 
 class TestAttackVerification:
     @pytest.fixture
-    def test_pokemon(self):
-        test_pokemon = Pokemon(
+    def testPokemon(self):
+        testPokemon = Pokemon(
             "Slowbro",
             100,
             "Male",
@@ -18,30 +18,30 @@ class TestAttackVerification:
             "Relaxed",
         )
 
-        return test_pokemon
+        return testPokemon
 
     @pytest.mark.parametrize(
-        "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
+        "inputStatusName,inputStatusNumber,inputAttackName,moveNumber,expectedBool",
         [(None, None, "Scald", 0, False), ("Flinched", 1, "Scald", 0, True)],
     )
-    def test_check_flinched(
+    def testCheckFlinched(
         self,
-        test_pokemon,
-        input_status_name,
-        input_status_number,
-        input_attack_name,
-        move_number,
-        expected_bool,
+        testPokemon,
+        inputStatusName,
+        inputStatusNumber,
+        inputAttackName,
+        moveNumber,
+        expectedBool,
     ):
-        p = test_pokemon
-        p.v_status[input_status_name] = input_status_number
+        p = testPokemon
+        p.vStatus[inputStatusName] = inputStatusNumber
         assert (
-            attack_verification.check_flinched(p, input_attack_name, move_number)
-            == expected_bool
+            attack_verification.checkFlinched(p, inputAttackName, moveNumber)
+            == expectedBool
         )
 
     @pytest.mark.parametrize(
-        "input_status_name,input_status_number,input_attack_name,move_number,previous_move,expected_bool",
+        "inputStatusName,inputStatusNumber,inputAttackName,moveNumber,previousMove,expectedBool",
         [
             (None, None, "Scald", 0, None, False),
             ("Choice Locked", float("inf"), "Scald", 0, None, False),
@@ -49,26 +49,26 @@ class TestAttackVerification:
             ("Choice Locked", float("inf"), "Slack Off", 1, "Scald", True),
         ],
     )
-    def test_choice_item(
+    def testChoiceItem(
         self,
-        test_pokemon,
-        input_status_name,
-        input_status_number,
-        input_attack_name,
-        move_number,
-        previous_move,
-        expected_bool,
+        testPokemon,
+        inputStatusName,
+        inputStatusNumber,
+        inputAttackName,
+        moveNumber,
+        previousMove,
+        expectedBool,
     ):
-        p = test_pokemon
-        p.v_status[input_status_name] = input_status_number
-        p.prev_move = previous_move
+        p = testPokemon
+        p.vStatus[inputStatusName] = inputStatusNumber
+        p.prevMove = previousMove
         assert (
-            attack_verification.check_choice_item(p, input_attack_name, move_number)
-            == expected_bool
+            attack_verification.checkChoiceItem(p, inputAttackName, moveNumber)
+            == expectedBool
         )
 
     @pytest.mark.parametrize(
-        "input_status_name,input_status_number,input_attack_name,move_number,previous_move,expected_bool",
+        "inputStatusName,inputStatusNumber,inputAttackName,moveNumber,previousMove,expectedBool",
         [
             (None, None, "Scald", 0, None, False),
             ("Encored", 1, "Scald", 0, None, False),
@@ -76,64 +76,64 @@ class TestAttackVerification:
             ("Encored", 1, "Slack Off", 1, "Scald", True),
         ],
     )
-    def test_check_encored(
+    def testCheckEncored(
         self,
-        test_pokemon,
-        input_status_name,
-        input_status_number,
-        input_attack_name,
-        move_number,
-        previous_move,
-        expected_bool,
+        testPokemon,
+        inputStatusName,
+        inputStatusNumber,
+        inputAttackName,
+        moveNumber,
+        previousMove,
+        expectedBool,
     ):
-        p = test_pokemon
-        p.v_status[input_status_name] = input_status_number
-        p.prev_move = previous_move
+        p = testPokemon
+        p.vStatus[inputStatusName] = inputStatusNumber
+        p.prevMove = previousMove
         assert (
-            attack_verification.check_encored(p, input_attack_name, move_number)
-            == expected_bool
+            attack_verification.checkEncored(p, inputAttackName, moveNumber)
+            == expectedBool
         )
 
     @pytest.mark.parametrize(
-        "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
+        "inputStatusName,inputStatusNumber,inputAttackName,moveNumber,expectedBool",
         [(None, None, "Scald", 0, False), ("Taunted", 1, "Slack Off", 1, True)],
     )
-    def test_check_taunted(
+    def testCheckTaunted(
         self,
-        test_pokemon,
-        input_status_name,
-        input_status_number,
-        input_attack_name,
-        move_number,
-        expected_bool,
+        testPokemon,
+        inputStatusName,
+        inputStatusNumber,
+        inputAttackName,
+        moveNumber,
+        expectedBool,
     ):
-        p = test_pokemon
-        p.v_status[input_status_name] = input_status_number
+        p = testPokemon
+        p.vStatus[inputStatusName] = inputStatusNumber
         assert (
-            attack_verification.check_taunted(p, input_attack_name, move_number)
-            == expected_bool
+            attack_verification.checkTaunted(p, inputAttackName, moveNumber)
+            == expectedBool
         )
 
     @pytest.mark.parametrize(
-        "input_status_name,input_status_number,input_attack_name,move_number,expected_bool",
+        "inputStatusName,inputStatusNumber,inputAttackName,moveNumber,expectedBool",
         [
             (None, None, "Scald", 0, False),
             ("Disabled", (1, "Scald", 0), "Scald", 0, True),
             ("Disabled", (1, "Scald", 0), "Slack Off", 0, False),
         ],
     )
-    def test_check_disabled(
+    def testCheckDisabled(
         self,
-        test_pokemon,
-        input_status_name,
-        input_status_number,
-        input_attack_name,
-        move_number,
-        expected_bool,
+        testPokemon,
+        inputStatusName,
+        inputStatusNumber,
+        inputAttackName,
+        moveNumber,
+        expectedBool,
     ):
-        p = test_pokemon
-        p.v_status[input_status_name] = input_status_number
+        p = testPokemon
+        p.vStatus[inputStatusName] = inputStatusNumber
         assert (
-            attack_verification.check_disabled(p, input_attack_name, move_number)
-            == expected_bool
+            attack_verification.checkDisabled(p, inputAttackName, moveNumber)
+            == expectedBool
         )

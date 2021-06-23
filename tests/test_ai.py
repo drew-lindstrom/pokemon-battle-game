@@ -22,7 +22,7 @@ class TestAI:
             (252, 0, 252, 0, 4, 0),
             "Relaxed",
         )
-        tapu_lele = Pokemon(
+        tapuLele = Pokemon(
             "Tapu Lele",
             100,
             None,
@@ -56,20 +56,20 @@ class TestAI:
             "Careful",
         )
 
-        p1 = Player([slowbro, tapu_lele, cinderace])
+        p1 = Player([slowbro, tapuLele, cinderace])
         p2 = Player([tyranitar])
         w = Weather()
         t = Terrain()
         testFrame = Frame(p1, p2, None, None, w, t)
         return testFrame
 
-    def test_choose_highest_damaging_attack(self, testFrame):
+    def testChooseHighestDamagingAttack(self, testFrame):
         chooseHighestDamagingAttack(testFrame)
         assert testFrame.attack == testFrame.user.moves[1]
         # TODO: Test with move lock.
 
-    def test_choose_next_pokemon(self, testFrame):
-        testFrame.attacking_team[1].stat["hp"] = 0
-        testFrame.attacking_team[1].check_fainted()
+    def testChooseNextPokemon(self, testFrame):
+        testFrame.attackingTeam[1].stat["hp"] = 0
+        testFrame.attackingTeam[1].checkFainted()
         chooseNextPokemon(testFrame)
-        assert testFrame.switch_choice == 2
+        assert testFrame.switchChoice == 2
