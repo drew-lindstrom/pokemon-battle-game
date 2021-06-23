@@ -7,14 +7,14 @@ import damage_calc
 def choose_highest_damaging_attack(frame):
     """Returns a move index for user's highest damaging attack against the current target."""
     highest_damage = -float("inf")
-    move_number = 0
+    move_number = None
     include_crit = False
     include_random = False
 
     for n in range(len(frame.user.moves)):
+        move_category = frame.user.moves[n].category
         if (
-            frame.user.moves[n].category == "Physical"
-            or frame.user.moves[n].category == "Special"
+            move_category == "Physical" or move_category == "Special"
         ) and ui.checkIfValidChoice(frame, n):
             frame.attack = frame.user.moves[n]
             if util.check_immunity(frame):
@@ -22,12 +22,16 @@ def choose_highest_damaging_attack(frame):
                 if damage > highest_damage:
                     highest_damage = damage
                     move_number = n
+    if move_number is None:
+        choose_next_pokemon(frame)
+        frame.attack = None
+    else:
+        frame.attack = frame.user.moves[move_number]
 
-    frame.attack = frame.user.moves[move_number]
     return frame
 
 
 def choose_next_pokemon(frame):
     for n in range(1, 6):
         if frame.attacking_team[n].status[0] != "Fainted":
-            return n
+            frame.switch_choice = n
