@@ -21,13 +21,14 @@ class Terrain:
         """Decrements the terrain counter by one at the end of each turn. If the counter equals 0, clear_terrain() is called."""
         if self.current_terrain is not None:
             if self.counter == 0:
-                print(f"The {self.current_terrain.lower()} subsided.")
                 self.clear_terrain()
             else:
                 self.counter -= 1
 
     def clear_terrain(self):
         """Resets terrain to None and resets counter to 0."""
+        print(f"The {self.current_terrain.lower()} subsided.")
+        print()
         self.current_terrain = None
         self.counter = 0
 

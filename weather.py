@@ -37,14 +37,15 @@ class Weather:
         """Decrements the weather counter by one at the end of each turn. If the counter equals 0, the weather is reset to Clear Skies."""
         if self.current_weather != "Clear Skies":
             if self.counter == 0:
-                print(f"The {self.current_weather.lower()} subsided.")
-                print()
+
                 self.clear_weather()
             else:
                 self.counter -= 1
 
     def clear_weather(self):
         """Resets the current weather to Clears Skies and sets the counter to None."""
+        print(f"The {self.current_weather.lower()} subsided.")
+        print()
         self.current_weather = "Clear Skies"
         self.counter = 0
 
