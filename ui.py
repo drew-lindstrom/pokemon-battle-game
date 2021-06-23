@@ -73,7 +73,7 @@ def checkIfValidChoice(frame, choice, printTextBool=False):
 def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
     if frame.user.moves[choice - 1].pp <= 0:
         if printTextBool:
-            print(f"{frame.user.moves[choice-1].name} is out of PP.")
+            print(f"{frame.user.moves[choice - 1].name} is out of PP.")
             print()
         return False
     return True

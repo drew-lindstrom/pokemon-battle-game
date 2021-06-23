@@ -43,7 +43,7 @@ def main():
 
         # Gets input on what each player wants to do before the given turn.
         ui.getChoice(frame1)
-        ai.choose_highest_damaging_attack(frame2)
+        ai.chooseHighestDamagingAttack(frame2)
 
         ui.clearScreen()
 
@@ -94,7 +94,7 @@ def main():
                     ui.getSwitch(cur_frame)
                     switch(cur_frame)
                 if player == p2:
-                    ai.choose_next_pokemon(cur_frame)
+                    ai.chooseNextPokemon(cur_frame)
                     switch(cur_frame)
 
 

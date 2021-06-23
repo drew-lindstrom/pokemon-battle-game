@@ -103,15 +103,15 @@ def activate_knock_off(frame):
         return 65
 
 
-def calc_modified_base_damage(frame):
+def calc_modified_base_damage(frame, base_damage):
     """Returns base power for various moves that have varying base powers based on different parameters."""
     if frame.attack.name == "Eruption":
-        damage = activate_eruption(frame)
+        base_damage = activate_eruption(frame)
 
     if frame.attack.name == "Knock Off" and frame.target.item:
-        damage = activate_knock_off(frame)
+        base_damage = activate_knock_off(frame)
 
-    return damage
+    return base_damage
 
 
 def calc_modified_damage():
@@ -133,10 +133,9 @@ def calc_damage(frame, include_crit=True, include_random=True):
 
     attack_stat, defense_stat = check_attacking_and_defending_stats(frame)
 
+    base_damage = frame.attack.power
     if frame.attack.name in modified_base_damage_list:
-        base_damage = calc_modified_base_damage(frame)
-    else:
-        base_damage = frame.attack.power
+        base_damage = calc_modified_base_damage(frame, base_damage)
 
     damage = int(
         (

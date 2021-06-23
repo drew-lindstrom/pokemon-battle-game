@@ -10,7 +10,7 @@ import pytest
 
 class TestAI:
     @pytest.fixture
-    def test_frame(self):
+    def testFrame(self):
         slowbro = Pokemon(
             "Slowbro",
             100,
@@ -60,15 +60,16 @@ class TestAI:
         p2 = Player([tyranitar])
         w = Weather()
         t = Terrain()
-        test_frame = Frame(p1, p2, None, None, w, t)
-        return test_frame
+        testFrame = Frame(p1, p2, None, None, w, t)
+        return testFrame
 
-    def test_choose_highest_damaging_attack(self, test_frame):
-        choose_highest_damaging_attack(test_frame)
-        assert test_frame.attack == test_frame.user.moves[1]
+    def test_choose_highest_damaging_attack(self, testFrame):
+        chooseHighestDamagingAttack(testFrame)
+        assert testFrame.attack == testFrame.user.moves[1]
         # TODO: Test with move lock.
 
-    def test_choose_next_pokemon(self, test_frame):
-        test_frame.attacking_team[1].stat["hp"] = 0
-        test_frame.attacking_team[1].check_fainted()
-        assert choose_next_pokemon(test_frame) == 2
+    def test_choose_next_pokemon(self, testFrame):
+        testFrame.attacking_team[1].stat["hp"] = 0
+        testFrame.attacking_team[1].check_fainted()
+        chooseNextPokemon(testFrame)
+        assert testFrame.switch_choice == 2

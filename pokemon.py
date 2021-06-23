@@ -206,6 +206,9 @@ class Pokemon:
 
     def check_fainted(self):
         """Checks if the pokemon is fainted (0 HP), and if True sets the pokemon's status to Fainted."""
+        if self.status[0] == "Fainted":
+            return True
+
         if self.stat["hp"] <= 0:
             print(f"{self.name} fainted!")
             print()
