@@ -3,60 +3,60 @@ from pokemon import Pokemon
 
 class Terrain:
     def __init__(self, terrain=None, counter=0):
-        self.current_terrain = terrain
+        self.currentTerrain = terrain
         self.counter = counter
 
-    def set_terrain(self, terrain_name, pokemon):
-        """Sets current_terrain to the specified terrain and terrain_counter to 5 turns (or 8 turns if pokemon is holding Terrain Extender)."""
-        if self.current_terrain is None:
-            self.current_terrain = terrain_name
-            print(f"{terrain_name} has been activated!")
+    def setTerrain(self, terrainName, pokemon):
+        """Sets currentTerrain to the specified terrain and terrainCounter to 5 turns (or 8 turns if pokemon is holding Terrain Extender)."""
+        if self.currentTerrain is None:
+            self.currentTerrain = terrainName
+            print(f"{terrainName} has been activated!")
             print()
             if pokemon.item == "Terrain Extender":
                 self.counter = 7
             else:
                 self.counter = 4
 
-    def decrement_terrain(self):
-        """Decrements the terrain counter by one at the end of each turn. If the counter equals 0, clear_terrain() is called."""
-        if self.current_terrain is not None:
+    def decrementTerrain(self):
+        """Decrements the terrain counter by one at the end of each turn. If the counter equals 0, clearTerrain() is called."""
+        if self.currentTerrain is not None:
             if self.counter == 0:
-                self.clear_terrain()
+                self.clearTerrain()
             else:
                 self.counter -= 1
 
-    def clear_terrain(self):
+    def clearTerrain(self):
         """Resets terrain to None and resets counter to 0."""
-        print(f"The {self.current_terrain.lower()} subsided.")
+        print(f"The {self.currentTerrain.lower()} subsided.")
         print()
-        self.current_terrain = None
+        self.currentTerrain = None
         self.counter = 0
 
 
-def check_damage_mod_from_terrain(terrain, pokemon, n):
+def checkDamageModFromTerrain(terrain, pokemon, n):
     if (
         (
-            terrain.current_terrain == "Electric Terrain"
+            terrain.currentTerrain == "Electric Terrain"
             and pokemon.moves[n].type == "Electric"
         )
         or (
-            terrain.current_terrain == "Grassy Terrain"
+            terrain.currentTerrain == "Grassy Terrain"
             and pokemon.moves[n].type == "Grass"
         )
         or (
-            terrain.current_terrain == "Psychic Terrain"
+            terrain.currentTerrain == "Psychic Terrain"
             and pokemon.moves[n].type == "Psychic"
         )
     ):
         return 1.3
-    if terrain.current_terrain == "Misty Terrain" and pokemon.moves[n].type == "Dragon":
+    if terrain.currentTerrain == "Misty Terrain" and pokemon.moves[n].type == "Dragon":
         return 0.5
     else:
         return 1
 
 
-def heal_from_grassy_terrain(terrain, pokemon):
+def healFromGrassyTerrain(terrain, pokemon):
     """If the current terrain is Grassy Terrain and the pokemon is grounded, heals for 1/16 max HP at the end of the turn."""
-    if terrain.current_terrain == "Grassy Terrain" and pokemon.grounded == True:
+    if terrain.currentTerrain == "Grassy Terrain" and pokemon.grounded == True:
         print(f"{pokemon.name} healed from the Grassy Terrain!")
-        pokemon.apply_heal(0.0625)
+        pokemon.applyHeal(0.0625)

@@ -2,60 +2,60 @@ from pokemon import Pokemon
 
 
 class Weather:
-    def __init__(self, weather_name="Clear Skies", counter=0):
-        self.current_weather = weather_name
+    def __init__(self, weatherName="Clear Skies", counter=0):
+        self.currentWeather = weatherName
         self.counter = counter
 
-    def set_weather(self, weather_name, pokemon):
-        """Sets current_weather to the specified weather if currently Clear Skies and
-        set weather_counter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
-        if self.current_weather == "Clear Skies":
-            self.current_weather = weather_name
-            if weather_name == "Sandstorm":
+    def setWeather(self, weatherName, pokemon):
+        """Sets currentWeather to the specified weather if currently Clear Skies and
+        set weatherCounter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
+        if self.currentWeather == "Clear Skies":
+            self.currentWeather = weatherName
+            if weatherName == "Sandstorm":
                 print("A sandstorm kicked up!")
                 print()
-            if weather_name == "Rain":
+            if weatherName == "Rain":
                 print("It started to rain!")
                 print()
-            if weather_name == "Harsh Sunlight":
+            if weatherName == "Harsh Sunlight":
                 print("The sunlight turned harsh!")
                 print()
-            if weather_name == "Hail":
+            if weatherName == "Hail":
                 print("It started to hail!")
                 print()
             if (
-                (pokemon.item == "Smooth Rock" and weather_name == "Sandstorm")
-                or (pokemon.item == "Damp Rock" and weather_name == "Rain")
-                or (pokemon.item == "Heat Rock" and weather_name == "Harsh Sunlight")
-                or (pokemon.item == "Icy Rock" and weather_name == "Hail")
+                (pokemon.item == "Smooth Rock" and weatherName == "Sandstorm")
+                or (pokemon.item == "Damp Rock" and weatherName == "Rain")
+                or (pokemon.item == "Heat Rock" and weatherName == "Harsh Sunlight")
+                or (pokemon.item == "Icy Rock" and weatherName == "Hail")
             ):
                 self.counter = 7
             else:
                 self.counter = 4
 
-    def decrement_weather(self):
+    def decrementWeather(self):
         """Decrements the weather counter by one at the end of each turn. If the counter equals 0, the weather is reset to Clear Skies."""
-        if self.current_weather != "Clear Skies":
+        if self.currentWeather != "Clear Skies":
             if self.counter == 0:
 
-                self.clear_weather()
+                self.clearWeather()
             else:
                 self.counter -= 1
 
-    def clear_weather(self):
+    def clearWeather(self):
         """Resets the current weather to Clears Skies and sets the counter to None."""
-        print(f"The {self.current_weather.lower()} subsided.")
+        print(f"The {self.currentWeather.lower()} subsided.")
         print()
-        self.current_weather = "Clear Skies"
+        self.currentWeather = "Clear Skies"
         self.counter = 0
 
 
-def apply_weather_damage(weather, pokemon):
+def applyWeatherDamage(weather, pokemon):
     """If weather is currently Sandstorm or Hail, damages all pokemon on the field at end of turn
     unless pokemon is of specific type, ability, or holding Safety Goggles."""
-    if weather.current_weather not in ("Sandstorm", "Hail"):
+    if weather.currentWeather not in ("Sandstorm", "Hail"):
         return False
-    if weather.current_weather == "Sandstorm":
+    if weather.currentWeather == "Sandstorm":
         for typing in pokemon.typing:
             if typing in ("Rock", "Steel", "Ground"):
                 return False
@@ -65,7 +65,7 @@ def apply_weather_damage(weather, pokemon):
             "Sand Veil",
         ):
             return False
-    if weather.current_weather == "Hail":
+    if weather.currentWeather == "Hail":
         for typing in pokemon.typing:
             if typing == "Ice":
                 return False
@@ -76,33 +76,33 @@ def apply_weather_damage(weather, pokemon):
     if pokemon.item == "Safety Goggles":
         return False
 
-    print(f"{pokemon.name} was buffeted by the {weather.current_weather.lower()}!")
+    print(f"{pokemon.name} was buffeted by the {weather.currentWeather.lower()}!")
     print()
 
-    pokemon.apply_damage(None, 1 / 16)
+    pokemon.applyDamage(None, 1 / 16)
 
     return True
 
 
-def check_sandstorm_sp_def_boost(weather, pokemon):
+def checkSandstormSpDefBoost(weather, pokemon):
     """Increases special defense of Rock type pokemon while weather is Sandstorm."""
-    if weather.current_weather == "Sandstorm" and (
+    if weather.currentWeather == "Sandstorm" and (
         (pokemon.typing[0] == "Rock") or (pokemon.typing[1] == "Rock")
     ):
         return 1.5
     return 1
 
 
-def check_damage_mod_from_weather(weather, pokemon, n):
+def checkDamageModFromWeather(weather, pokemon, n):
     """Boosts power of fire type moves by 50% and lowers power of water type moves by 50% if weather is Harsh Sunlight.
     Boosts power of water type moves by 50% and lower power of fire types moves by 50% if weather is Rain."""
-    if weather.current_weather == "Harsh Sunlight":
+    if weather.currentWeather == "Harsh Sunlight":
         if pokemon.moves[n].type == "Fire":
             return 1.5
         elif pokemon.moves[n].type == "Water":
             return 0.5
 
-    elif weather.current_weather == "Rain":
+    elif weather.currentWeather == "Rain":
         if pokemon.moves[n].type == "Water":
             return 1.5
         elif pokemon.moves[n].type == "Fire":

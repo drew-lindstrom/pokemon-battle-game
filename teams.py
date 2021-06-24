@@ -1,7 +1,7 @@
 from pokemon import Pokemon
 from player import Player
 
-tapu_lele = Pokemon(
+tapuLele = Pokemon(
     "Tapu Lele",
     100,
     None,
@@ -79,7 +79,7 @@ heatran = Pokemon(
     (0, 0, 0, 252, 4, 252),
     "Modest",
 )
-tapu_lele_2 = Pokemon(
+tapuLele2 = Pokemon(
     "Tapu Lele",
     100,
     None,
@@ -135,5 +135,5 @@ rillaboom = Pokemon(
     "Adamant",
 )
 
-p1 = Player([tapu_lele, cinderace, excadrill, slowbro, tyranitar, zapdos])
-p2 = Player([heatran, tapu_lele_2, urshifu, hydreigon, landorus, rillaboom])
+p1 = Player([tapuLele, cinderace, excadrill, slowbro, tyranitar, zapdos])
+p2 = Player([heatran, tapuLele2, urshifu, hydreigon, landorus, rillaboom])

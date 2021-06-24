@@ -1,6 +1,6 @@
 from pokemon import Pokemon
 from switch_effects import *
-from game_data import type_key, type_chart
+from game_data import typeKey, typeChart
 
 
 class Player:
@@ -8,15 +8,15 @@ class Player:
         self.team = []
         for n in range(len(pokemon)):
             self.team.append(pokemon[n])
-        self.cur_pokemon = self.team[0]
-        self.light_screen = False
-        self.light_screen_counter = 0
+        self.curPokemon = self.team[0]
+        self.lightScreen = False
+        self.lightScreenCounter = 0
         self.reflect = False
-        self.reflect_counter = 0
-        self.stealth_rocks = False
+        self.reflectCounter = 0
+        self.stealthRocks = False
         self.spikes = 0
         self.tspikes = 0
-        self.sticky_web = False
+        self.stickyWeb = False
 
     def __len__(self):
         return len(self.team)
@@ -24,12 +24,12 @@ class Player:
     def __getitem__(self, index):
         return self.team[index]
 
-    def show_team(self):
+    def showTeam(self):
         """Shows stats of the pokemon on the player's team."""
         for n in range(len(self.team)):
-            self.team[n].show_stats()
+            self.team[n].showStats()
 
-    def check_game_over(self):
+    def checkGameOver(self):
         """Checks if there are any pokemon on the player's team who can still fight (HP greater than 0).
         Returns False if all Pokemon on team are fainted."""
 
@@ -38,10 +38,9 @@ class Player:
                 return False
         return True
 
-    def clear_hazards(self):
+    def clearHazards(self):
         """Clears the hazards on the player's side of the field."""
-        # Rapid spin clears all entry hazards.
-        self.stealth_rocks = False
-        self.sticky_web = False
+        self.stealthRocks = False
+        self.stickyWeb = False
         self.spikes = 0
         self.tspikes = 0

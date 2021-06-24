@@ -1,59 +1,59 @@
-from game_data import moves_dict
+from game_data import movesDict
 from copy import deepcopy
 
 
 class Move:
     def __init__(self, name):
         self.name = name
-        self.type = moves_dict[name][0]
-        self.category = moves_dict[name][1]
+        self.type = movesDict[name][0]
+        self.category = movesDict[name][1]
         self.pp = None
 
     @property
     def power(self):
-        power = moves_dict[self.name][2]
+        power = movesDict[self.name][2]
         if power == None:
             return 0
         return int(power)
 
     @property
     def accuracy(self):
-        accuracy = moves_dict[self.name][3]
+        accuracy = movesDict[self.name][3]
         if accuracy == None:
             return 0
         return int(accuracy)
 
     @property
-    def max_pp(self):
-        max_pp = int(moves_dict[self.name][4])
-        if max_pp <= 1:
-            return max_pp
-        return int(max_pp * 1.6)
+    def maxPPp(self):
+        maxPPp = int(movesDict[self.name][4])
+        if maxPPp <= 1:
+            return maxPPp
+        return int(maxPPp * 1.6)
 
     @property
     def pp(self):
-        return self._pp
+        return self.PPp
 
     @pp.setter
     def pp(self, n):
-        if n == None or n > self.max_pp:
-            self.pp = self.max_pp
+        if n == None or n > self.maxPPp:
+            self.pp = self.maxPPp
         elif n <= 0:
-            self._pp = 0
+            self.PPp = 0
         else:
-            self._pp = n
+            self.PPp = n
 
-    def show_stats(self):
+    def showStats(self):
 
         print(f"Move: {self.name}")
         print(f"Type: {self.type}")
         print(f"Category: {self.category}")
         print(f"Power: {self.power}")
         print(f"Accuracy: {self.accuracy}")
-        print(f"PP: {self.pp}/{self.max_pp}")
+        print(f"PP: {self.pp}/{self.maxPPp}")
         print()
 
-    def check_pp(self):
+    def checkPPp(self):
         """Returns True if a move has enough PP to be used (above 0 PP). Returns False otherwise.
         move.pp (int) -> Boolean
         Ex: move.pp == 0, return False.
@@ -63,6 +63,6 @@ class Move:
             return False
         return True
 
-    def decrement_pp(self):
+    def decrementPPp(self):
         """Decrements a move's pp by one at the end of the turn."""
         self.pp -= 1

@@ -1,6 +1,6 @@
 import random
 
-natures_dict = {
+naturesDict = {
     "Hardy": (1, 1, 1, 1, 1),
     "Lonely": (1.1, 0.9, 1, 1, 1),
     "Brave": (1.1, 1, 1, 1, 0.9),
@@ -28,7 +28,7 @@ natures_dict = {
     "Quikry": (1, 1, 1, 1, 1),
 }
 
-type_key = {
+typeKey = {
     "Normal": 0,
     "Fire": 1,
     "Water": 2,
@@ -49,7 +49,7 @@ type_key = {
     "Fairy": 17,
 }
 
-type_chart = [
+typeChart = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.5, 0, 1, 1, 0.5, 1],
     [1, 0.5, 0.5, 1, 2, 2, 1, 1, 1, 1, 1, 2, 0.5, 1, 0.5, 1, 2, 1],
     [1, 2, 0.5, 1, 0.5, 1, 1, 1, 2, 1, 1, 1, 2, 1, 0.5, 1, 1, 1],
@@ -70,7 +70,7 @@ type_chart = [
     [1, 0.5, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 1, 2, 2, 0.5, 1],
 ]
 
-priority_moves = {
+priorityMoves = {
     "Helping Hand": 5,
     "Baneful Bunker": 4,
     "Detect": 4,
@@ -117,18 +117,18 @@ priority_moves = {
     "Trick Room": -7,
 }
 
-stat_alt_attacks = {
-    "Close Combat": ("user", 100, "defense", -1, "sp_defense", -1),
+statAltAttacks = {
+    "Close Combat": ("user", 100, "defense", -1, "spDefense", -1),
     "Crunch": ("target", 20, "defense", -1),
-    "Earth Power": ("target", 10, "sp_defense", -1),
-    "Flash Cannon": ("target", 10, "sp_defense", -1),
-    "Focus Blast": ("target", 10, "sp_defense", -1),
-    "Moon Blast": ("target", 30, "sp_attack", -1),
-    "Psychic": ("target", 10, "sp_attack", -1),
+    "Earth Power": ("target", 10, "spDefense", -1),
+    "Flash Cannon": ("target", 10, "spDefense", -1),
+    "Focus Blast": ("target", 10, "spDefense", -1),
+    "Moon Blast": ("target", 30, "spAttack", -1),
+    "Psychic": ("target", 10, "spAttack", -1),
     "Swords Dance": ("user", 100, "attack", 2),
 }
 
-status_inflicting_attacks = {
+statusInflictingAttacks = {
     "Discharge": ("target", 30, "Paralyzed"),
     "Fire Blast": ("target", 10, "Burned"),
     "Gunk Shot": ("target", 30, "Poisoned"),
@@ -138,18 +138,18 @@ status_inflicting_attacks = {
     "Toxic": ("target", 100, "Badly Poisoned"),
 }
 
-v_status_inflicting_attacks = {
+vStatusInflictingAttacks = {
     "Dark Pulse": ("target", 20, "Flinched"),
     "Hurricane": ("target", 30, "Confused"),
     "Iron Head": ("target", 30, "Flinched"),
     "Test Dark Pulse": ("target", 100, "Flinched"),
 }
 
-multi_hit_attacks = {"Rock Blast"}
+multiHitAttacks = {"Rock Blast"}
 
-recoil_attacks = {"High Jump Kick", "Wood Hammer"}
+recoilAttacks = {"High Jump Kick", "Wood Hammer"}
 
-contact_attacks = {
+contactAttacks = {
     "Close Combat",
     "Crunch",
     "Grassy Glide",
@@ -161,10 +161,10 @@ contact_attacks = {
     "U-turn",
 }
 
-modified_base_damage_list = ["Eruption", "Knock Off"]
+modifiedBaseDamageList = ["Eruption", "Knock Off"]
 
 # TODO : Darmanitan's different forms are named incorrectly.
-pokemon_dict = {
+pokemonDict = {
     "Abomasnow": (("Grass", "Ice"), ("90", "92", "75", "92", "85", "60")),
     "Abra": (("Psychic", None), ("25", "20", "15", "105", "55", "90")),
     "Absol": (("Dark", None), ("65", "130", "60", "75", "60", "75")),
@@ -1433,7 +1433,7 @@ pokemon_dict = {
 
 # To do: Aura Sphere has power set to infinity.
 # Order is: Name, Type, Category, Power, Accuracy, PP
-moves_dict = {
+movesDict = {
     "10,000,000 Volt Thunderbolt": ("Electric", "Special", "195", None, "1"),
     "Absorb": ("Grass", "Special", "20", "100", "25"),
     "Accelerock": ("Rock", "Physical", "40", "100", "20"),

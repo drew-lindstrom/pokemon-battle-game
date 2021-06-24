@@ -19,27 +19,27 @@ def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
     and calls appropriate functions to apply damage and various effects."""
     ui.clearScreen()
-    game_over_bool = False
+    gameOverBool = False
 
     w = Weather()
     t = Terrain()
 
     #'Switches' leading pokemon with their respective selves in order to activate any abilities that activate on switch in.
-    opening_frame_1 = Frame(p1, p2, None, None, w, t)
-    opening_frame_1.switch_choice = 0
-    opening_frame_2 = Frame(p2, p1, None, None, w, t)
-    opening_frame_2.switch_choice = 0
-    switch(opening_frame_1)
-    switch(opening_frame_2)
+    openingFrame1 = Frame(p1, p2, None, None, w, t)
+    openingFrame1.switchChoice = 0
+    openingFrame2 = Frame(p2, p1, None, None, w, t)
+    openingFrame2.switchChoice = 0
+    switch(openingFrame1)
+    switch(openingFrame2)
 
-    while game_over_bool is False:
+    while gameOverBool is False:
         frame1 = Frame(p1, p2, None, None, w, t)
         frame2 = Frame(p2, p1, None, None, w, t)
 
         ui.printPokemonOnField(frame1, frame2)
 
-        frame1.user.check_choice_item()
-        frame2.user.check_choice_item()
+        frame1.user.checkChoiceItem()
+        frame2.user.checkChoiceItem()
 
         # Gets input on what each player wants to do before the given turn.
         ui.getChoice(frame1)
@@ -48,54 +48,54 @@ def main():
         ui.clearScreen()
 
         # Determines which player goes first for the turn (based on speed, priority moves, etc.)
-        frame_order = get_frame_order(frame1, frame2)
+        frameOrder = getFrameOrder(frame1, frame2)
 
-        for cur_frame in frame_order:
-            if cur_frame.switch_choice:
-                switch(cur_frame)
-                frame1.update_cur_pokemon()
-                frame2.update_cur_pokemon()
-            elif cur_frame.user.status[0] != "Fainted":
-                print(f"{cur_frame.user.name} used {cur_frame.attack.name}!")
+        for curFrame in frameOrder:
+            if curFrame.switchChoice:
+                switch(curFrame)
+                frame1.updateCurPokemon()
+                frame2.updateCurPokemon()
+            elif curFrame.user.status[0] != "Fainted":
+                print(f"{curFrame.user.name} used {curFrame.attack.name}!")
                 print()
 
-                cur_frame.can_attack = check_can_attack(cur_frame)
-                check_attack_lands(cur_frame)
-                if cur_frame.can_attack and cur_frame.attack_lands:
+                curFrame.canAttack = checkCanAttack(curFrame)
+                checkAttackLands(curFrame)
+                if curFrame.canAttack and curFrame.attackLands:
                     if (
-                        cur_frame.attack.category == "Physical"
-                        or cur_frame.attack.category == "Special"
+                        curFrame.attack.category == "Physical"
+                        or curFrame.attack.category == "Special"
                     ):
-                        cur_frame.attack_damage = calc_damage(cur_frame)
-                        cur_frame.target.apply_damage(cur_frame.attack_damage, None)
+                        curFrame.attackDamage = calcDamage(curFrame)
+                        curFrame.target.applyDamage(curFrame.attackDamage, None)
 
                     else:
-                        apply_non_damaging_move(cur_frame)
-                    apply_post_attack_effects(cur_frame)
+                        applyNonDamagingMove(curFrame)
+                    applyPostAttackEffects(curFrame)
 
-        apply_end_of_turn_effects(frame_order)
+        applyEndOfTurnEffects(frameOrder)
 
-        w.decrement_weather()
-        t.decrement_terrain()
+        w.decrementWeather()
+        t.decrementTerrain()
 
-        for cur_frame in frame_order:
-            player = cur_frame.attacking_team
+        for curFrame in frameOrder:
+            player = curFrame.attackingTeam
             # Game over check
-            if player.check_game_over():
+            if player.checkGameOver():
                 if player == p1:
                     print("Player 2 Wins!")
                 elif player == p2:
                     print("Player 1 Wins!")
-                game_over_bool = True
+                gameOverBool = True
                 break
             # Prompts player to switch any fainted pokemon at end of turn.
-            if player.cur_pokemon.status[0] == "Fainted":
+            if player.curPokemon.status[0] == "Fainted":
                 if player == p1:
-                    ui.getSwitch(cur_frame)
-                    switch(cur_frame)
+                    ui.getSwitch(curFrame)
+                    switch(curFrame)
                 if player == p2:
-                    ai.chooseNextPokemon(cur_frame)
-                    switch(cur_frame)
+                    ai.chooseNextPokemon(curFrame)
+                    switch(curFrame)
 
 
 if __name__ == "__main__":

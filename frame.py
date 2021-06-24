@@ -9,30 +9,30 @@ class Frame:
 
     def __init__(
         self,
-        attacking_team=None,
-        defending_team=None,
+        attackingTeam=None,
+        defendingTeam=None,
         attack=None,
-        switch_choice=None,
+        switchChoice=None,
         weather=None,
         terrain=None,
     ):
-        self.attacking_team = attacking_team
-        self.user = attacking_team.cur_pokemon
-        self.defending_team = defending_team
-        self.target = defending_team.cur_pokemon
+        self.attackingTeam = attackingTeam
+        self.user = attackingTeam.curPokemon
+        self.defendingTeam = defendingTeam
+        self.target = defendingTeam.curPokemon
         self.attack = None
-        if switch_choice:
-            self.switch_choice = switch_choice
+        if switchChoice:
+            self.switchChoice = switchChoice
         else:
-            self.switch_choice = False
+            self.switchChoice = False
         self.weather = weather
         self.terrain = terrain
-        self.can_attack = False
-        self.attack_lands = False
-        self.attack_damage = 0
+        self.canAttack = False
+        self.attackLands = False
+        self.attackDamage = 0
         self.crit = False
 
-    def update_cur_pokemon(self):
+    def updateCurPokemon(self):
         "Whenever a switch occurs, updates the frames to switch the user/target to the current pokemon on the respective teams."
-        self.user = self.attacking_team.cur_pokemon
-        self.target = self.defending_team.cur_pokemon
+        self.user = self.attackingTeam.curPokemon
+        self.target = self.defendingTeam.curPokemon

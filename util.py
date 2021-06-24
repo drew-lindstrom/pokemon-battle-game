@@ -4,73 +4,73 @@ from weather import *
 from terrain import *
 from random import *
 import move_effects
-from game_data import priority_moves, type_key, type_chart
-from stat_calc import calc_speed
+from game_data import priorityMoves, typeKey, typeChart
+from stat_calc import calcSpeed
 
 
-def get_frame_order(frame1, frame2):
+def getFrameOrder(frame1, frame2):
     """Gets the turn order for the current turn of the game.
     Turn order is determined by the speeds of the current pokemon on the field.
     With the exception of the effects from certian moves, items, or abilities,
     the faster pokemon always switches or attacks before the slower pokemon.
     Switching to a different pokemon always occurs before a pokemon attacks (unless the opposing pokemon uses the move Pursuit)."""
-    if frame1.attack and frame1.attack.name == "Pursuit" and frame2.switch_choice:
+    if frame1.attack and frame1.attack.name == "Pursuit" and frame2.switchChoice:
         return [frame1, frame2]
-    elif frame2.attack and frame2.attack.name == "Pursuit" and frame1.switch_choice:
+    elif frame2.attack and frame2.attack.name == "Pursuit" and frame1.switchChoice:
         return [frame1, frame2]
 
-    if frame1.switch_choice and frame2.attack:
+    if frame1.switchChoice and frame2.attack:
         return [frame1, frame2]
-    elif frame2.switch_choice and frame1.attack:
+    elif frame2.switchChoice and frame1.attack:
         return [frame2, frame1]
 
-    priority_p1 = check_priority(frame1)
-    priority_p2 = check_priority(frame2)
+    priorityP1 = checkPriority(frame1)
+    priorityP2 = checkPriority(frame2)
 
-    if priority_p1 == priority_p2:
-        return check_speed(frame1, frame2)
-    elif priority_p1 > priority_p2:
+    if priorityP1 == priorityP2:
+        return checkSpeed(frame1, frame2)
+    elif priorityP1 > priorityP2:
         return [frame1, frame2]
     else:
         return [frame2, frame1]
 
 
-def check_speed(frame1, frame2):
+def checkSpeed(frame1, frame2):
     """Checks the speed of both pokemon on field to determine who moves first.
     Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
-    p1_speed = calc_speed(frame1)
-    p2_speed = calc_speed(frame2)
+    p1Speed = calcSpeed(frame1)
+    p2Speed = calcSpeed(frame2)
 
-    if p1_speed > p2_speed:
+    if p1Speed > p2Speed:
         return [frame1, frame2]
     # If the speed check is a tie, its usually random who goes first, but for the sake of AI consistency, the opponent will always go first.
     else:
         return [frame2, frame1]
 
 
-def check_priority(frame):
-    """Calls priority_moves dictionary to see if the given attack has a priority number, if not returns 0.
+def checkPriority(frame):
+    """Calls priorityMoves dictionary to see if the given attack has a priority number, if not returns 0.
     Attacks with a priority higher number will go before the opponent's attack regardless of speed.
     Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
 
     if (
-        frame.terrain.current_terrain == "Psychic Terrain"
+        frame.terrain.currentTerrain == "Psychic Terrain"
         and frame.target.grounded == True
     ):
         return 0
     if (
-        frame.terrain.current_terrain == "Grassy Terrain"
+        frame.terrain.currentTerrain == "Grassy Terrain"
         and frame.attack.name == "Grassy Glide"
     ):
         return 1
 
     try:
-        return priority_moves[frame.attack.name]
+        return priorityMoves[frame.attack.name]
     except Exception:
         return 0
 
 
-def roll_paralysis(user, i=None):
+def rollParalysis(user, i=None):
     """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
     if i == None or i < 1 or i > 4:
         i = randint(1, 4)
@@ -81,7 +81,7 @@ def roll_paralysis(user, i=None):
     return True
 
 
-def roll_frozen(user, i=None):
+def rollFrozen(user, i=None):
     """Rolls to determine if a frozen pokemon thaws out during it's attack. Frozen pokemon are not able to attack. 20% chance to thaw out.
     The pokemon can use it's attack on the turn that it thaws out."""
     if i == None or i < 1 or i > 5:
@@ -89,29 +89,29 @@ def roll_frozen(user, i=None):
 
     if i == 1:
         print(f"{user.name} thawed out!")
-        user.cure_status()
+        user.cureStatus()
         return True
     print(f"{user.name} is frozen and cant attack!")
     print()
     return False
 
 
-def roll_confusion(user, i=None):
+def rollConfusion(user, i=None):
     """Rolls to determine if a confused pokemon can successfully use an attack. 33% chance they will hit themselves in confusion."""
     if i == None or i < 1 or i > 2:
         i = randint(1, 2)
 
     if i == 1:
         print(f"{user.name} hit its self in confusion!")
-        user.apply_damage(calc_confusion_damage(user), None)
+        user.applyDamage(calcConfusionDamage(user), None)
         return False
     return True
 
 
-def calc_confusion_damage(user):
+def calcConfusionDamage(user):
     """Returns damage inflicted by a pokemon to itself if they hit themselves in confusion."""
-    # TODO: Need to add random to damage calc. Probably better to combine this with calc_damage function.
-    random_mod = 1
+    # TODO: Need to add random to damage calc. Probably better to combine this with calcDamage function.
+    randomMod = 1
 
     damage = int(
         (
@@ -125,15 +125,15 @@ def calc_confusion_damage(user):
             )
             + 2
         )
-        * random_mod
+        * randomMod
     )
 
     return damage
 
 
-def check_immunity(frame):
+def checkImmunity(frame):
     """Returns boolean if current attack isn't able to land due to target being immune to the attack's type."""
-    frame.target.check_grounded()
+    frame.target.checkGrounded()
     if (
         (frame.attack.type == "Poison" and "Steel" in frame.target.typing)
         or (frame.attack.type == "Dragon" and "Fairy" in frame.target.typing)
@@ -150,11 +150,11 @@ def check_immunity(frame):
     return True
 
 
-def check_can_attack(frame, i=None):
+def checkCanAttack(frame, i=None):
     """Checks to make sure if an attacker is able to use a move based on any present status conditions.
     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
     if frame.user.status[0] == "Paralyzed":
-        if not roll_paralysis(frame.user, i):
+        if not rollParalysis(frame.user, i):
             return False
 
     if frame.user.status[0] == "Asleep" and frame.attack.name != "Sleep Talk":
@@ -163,19 +163,19 @@ def check_can_attack(frame, i=None):
         return False
 
     if frame.user.status[0] == "Frozen":
-        if not roll_frozen(frame.user, i):
+        if not rollFrozen(frame.user, i):
             return False
 
-    if "Confusion" in frame.user.v_status:
-        if not roll_confusion(frame.user, i):
+    if "Confusion" in frame.user.vStatus:
+        if not rollConfusion(frame.user, i):
             return False
 
-    if "Flinched" in frame.user.v_status:
+    if "Flinched" in frame.user.vStatus:
         print(f"{frame.user.name} flinched!")
         print()
         return False
 
-    if not check_immunity(frame):
+    if not checkImmunity(frame):
         print(f"It had no effect.")
         print()
         return False
@@ -183,43 +183,43 @@ def check_can_attack(frame, i=None):
     if frame.attack.type == "Fire" and frame.target.ability == "Flash Fire":
         print(f"{frame.target.name}s attack was boosted by Flash Fire!")
         print()
-        frame.target.update_stat_modifier("attack", 1)
-        frame.target.update_stat_modifier("sp_attack", 1)
+        frame.target.updateStatModifier("attack", 1)
+        frame.target.updateStatModifier("spAttack", 1)
         return False
     return True
 
 
-def check_attack_lands(frame, i=None):
+def checkAttackLands(frame, i=None):
     """Calculates required accuracy for an attack to land based on the accuracy of the attack,
     accuracy of user, evasion of target, and any additional modifiers. Rolls i in range 0 to 100.
     If i is less than or equal to required accuracy, attack hits and function returns True."""
     if frame.attack.accuracy == 0:
-        frame.attack_lands = True
+        frame.attackLands = True
         return
 
-    additional_modifier = 1
+    additionalModifier = 1
 
-    accuracy_evasion_stat = frame.user.calc_modified_stat(
+    accuracyEvasionStat = frame.user.calcModifiedStat(
         "accuracy"
-    ) - frame.target.calc_modified_stat("evasion")
+    ) - frame.target.calcModifiedStat("evasion")
 
-    if accuracy_evasion_stat < -6:
-        accuracy_evasion_stat = -6
+    if accuracyEvasionStat < -6:
+        accuracyEvasionStat = -6
 
-    if accuracy_evasion_stat < 0:
-        accuracy_evasion_stat = 3 / (3 + accuracy_evasion_stat * -1)
-    elif accuracy_evasion_stat > 0:
-        accuracy_evasion_stat = (3 + accuracy_evasion_stat) / 3
+    if accuracyEvasionStat < 0:
+        accuracyEvasionStat = 3 / (3 + accuracyEvasionStat * -1)
+    elif accuracyEvasionStat > 0:
+        accuracyEvasionStat = (3 + accuracyEvasionStat) / 3
     else:
-        accuracy_evasion_stat = 1
+        accuracyEvasionStat = 1
 
-    a = frame.attack.accuracy * accuracy_evasion_stat * additional_modifier
+    a = frame.attack.accuracy * accuracyEvasionStat * additionalModifier
 
     if i is None or i < 0 or i > 100:
         i = randint(0, 100)
 
     if i <= a:
-        frame.attack_lands = True
+        frame.attackLands = True
         return
 
     print(f"{frame.user.name}s attack missed!")
@@ -228,158 +228,149 @@ def check_attack_lands(frame, i=None):
     # If high jump kick misses, it damages the user.
     if frame.attack.name == "High Jump Kick":
         print(f"{frame.user.name} came crashing down...")
-        frame.user.apply_damage(None, 0.5)
+        frame.user.applyDamage(None, 0.5)
 
 
-def apply_non_damaging_move(frame):
+def applyNonDamagingMove(frame):
     """Applies effect of current non damaging move being used."""
     if frame.attack.name == "Stealth Rock":
-        move_effects.set_stealth_rocks(frame)
+        move_effects.setStealthRocks(frame)
 
     if frame.attack.name == "Defog":
-        move_effects.activate_defog(frame)
+        move_effects.activateDefog(frame)
 
     if frame.attack.name == "Toxic":
-        frame.target.set_status("Badly Poisoned")
+        frame.target.setStatus("Badly Poisoned")
 
     if frame.attack.name == "Roost":
-        move_effects.activate_roost(frame)
+        move_effects.activateRoost(frame)
 
     if frame.attack.name == "Slack Off":
-        move_effects.activate_slack_off(frame)
+        move_effects.activateSlackOff(frame)
 
 
 def switch(frame):
     """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
-    Ex: Player team order is [Tyranitar, Slowbro] -> player_team.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
-    n = int(frame.switch_choice)
-    if frame.attacking_team.team[n].stat["hp"] == 0:
-        print(f"{frame.attacking_team.team[n].name} has already fainted!")
+    Ex: Player team order is [Tyranitar, Slowbro] -> playerTeam.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
+    n = int(frame.switchChoice)
+    if frame.attackingTeam.team[n].stat["hp"] == 0:
+        print(f"{frame.attackingTeam.team[n].name} has already fainted!")
         print()
     else:
-        # try:
-        frame.attacking_team.team[0], frame.attacking_team.team[n] = (
-            frame.attacking_team.team[n],
-            frame.attacking_team.team[0],
+        frame.attackingTeam.team[0], frame.attackingTeam.team[n] = (
+            frame.attackingTeam.team[n],
+            frame.attackingTeam.team[0],
         )
-        frame.user = frame.attacking_team[0]
-        frame.attacking_team.cur_pokemon = frame.attacking_team.team[0]
+        frame.user = frame.attackingTeam[0]
+        frame.attackingTeam.curPokemon = frame.attackingTeam.team[0]
         print(
-            f"{frame.attacking_team.team[n].name} switched with {frame.attacking_team.team[0].name}."
+            f"{frame.attackingTeam.team[n].name} switched with {frame.attackingTeam.team[0].name}."
         )
         print()
-        frame.attacking_team.team[n].reset_previous_move()
-        frame.attacking_team.team[n].reset_stat_modifier()
-        frame.attacking_team.team[n].reset_statuses()
-        apply_switch_effect(frame, n, "Out")
-        apply_switch_effect(frame, 0, "In")
-        apply_entry_hazards(frame)
-        # except Exception:
-        #     print(f"Can't switch out {frame.attacking_team.cur_pokemon.name}...")
-    # Grounded Poision type pokemon remove toxic spikes when switched in even if wearing heavy duty boots.
+        frame.attackingTeam.team[n].resetPreviousMove()
+        frame.attackingTeam.team[n].resetStatModifier()
+        frame.attackingTeam.team[n].resetStatuses()
+        applySwitchEffect(frame, n, "Out")
+        applySwitchEffect(frame, 0, "In")
+        applyEntryHazards(frame)
 
 
-def apply_switch_effect(frame, n, switch_dir):
+def applySwitchEffect(frame, n, switchDir):
     """Applies switch effect for current pokemon that's switched in or switched out."""
-    user = frame.attacking_team[n]
-    if switch_dir == "In":
+    user = frame.attackingTeam[n]
+    if switchDir == "In":
         if user.ability == "Grassy Surge":
-            activate_grassy_surge(user, frame.terrain)
+            activateGrassySurge(user, frame.terrain)
 
         if user.ability == "Intimidate":
-            activate_intimidate(user, frame.target)
+            activateIntimidate(user, frame.target)
 
         if user.ability == "Psychic Surge":
-            activate_psychic_surge(user, frame.terrain)
+            activatePsychicSurge(user, frame.terrain)
 
         if user.ability == "Sand Stream":
-            activate_sand_stream(user, frame.weather)
+            activateSandStream(user, frame.weather)
 
-    if switch_dir == "Out":
+    if switchDir == "Out":
         if user.ability == "Regenerator":
-            activate_regenerator(user)
+            activateRegenerator(user)
 
 
-def apply_entry_hazards(frame):
+def applyEntryHazards(frame):
     """Applies the appropriate entry hazards effects after a pokemon switches in.
     Calls funciton to clear toxic spikes if target if a grounded poison type."""
     if (
         frame.user.item != "Heavy Duty Boots"
-        and frame.attacking_team.stealth_rocks == True
+        and frame.attackingTeam.stealthRocks == True
     ):
-        apply_stealth_rocks_damage(frame)
+        applyStealthRocksDamage(frame)
     else:
         pass
-        # if player.current_pokemon.grounded == True:
-        # apply_spikes_damage(player.current_pokemon)
-        # tspikes_clear_check(player.current_pokemon)
-        # apply_tspikes_effect(player.current_pokemon)
-        # apply_sticky_web_effect(player.current_pokemon)
 
 
-def apply_stealth_rocks_damage(frame):
+def applyStealthRocksDamage(frame):
     """Applies stealth rock damage to the target depending on target's weakness to Rock."""
-    atk_id = type_key.get("Rock")
-    def1_id = type_key.get(frame.user.typing[0])
-    mult_1 = type_chart[atk_id][def1_id]
+    atkId = typeKey.get("Rock")
+    def1Id = typeKey.get(frame.user.typing[0])
+    mult1 = typeChart[atkId][def1Id]
     try:
-        def2_id = type_key.get(frame.user.typing[1])
-        mult_2 = type_chart[atk_id][def2_id]
+        def2Id = typeKey.get(frame.user.typing[1])
+        mult2 = typeChart[atkId][def2Id]
     except:
-        mult_2 = 1
+        mult2 = 1
 
     print(f"Pointed stones dug into {frame.user.name}!")
     print()
 
-    frame.user.apply_damage(None, 0.125 * mult_1 * mult_2)
+    frame.user.applyDamage(None, 0.125 * mult1 * mult2)
 
 
-def apply_post_attack_effects(frame, i=None):
+def applyPostAttackEffects(frame, i=None):
     """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
-    apply_stat_alt_attack(frame.user, frame.target, frame.attack.name)
-    apply_status_inflicting_attack(frame.user, frame.target, frame.attack.name)
-    apply_v_status_inflicting_attack(frame.user, frame.target, frame.attack.name)
+    applyStatAltAttack(frame.user, frame.target, frame.attack.name)
+    applyStatusInflictingAttack(frame.user, frame.target, frame.attack.name)
+    applyVStatusInflictingAttack(frame.user, frame.target, frame.attack.name)
     if frame.target.ability == "Static":
-        apply_static(frame, i)
+        applyStatic(frame, i)
 
 
-def apply_end_of_turn_effects(frame_order):
+def applyEndOfTurnEffects(frameOrder):
     """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
-    for frame in frame_order:
-        frame.user.decrement_statuses()
-        if not frame.switch_choice:
-            frame.attack.decrement_pp()
+    for frame in frameOrder:
+        frame.user.decrementStatuses()
+        if not frame.switchChoice:
+            frame.attack.decrementPp()
 
     if (
-        frame_order[0].weather.current_weather == "Sandstorm"
-        or frame_order[0].weather.current_weather == "Hail"
+        frameOrder[0].weather.currentWeather == "Sandstorm"
+        or frameOrder[0].weather.currentWeather == "Hail"
     ):
-        for frame in frame_order:
-            apply_weather_damage(frame.weather, frame.user)
+        for frame in frameOrder:
+            applyWeatherDamage(frame.weather, frame.user)
 
-    if frame_order[0].terrain.current_terrain == "Grassy Terrain":
-        for frame in frame_order:
-            heal_from_grassy_terrain(frame.terrain, frame.user)
+    if frameOrder[0].terrain.currentTerrain == "Grassy Terrain":
+        for frame in frameOrder:
+            healFromGrassyTerrain(frame.terrain, frame.user)
 
-    for frame in frame_order:
+    for frame in frameOrder:
         if frame.user.item == "Leftovers":
-            apply_leftovers(frame.user)
+            applyLeftovers(frame.user)
 
-    for frame in frame_order:
+    for frame in frameOrder:
         if frame.user.status[0] == "Burned":
-            apply_burn(frame.user)
+            applyBurn(frame.user)
 
-    for frame in frame_order:
+    for frame in frameOrder:
         if (
             frame.user.status[0] == "Badly Poisoned"
             or frame.user.status[0] == "Poisoned"
         ):
-            apply_poison(frame.user)
+            applyPoison(frame.user)
 
-    for frame in frame_order:
+    for frame in frameOrder:
         if frame.attack and frame.attack.name == "Wood Hammer":
-            apply_recoil(frame.user, frame.attack_damage, 0.33)
+            applyRecoil(frame.user, frame.attackDamage, 0.33)
 
-    for frame in frame_order:
+    for frame in frameOrder:
         if frame.attack:
-            frame.user.set_previous_move(frame.attack.name)
+            frame.user.setPreviousMove(frame.attack.name)

@@ -12,14 +12,14 @@ def chooseHighestDamagingAttack(frame):
     includeRandom = False
 
     for n in range(len(frame.user.moves)):
-        move_category = frame.user.moves[n].category
+        moveCategory = frame.user.moves[n].category
         if (
-            move_category == "Physical" or move_category == "Special"
+            moveCategory == "Physical" or moveCategory == "Special"
         ) and ui.checkIfValidChoice(frame, n + 1):
             # ui.checkIfValidChoice subtracts 1 from the given int due to first attack being tied with '1' key.
             frame.attack = frame.user.moves[n]
-            if util.check_immunity(frame):
-                damage = damage_calc.calc_damage(frame, includeCrit, includeRandom)
+            if util.checkImmunity(frame):
+                damage = damageCalc.calcDamage(frame, includeCrit, includeRandom)
                 if damage > highestDamage:
                     highestDamage = damage
                     moveNumber = n
@@ -34,5 +34,5 @@ def chooseHighestDamagingAttack(frame):
 
 def chooseNextPokemon(frame):
     for n in range(1, 6):
-        if frame.attacking_team[n].status[0] != "Fainted":
-            frame.switch_choice = n
+        if frame.attackingTeam[n].status[0] != "Fainted":
+            frame.switchChoice = n

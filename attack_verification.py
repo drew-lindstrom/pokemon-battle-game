@@ -1,47 +1,44 @@
 from pokemon import Pokemon
 
 
-def check_flinched(attacker, move_name, n):
-    if "Flinched" in attacker.v_status:
+def checkFlinched(attacker, moveName, n):
+    if "Flinched" in attacker.vStatus:
         print(f"{attacker.name} flinched!")
         return True
     return False
 
 
-def check_choice_item(attacker, move_name, n):
+def checkChoiceItem(attacker, moveName, n):
     if (
-        "Choice Locked" in attacker.v_status
-        and attacker.prev_move != None
-        and attacker.prev_move != move_name
+        "Choice Locked" in attacker.vStatus
+        and attacker.prevMove != None
+        and attacker.prevMove != moveName
     ):
-        print(f"{attacker.name} can only use {attacker.prev_move}")
+        print(f"{attacker.name} can only use {attacker.prevMove}")
         return True
     return False
 
 
-def check_encored(attacker, move_name, n):
+def checkEncored(attacker, moveName, n):
     if (
-        "Encored" in attacker.v_status
-        and attacker.prev_move != None
-        and attacker.prev_move != move_name
+        "Encored" in attacker.vStatus
+        and attacker.prevMove != None
+        and attacker.prevMove != moveName
     ):
-        print(f"{attacker.name} can only use {attacker.prev_move}")
+        print(f"{attacker.name} can only use {attacker.prevMove}")
         return True
     return False
 
 
-def check_taunted(attacker, move_name, n):
-    if "Taunted" in attacker.v_status and attacker.moves[n].category == "Status":
+def checkTaunted(attacker, moveName, n):
+    if "Taunted" in attacker.vStatus and attacker.moves[n].category == "Status":
         print(f"{attacker.name} must use at attacking move while taunted.")
         return True
     return False
 
 
-def check_disabled(attacker, move_name, n):
-    if (
-        "Disabled" in attacker.v_status
-        and attacker.v_status["Disabled"][1] == move_name
-    ):
-        print(f"{attacker.name} is not able to use {move_name} while it is disabled.")
+def checkDisabled(attacker, moveName, n):
+    if "Disabled" in attacker.vStatus and attacker.vStatus["Disabled"][1] == moveName:
+        print(f"{attacker.name} is not able to use {moveName} while it is disabled.")
         return True
     return False
