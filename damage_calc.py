@@ -2,10 +2,10 @@ import random
 import time
 
 from move import Move
-from gameData import typeKey, typeChart, modifiedBaseDamageList
+from game_data import typeKey, typeChart, modifiedBaseDamageList
 from pokemon import Pokemon
 from player import Player
-from statCalc import *
+from stat_calc import *
 
 
 def rollCrit(frame, i=None):

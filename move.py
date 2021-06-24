@@ -24,24 +24,24 @@ class Move:
         return int(accuracy)
 
     @property
-    def maxPPp(self):
-        maxPPp = int(movesDict[self.name][4])
-        if maxPPp <= 1:
-            return maxPPp
-        return int(maxPPp * 1.6)
+    def maxPp(self):
+        maxPp = int(movesDict[self.name][4])
+        if maxPp <= 1:
+            return maxPp
+        return int(maxPp * 1.6)
 
     @property
     def pp(self):
-        return self.PPp
+        return self._pp
 
     @pp.setter
     def pp(self, n):
-        if n == None or n > self.maxPPp:
-            self.pp = self.maxPPp
+        if n == None or n > self.maxPp:
+            self.pp = self.maxPp
         elif n <= 0:
-            self.PPp = 0
+            self._pp = 0
         else:
-            self.PPp = n
+            self._pp = n
 
     def showStats(self):
 
@@ -50,10 +50,10 @@ class Move:
         print(f"Category: {self.category}")
         print(f"Power: {self.power}")
         print(f"Accuracy: {self.accuracy}")
-        print(f"PP: {self.pp}/{self.maxPPp}")
+        print(f"PP: {self.pp}/{self.maxPp}")
         print()
 
-    def checkPPp(self):
+    def checkPp(self):
         """Returns True if a move has enough PP to be used (above 0 PP). Returns False otherwise.
         move.pp (int) -> Boolean
         Ex: move.pp == 0, return False.
@@ -63,6 +63,6 @@ class Move:
             return False
         return True
 
-    def decrementPPp(self):
+    def decrementPp(self):
         """Decrements a move's pp by one at the end of the turn."""
         self.pp -= 1

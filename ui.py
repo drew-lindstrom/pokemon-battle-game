@@ -106,7 +106,7 @@ def printOptions(team):
     print()
     for n in range(len(team.curPokemon.moves)):
         print(
-            f"({n+1}) {team.curPokemon.moves[n].name} - {team.curPokemon.moves[n].pp}/{team.curPokemon.moves[n].maxPP} PP"
+            f"({n+1}) {team.curPokemon.moves[n].name} - {team.curPokemon.moves[n].pp}/{team.curPokemon.moves[n].maxPp} PP"
         )
     print()
     print("(5) Switch Pokemon")

@@ -100,14 +100,16 @@ class TestDamageCalc:
         assert activateKnockOff(testFrame) == 65
 
     @pytest.mark.parametrize(
-        "number,name,inputHp,expectedInt",
-        [(0, "Eruption", 394, 150), (0, "Eruption", 1, 0)],
+        "number,name,inputHp,inputBaseDamage,expectedInt",
+        [(0, "Eruption", 394, 150, 150), (0, "Eruption", 1, 150, 0)],
     )
-    def testCalcModifiedBaseDamage(self, testFrame, number, name, inputHp, expectedInt):
+    def testCalcModifiedBaseDamage(
+        self, testFrame, number, name, inputHp, inputBaseDamage, expectedInt
+    ):
         testFrame.user.setMove(number, name)
         testFrame.attack = testFrame.user.moves[0]
         testFrame.user.stat["hp"] = inputHp
-        assert calcModifiedBaseDamage(testFrame) == expectedInt
+        assert calcModifiedBaseDamage(testFrame, inputBaseDamage) == expectedInt
 
     def testCalcModifiedDamage(self, testFrame):
         pass

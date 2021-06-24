@@ -4,7 +4,7 @@ import pytest
 
 class TestMove:
     @pytest.mark.parametrize(
-        "moveName,expectedType,expectedCategory,expectedPower,expectedAccuracy,expectedMaxPP,expectedPP",
+        "moveName,expectedType,expectedCategory,expectedPower,expectedAccuracy,expectedMaxPp,expectedPp",
         [
             ("Earthquake", "Ground", "Physical", 100, 100, 16, 16),
             ("Bulk Up", "Fighting", "Status", 0, 0, 32, 32),
@@ -17,8 +17,8 @@ class TestMove:
         expectedCategory,
         expectedPower,
         expectedAccuracy,
-        expectedMaxPP,
-        expectedPP,
+        expectedMaxPp,
+        expectedPp,
     ):
         attack = Move(moveName)
 
@@ -26,28 +26,28 @@ class TestMove:
         assert attack.category == expectedCategory
         assert attack.power == expectedPower
         assert attack.accuracy == expectedAccuracy
-        assert attack.maxPP == expectedMaxPP
-        assert attack.PP == expectedPP
+        assert attack.maxPp == expectedMaxPp
+        assert attack.pp == expectedPp
 
     @pytest.mark.parametrize(
-        "moveName,inputPP,expectedPP",
+        "moveName,inputPp,expectedPp",
         [("Earthquake", -5, 0), ("Earthquake", 99, 16), ("Earthquake", 7, 7)],
     )
-    def testPP(self, moveName, inputPP, expectedPP):
+    def testPp(self, moveName, inputPp, expectedPp):
         earthquake = Move(moveName)
-        earthquake.PP = inputPP
-        assert earthquake.PP == expectedPP
+        earthquake.pp = inputPp
+        assert earthquake.pp == expectedPp
 
     @pytest.mark.parametrize(
-        "moveName,inputPP,expectedBool",
+        "moveName,inputPp,expectedBool",
         [("Earthquake", 10, True), ("Earthquake", 0, False), ("Earthquake", -9, False)],
     )
-    def testCheckPP(self, moveName, inputPP, expectedBool):
+    def testCheckPp(self, moveName, inputPp, expectedBool):
         earthquake = Move(moveName)
-        earthquake.PP = inputPP
-        assert earthquake.checkPP() == expectedBool
+        earthquake.pp = inputPp
+        assert earthquake.checkPp() == expectedBool
 
-    def testDecrementPP(self):
+    def testDecrementPp(self):
         earthquake = Move("Earthquake")
-        earthquake.decrementPP()
-        assert earthquake.PP == 15
+        earthquake.decrementPp()
+        assert earthquake.pp == 15

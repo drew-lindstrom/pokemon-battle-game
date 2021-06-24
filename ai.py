@@ -1,7 +1,7 @@
 from frame import Frame
 import ui
 import util
-import damage_calc
+from damage_calc import calcDamage
 
 
 def chooseHighestDamagingAttack(frame):
@@ -19,7 +19,7 @@ def chooseHighestDamagingAttack(frame):
             # ui.checkIfValidChoice subtracts 1 from the given int due to first attack being tied with '1' key.
             frame.attack = frame.user.moves[n]
             if util.checkImmunity(frame):
-                damage = damageCalc.calcDamage(frame, includeCrit, includeRandom)
+                damage = calcDamage(frame, includeCrit, includeRandom)
                 if damage > highestDamage:
                     highestDamage = damage
                     moveNumber = n
