@@ -63,10 +63,56 @@ class TestAI:
         testFrame = Frame(p1, p2, None, None, w, t)
         return testFrame
 
+    def testChooseMove(self, testFrame):
+        assert chooseMove(testFrame) == testFrame.user.moves[1]
+
     def testChooseHighestDamagingAttack(self, testFrame):
-        chooseHighestDamagingAttack(testFrame)
-        assert testFrame.attack == testFrame.user.moves[1]
-        # TODO: Test with move lock.
+        assert chooseHighestDamagingAttack(testFrame) == (153, 1)
+
+    @pytest.mark.parametrize(
+        "inputN,inputPp,inputVStatus,inputPrevMove,expectedBool",
+        [
+            (1, 5, None, None, True),
+            (1, 0, None, None, False),
+            (1, 5, "Move Lock", "Surf", False),
+            (1, 5, "Move Lock", "Scald", True),
+        ],
+    )
+    def testCheckIfDamagingAttack(
+        self, testFrame, inputN, inputPp, inputVStatus, inputPrevMove, expectedBool
+    ):
+        testFrame.user.moves[inputN].pp = inputPp
+        testFrame.user.vStatus[inputVStatus] = None
+        testFrame.prevMove = inputPrevMove
+        assert checkIfDamagingAttack(testFrame, inputN) == expectedBool
+
+    @pytest.mark.parametrize(
+        "inputN,inputAttackType,inputTargetType,expectedBool",
+        [(1, "Water", "Water", True), (1, "Poison", "Steel", False)],
+    )
+    def testCheckIfNoTypeImmunity(
+        self, testFrame, inputN, inputAttackType, inputTargetType, expectedBool
+    ):
+        testFrame.user.moves[inputN].type = inputAttackType
+        testFrame.target.typing[0] = inputTargetType
+        assert checkIfNoTypeImmunity(testFrame, inputN) == expectedBool
+
+    @pytest.mark.parametrize(
+        "inputDamage,inputHighestDamage,inputMoveNumber,inputN,expectedHighestDamage,expectedMoveNumber",
+        [(100, 150, 0, 1, 150, 1), (150, 100, 0, 1, 150, 0)],
+    )
+    def testSetHighestDamageAndMoveNumber(
+        self,
+        inputDamage,
+        inputHighestDamage,
+        inputMoveNumber,
+        inputN,
+        expectedHighestDamage,
+        expectedMoveNumber,
+    ):
+        assert setHighestDamageAndMoveNumber(
+            inputHighestDamage, inputDamage, inputMoveNumber, inputN
+        ) == (expectedHighestDamage, expectedMoveNumber)
 
     def testChooseNextPokemon(self, testFrame):
         testFrame.attackingTeam[1].stat["hp"] = 0
