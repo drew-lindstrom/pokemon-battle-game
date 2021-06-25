@@ -57,6 +57,9 @@ class Pokemon:
         self.vStatus = {}
         self.grounded = True
 
+    def __repr__(self):
+        return self.name
+
     def initStat(self):
         """Initializes the hp, maxHp, attack, defense, special attack, special defense, and speed stat for the given pokemon based on the pokemon's
         IVs, EVs, and nature."""

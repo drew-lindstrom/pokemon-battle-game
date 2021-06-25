@@ -9,6 +9,9 @@ class Move:
         self.category = movesDict[name][1]
         self.pp = None
 
+    def __repr__(self):
+        return self.name
+
     @property
     def power(self):
         power = movesDict[self.name][2]
