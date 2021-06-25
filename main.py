@@ -119,14 +119,12 @@ def applyEndOfTurnEffects(frameOrder, w, t, gameOverBool):
 def checkForGameOver(frameOrder):
     for curFrame in frameOrder:
         player = curFrame.attackingTeam
-        # Game over check
         if player.checkGameOver():
             if player == p1:
                 print("Player 2 Wins!")
             elif player == p2:
                 print("Player 1 Wins!")
             return True
-
     return False
 
 
