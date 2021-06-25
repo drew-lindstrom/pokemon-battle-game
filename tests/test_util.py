@@ -360,7 +360,8 @@ class TestUtil:
         testFrame.target.ability = ability
         testFrame.target.typing[0] = typing
         testFrame.attack.type = attackType
-        assert checkCanAttack(testFrame, number) == expectedBool
+        checkCanAttack(testFrame, number)
+        assert testFrame.canAttack == expectedBool
         assert testFrame.target.statMod["attack"] == attackMod
         assert testFrame.target.statMod["spAttack"] == spAttackMod
 

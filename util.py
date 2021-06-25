@@ -155,38 +155,46 @@ def checkCanAttack(frame, i=None):
     Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
     if frame.user.status[0] == "Paralyzed":
         if not rollParalysis(frame.user, i):
-            return False
+            frame.canAttack = False
+            return
 
     if frame.user.status[0] == "Asleep" and frame.attack.name != "Sleep Talk":
         print(f"{frame.user.name} is asleep.")
         print()
-        return False
+        frame.canAttack = False
+        return
 
     if frame.user.status[0] == "Frozen":
         if not rollFrozen(frame.user, i):
-            return False
+            frame.canAttack = False
+            return
 
     if "Confusion" in frame.user.vStatus:
         if not rollConfusion(frame.user, i):
-            return False
+            frame.canAttack = False
+            return
 
     if "Flinched" in frame.user.vStatus:
         print(f"{frame.user.name} flinched!")
         print()
-        return False
+        frame.canAttack = False
+        return
 
     if not checkImmunity(frame):
         print(f"It had no effect.")
         print()
-        return False
+        frame.canAttack = False
+        return
 
     if frame.attack.type == "Fire" and frame.target.ability == "Flash Fire":
         print(f"{frame.target.name}s attack was boosted by Flash Fire!")
         print()
         frame.target.updateStatModifier("attack", 1)
         frame.target.updateStatModifier("spAttack", 1)
-        return False
-    return True
+        frame.canAttack = False
+        return
+    frame.canAttack = True
+    return
 
 
 def checkAttackLands(frame, i=None):
