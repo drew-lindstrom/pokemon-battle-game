@@ -6,7 +6,7 @@ from terrain import Terrain
 import pytest
 
 
-class TestMain:
+class TestFrame:
     @pytest.fixture
     def testFrame(self):
         slowbro = Pokemon(
