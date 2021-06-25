@@ -570,14 +570,14 @@ class TestUtil:
         applyPostAttackEffects(testFrame, 20)
         assert testFrame.user.status[0] == "Paralyzed"
 
-    def testApplyEndOfTurnEffects(self, testFrame, testFrame2):
+    def testApplyEndOfTurnAttackEffects(self, testFrame, testFrame2):
         frameOrder = [testFrame, testFrame2]
         testFrame.attack = testFrame.user.moves[0]
         testFrame2.attack = testFrame2.user.moves[0]
         testFrame.weather.currentWeather = "Sandstorm"
         testFrame.user.status = ["Asleep", 3]
         testFrame.user.vStatus["Flinched"] = [2]
-        applyEndOfTurnEffects(frameOrder)
+        applyEndOfTurnAttackEffects(frameOrder)
         assert testFrame.user.moves[0].pp == 23
         assert testFrame.user.stat["hp"] == 370
         assert testFrame.user.status[1] == 2
@@ -586,22 +586,22 @@ class TestUtil:
         testFrame.weather.currentWeather = None
         testFrame.terrain.currentTerrain = "Grassy Terrain"
         testFrame2.user.status = ["Burned", 1]
-        applyEndOfTurnEffects(frameOrder)
+        applyEndOfTurnAttackEffects(frameOrder)
         assert testFrame.user.stat["hp"] == 74
         assert testFrame2.user.stat["hp"] == 264
         testFrame.terrain.currentTerrain = None
         testFrame.user.item = "Leftovers"
         testFrame2.user.status = ["Badly Poisoned", 3]
-        applyEndOfTurnEffects(frameOrder)
+        applyEndOfTurnAttackEffects(frameOrder)
         assert testFrame.user.stat["hp"] == 98
         assert testFrame2.user.stat["hp"] == 36
         testFrame2.user.status = ["Poisoned", 4]
         testFrame2.user.stat["hp"] = 200
-        applyEndOfTurnEffects(frameOrder)
+        applyEndOfTurnAttackEffects(frameOrder)
         assert testFrame2.user.stat["hp"] == 165
         testFrame.user.setMove(0, "Wood Hammer")
         testFrame.attack = testFrame.user.moves[0]
         testFrame.attackDamage = 100
         assert testFrame.user.stat["hp"] == 122
-        applyEndOfTurnEffects(frameOrder)
+        applyEndOfTurnAttackEffects(frameOrder)
         assert testFrame.user.prevMove == "Wood Hammer"

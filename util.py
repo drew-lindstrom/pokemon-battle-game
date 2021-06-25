@@ -342,7 +342,7 @@ def applyPostAttackEffects(frame, i=None):
         applyStatic(frame, i)
 
 
-def applyEndOfTurnEffects(frameOrder):
+def applyEndOfTurnAttackEffects(frameOrder):
     """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
     for frame in frameOrder:
         frame.user.decrementStatuses()
