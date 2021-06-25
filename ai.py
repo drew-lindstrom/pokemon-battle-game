@@ -4,25 +4,10 @@ import util
 from damage_calc import calcDamage
 
 
-def chooseHighestDamagingAttack(frame):
-    """Returns a move index for user's highest damaging attack against the current target."""
-    highestDamage = -float("inf")
-    moveNumber = None
-    includeCrit = False
-    includeRandom = False
+def chooseMove(frame):
+    highestDamage, moveNumber = chooseHighestDamagingAttack(frame)
 
-    for n in range(len(frame.user.moves)):
-        moveCategory = frame.user.moves[n].category
-        if (
-            moveCategory == "Physical" or moveCategory == "Special"
-        ) and ui.checkIfValidChoice(frame, n + 1):
-            # ui.checkIfValidChoice subtracts 1 from the given int due to first attack being tied with '1' key.
-            frame.attack = frame.user.moves[n]
-            if util.checkImmunity(frame):
-                damage = calcDamage(frame, includeCrit, includeRandom)
-                if damage > highestDamage:
-                    highestDamage = damage
-                    moveNumber = n
+    # If AI doesn't have a damaging attack availble, it will switch to its next available pokemon.
     if moveNumber is None:
         chooseNextPokemon(frame)
         frame.attack = None
@@ -30,6 +15,46 @@ def chooseHighestDamagingAttack(frame):
         frame.attack = frame.user.moves[moveNumber]
 
     return frame
+
+
+def chooseHighestDamagingAttack(frame):
+    highestDamage = -float("inf")
+    moveNumber = None
+    includeCrit = False
+    includeRandom = False
+
+    for n in range(len(frame.user.moves)):
+        if checkIfDamagingAttack(frame, n) and checkIfNoTypeImmunity(frame, n):
+            damage = calcDamage(frame, includeCrit, includeRandom)
+            highestDamage, moveNumber = setHighestDamageAndMoveNumber(
+                highestDamage, damage, moveNumber, n
+            )
+
+    return highestDamage, moveNumber
+
+
+def checkIfDamagingAttack(frame, n):
+    moveCategory = frame.user.moves[n].category
+    if (
+        moveCategory == "Physical" or moveCategory == "Special"
+    ) and ui.checkIfValidChoice(frame, n + 1):
+        # ui.checkIfValidChoice subtracts 1 from the given int due to first attack being tied with '1' key.
+        return True
+    return False
+
+
+def checkIfNoTypeImmunity(frame, n):
+    frame.attack = frame.user.moves[n]
+    if util.checkImmunity(frame):
+        return True
+    return False
+
+
+def setHighestDamageAndMoveNumber(highestDamage, damage, moveNumber, n):
+    if damage > highestDamage:
+        highestDamage = damage
+        moveNumber = n
+    return highestDamage, moveNumber
 
 
 def chooseNextPokemon(frame):
