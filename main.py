@@ -57,8 +57,8 @@ def activateTurnOneSwitchAbilities(p1, p2, w, t):
     openingFrame1.switchChoice = 0
     openingFrame2 = Frame(p2, p1, None, None, w, t)
     openingFrame2.switchChoice = 0
-    switch(openingFrame1)
-    switch(openingFrame2)
+    switch(openingFrame1, printText=False)
+    switch(openingFrame2, printText=False)
 
 
 def applyPreInputPreparations(p1, p2, w, t):
