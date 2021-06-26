@@ -257,14 +257,13 @@ def applyNonDamagingMove(frame):
         move_effects.activateSlackOff(frame)
 
 
-def switch(frame, printText=True):
+def switch(frame, printSwitchText=True, printStatResetText=True):
     """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
     Ex: Player team order is [Tyranitar, Slowbro] -> playerTeam.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
     n = int(frame.switchChoice)
     if frame.attackingTeam.team[n].stat["hp"] == 0:
-        if printText:
-            print(f"{frame.attackingTeam.team[n].name} has already fainted!")
-            print()
+        print(f"{frame.attackingTeam.team[n].name} has already fainted!")
+        print()
     else:
         frame.attackingTeam.team[0], frame.attackingTeam.team[n] = (
             frame.attackingTeam.team[n],
@@ -272,13 +271,13 @@ def switch(frame, printText=True):
         )
         frame.user = frame.attackingTeam[0]
         frame.attackingTeam.curPokemon = frame.attackingTeam.team[0]
-        if printText:
+        if printSwitchText:
             print(
                 f"{frame.attackingTeam.team[n].name} switched with {frame.attackingTeam.team[0].name}."
             )
             print()
         frame.attackingTeam.team[n].resetPreviousMove()
-        frame.attackingTeam.team[n].resetStatModifier(printText)
+        frame.attackingTeam.team[n].resetStatModifier(printStatResetText)
         frame.attackingTeam.team[n].resetStatuses()
         applySwitchEffect(frame, n, "Out")
         applySwitchEffect(frame, 0, "In")

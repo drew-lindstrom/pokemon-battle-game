@@ -133,7 +133,7 @@ def checkForFaintedPokemon(frameOrder):
         player = curFrame.attackingTeam
         if player.curPokemon.status[0] == "Fainted":
             getAppropriateSwitchChoice(curFrame)
-            switch(curFrame)
+            switch(curFrame, printSwitchText=True, printStatResetText=False)
 
 
 def getAppropriateSwitchChoice(frame):

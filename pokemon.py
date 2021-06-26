@@ -115,13 +115,13 @@ class Pokemon:
         if self.statMod[stat] < -6:
             self.statMod[stat] = -6
 
-    def resetStatModifier(self, printText=True):
+    def resetStatModifier(self, printStatResetText=True):
         """Resets all stat modifiers of a given pokemon back to 0.
         Switching a pokemon out always resets stat modifiers. Certian moves also remove all stat modifiers."""
         for stat in self.statMod:
             self.statMod[stat] = 0
 
-        if printText:
+        if printStatResetText:
             print(f"{self.name}s stats were reset!")
             print()
 
