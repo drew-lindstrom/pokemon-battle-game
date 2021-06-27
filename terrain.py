@@ -33,23 +33,26 @@ class Terrain:
         self.counter = 0
 
 
-def checkDamageModFromTerrain(terrain, pokemon, n):
+def checkDamageModFromTerrain(frame):
     if (
         (
-            terrain.currentTerrain == "Electric Terrain"
-            and pokemon.moves[n].type == "Electric"
+            frame.terrain.currentTerrain == "Electric Terrain"
+            and frame.attack.type == "Electric"
         )
         or (
-            terrain.currentTerrain == "Grassy Terrain"
-            and pokemon.moves[n].type == "Grass"
+            frame.terrain.currentTerrain == "Grassy Terrain"
+            and frame.attack.type == "Grass"
         )
         or (
-            terrain.currentTerrain == "Psychic Terrain"
-            and pokemon.moves[n].type == "Psychic"
+            frame.terrain.currentTerrain == "Psychic Terrain"
+            and frame.attack.type == "Psychic"
         )
     ):
         return 1.3
-    if terrain.currentTerrain == "Misty Terrain" and pokemon.moves[n].type == "Dragon":
+    if (
+        frame.terrain.currentTerrain == "Misty Terrain"
+        and frame.attack.type == "Dragon"
+    ):
         return 0.5
     else:
         return 1

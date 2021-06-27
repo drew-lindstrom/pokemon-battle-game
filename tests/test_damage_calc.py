@@ -100,16 +100,33 @@ class TestDamageCalc:
         assert activateKnockOff(testFrame) == 65
 
     @pytest.mark.parametrize(
-        "number,name,inputHp,inputBaseDamage,expectedInt",
-        [(0, "Eruption", 394, 150, 150), (0, "Eruption", 1, 150, 0)],
+        "number,name,inputHp,inputBaseDamage,inputAttackType,inputTerrainName,expectedInt",
+        [
+            (0, "Eruption", 394, 150, "Fire", None, 150),
+            (0, "Eruption", 1, 150, "Fire", None, 0),
+            (0, "Tackle", 394, 100, "Electric", "Electric Terrain", 130),
+        ],
     )
     def testCalcModifiedBaseDamage(
-        self, testFrame, number, name, inputHp, inputBaseDamage, expectedInt
+        self,
+        testFrame,
+        number,
+        name,
+        inputHp,
+        inputBaseDamage,
+        inputAttackType,
+        inputTerrainName,
+        expectedInt,
     ):
         testFrame.user.setMove(number, name)
         testFrame.attack = testFrame.user.moves[0]
         testFrame.user.stat["hp"] = inputHp
-        assert calcModifiedBaseDamage(testFrame, inputBaseDamage) == expectedInt
+        testFrame.attack.type = inputAttackType
+        testFrame.terrain.currentTerrain = inputTerrainName
+        assert (
+            calcModifiedBaseDamage(testFrame, inputBaseDamage, ghostCalc=False)
+            == expectedInt
+        )
 
     def testCalcModifiedDamage(self, testFrame):
         pass

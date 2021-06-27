@@ -5,6 +5,7 @@ from move import Move
 from game_data import typeKey, typeChart, modifiedBaseDamageList
 from pokemon import Pokemon
 from player import Player
+from terrain import checkDamageModFromTerrain
 from stat_calc import *
 
 
@@ -112,6 +113,9 @@ def calcModifiedBaseDamage(frame, baseDamage, ghostCalc=False):
 
     if frame.attack.name == "Knock Off" and frame.target.item:
         baseDamage = activateKnockOff(frame, ghostCalc)
+
+    if frame.terrain.currentTerrain is not None:
+        baseDamage *= checkDamageModFromTerrain(frame)
 
     return baseDamage
 

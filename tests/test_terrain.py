@@ -1,4 +1,6 @@
 from pokemon import Pokemon
+from frame import Frame
+from player import Player
 from terrain import Terrain, checkDamageModFromTerrain, healFromGrassyTerrain
 import pytest
 
@@ -92,10 +94,14 @@ class TestTerrain:
         self, testPokemon, moveType, terrainName, expectedInt
     ):
         slowbro = testPokemon
-        slowbro.moves[0].type = moveType
         terrain = Terrain()
-        terrain.currentTerrain = terrainName
-        assert checkDamageModFromTerrain(terrain, slowbro, 0) == expectedInt
+        testPlayer = Player([slowbro])
+        testFrame = Frame(testPlayer, testPlayer, None, None, None, terrain)
+
+        testFrame.attack = slowbro.moves[0]
+        testFrame.attack.type = moveType
+        testFrame.terrain.currentTerrain = terrainName
+        assert checkDamageModFromTerrain(testFrame) == expectedInt
 
     @pytest.mark.parametrize(
         "hp,terrainName,groundedBool,expectedInt",
