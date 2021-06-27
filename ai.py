@@ -20,12 +20,12 @@ def chooseMove(frame):
 def chooseHighestDamagingAttack(frame):
     highestDamage = -float("inf")
     moveNumber = None
-    includeCrit = False
-    includeRandom = False
 
     for n in range(len(frame.user.moves)):
         if checkIfDamagingAttack(frame, n) and checkIfNoTypeImmunity(frame, n):
-            damage = calcDamage(frame, includeCrit, includeRandom)
+            damage = calcDamage(
+                frame, includeCrit=False, includeRandom=False, ghostCalc=True
+            )
             highestDamage, moveNumber = setHighestDamageAndMoveNumber(
                 highestDamage, damage, moveNumber, n
             )

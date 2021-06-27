@@ -30,7 +30,7 @@ def checkStab(frame):
         return 1
 
 
-def checkTypeEffectiveness(frame):
+def checkTypeEffectiveness(frame, ghostCalc=False):
     """Return the damage multiplier for how super effective the move is. typeChart is a matrix showing how each type matches up between each
     other. X-axis is the defending type, y-axis is the attacking type. Top left corner is (0, 0). Each type corresponds to a number on the
     x and y axis."""
@@ -46,12 +46,13 @@ def checkTypeEffectiveness(frame):
 
     modifier = mult1 * mult2
 
-    if modifier > 1:
-        print("It's super effective!")
-    elif modifier < 1 and modifier > 0:
-        print("It's not very effective...")
-    elif modifier == 0:
-        print("It had no effect...")
+    if not ghostCalc:
+        if modifier > 1:
+            print("It's super effective!")
+        elif modifier < 1 and modifier > 0:
+            print("It's not very effective...")
+        elif modifier == 0:
+            print("It had no effect...")
 
     return modifier
 
@@ -90,26 +91,27 @@ def activateEruption(frame):
     return int(150 * frame.user.stat["hp"] / frame.user.stat["maxHp"])
 
 
-def activateKnockOff(frame):
+def activateKnockOff(frame, ghostCalc=False):
     """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
     if frame.target.item:
-        print(f"{frame.target.name} lost their item!")
-        print()
+        if not ghostCalc:
+            print(f"{frame.target.name} lost their item!")
+            print()
 
-        frame.target.item = None
+            frame.target.item = None
         return int(65 * 1.5)
 
     else:
         return 65
 
 
-def calcModifiedBaseDamage(frame, baseDamage):
+def calcModifiedBaseDamage(frame, baseDamage, ghostCalc=False):
     """Returns base power for various moves that have varying base powers based on different parameters."""
     if frame.attack.name == "Eruption":
         baseDamage = activateEruption(frame)
 
     if frame.attack.name == "Knock Off" and frame.target.item:
-        baseDamage = activateKnockOff(frame)
+        baseDamage = activateKnockOff(frame, ghostCalc)
 
     return baseDamage
 
@@ -118,7 +120,7 @@ def calcModifiedDamage():
     pass
 
 
-def calcDamage(frame, includeCrit=True, includeRandom=True):
+def calcDamage(frame, includeCrit=True, includeRandom=True, ghostCalc=False):
     """Returns damage from an attack for a given frame."""
     crit, randomMod = 1, 1
 
@@ -128,14 +130,14 @@ def calcDamage(frame, includeCrit=True, includeRandom=True):
         randomMod = rollRandom()
 
     stab = checkStab(frame)
-    typ = checkTypeEffectiveness(frame)
+    typ = checkTypeEffectiveness(frame, ghostCalc)
     burn = checkBurn(frame)
 
     attackStat, defenseStat = checkAttackingAndDefendingStats(frame)
 
     baseDamage = frame.attack.power
     if frame.attack.name in modifiedBaseDamageList:
-        baseDamage = calcModifiedBaseDamage(frame, baseDamage)
+        baseDamage = calcModifiedBaseDamage(frame, baseDamage, ghostCalc)
 
     damage = int(
         (
