@@ -60,7 +60,7 @@ def healFromGrassyTerrain(terrain, pokemon):
     if (
         terrain.currentTerrain == "Grassy Terrain"
         and pokemon.grounded == True
-        and pokemon.status[0] != "Fainted"
+        and not pokemon.checkFainted()
     ):
         print(f"{pokemon.name} healed from the Grassy Terrain!")
         pokemon.applyHeal(0.0625)
