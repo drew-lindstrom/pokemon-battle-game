@@ -64,7 +64,7 @@ def applyLeftovers(pokemon):
     if (
         pokemon.item == "Leftovers"
         and pokemon.stat["hp"] != pokemon.stat["maxHp"]
-        and pokemon.status[0] != "Fainted"
+        and not pokemon.checkFainted()
     ):
         print(f"{pokemon.name} healed some of it's HP with it's leftovers.")
         pokemon.applyHeal(0.0625)
@@ -95,9 +95,10 @@ def applyPoison(pokemon):
 
 def applyRecoil(pokemon, moveDamage, n):
     """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
-    print(f"{pokemon.name} was damaged by recoil!")
-    print()
-    pokemon.stat["hp"] = max(0, int(pokemon.stat["hp"] - moveDamage * n))
+    if not pokemon.checkFainted():
+        print(f"{pokemon.name} was damaged by recoil!")
+        print()
+        pokemon.stat["hp"] = max(0, int(pokemon.stat["hp"] - moveDamage * n))
 
 
 def applyStatic(frame, i=None):
