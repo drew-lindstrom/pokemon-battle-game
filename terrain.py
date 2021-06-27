@@ -57,6 +57,10 @@ def checkDamageModFromTerrain(terrain, pokemon, n):
 
 def healFromGrassyTerrain(terrain, pokemon):
     """If the current terrain is Grassy Terrain and the pokemon is grounded, heals for 1/16 max HP at the end of the turn."""
-    if terrain.currentTerrain == "Grassy Terrain" and pokemon.grounded == True:
+    if (
+        terrain.currentTerrain == "Grassy Terrain"
+        and pokemon.grounded == True
+        and pokemon.status[0] != "Fainted"
+    ):
         print(f"{pokemon.name} healed from the Grassy Terrain!")
         pokemon.applyHeal(0.0625)
