@@ -9,51 +9,121 @@ from move_effects import *
 from post_attack import *
 from switch_effects import *
 from util import *
+from teams import p1, p2
 import ui
 import ai
 
-from teams import p1, p2
+from flask import Flask, request, escape
 
-from website import create_app
+app = Flask(__name__)
 
-app = create_app()
+gameOverBool = False
+w = Weather()
+t = Terrain()
 
 
-def main():
-    """Main function of the program. Takes players' input for attacks, checks for win condition,
-    and calls appropriate functions to apply damage and various effects."""
-    app.run(debug=True)
-    ui.clearScreen()
-    gameOverBool = False
+@app.route("/")
+def index():
+    playerInput = int(escape(request.args.get("playerInput", "")))
 
-    w = Weather()
-    t = Terrain()
-
-    activateTurnOneSwitchAbilities(p1, p2, w, t)
-
-    while gameOverBool is False:
-
+    if playerInput:
         frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-        getPlayerInputs(frame1, frame2)
-        ui.clearScreen()
-        # Determines which player goes first for the turn (based on speed, priority moves, etc.)
-        frameOrder = getFrameOrder(frame1, frame2)
+        callAppropriateFunctionBasedOnChoice(frame1, playerInput)
+        ai.chooseHighestDamagingAttack(frame2)
+        if applyTurn(frame1, frame2):
+            return (
+                """<form action="" method="get">
+                <input type="text" name="playerInput">
+                <input type="submit" value="Enter Input">
+            </form>"""
+                + frame1.gameText
+            )
+        else:
+            return "Game Over"
 
-        for curFrame in frameOrder:
-            if curFrame.switchChoice:
-                applySwitch(curFrame, frame1, frame2)
+    else:
+        activateTurnOneSwitchAbilities(p1, p2, w, t)
+        return (
+            """<form action="" method="get">
+            <input type="text" name="playerInput">
+            <input type="submit" value="Enter Input">
+        </form>"""
+            + frame1.gameText
+        )
 
-            elif curFrame.user.status[0] != "Fainted":
-                print(f"{curFrame.user.name} used {curFrame.attack.name}!")
-                print()
 
-                if checkIfCanAttackAndAttackLands(curFrame):
-                    applyAttack(curFrame)
+def callAppropriateFunctionBasedOnChoice(
+    frame, choice, inputList=[], printTextBool=False
+):
+    if choice >= 0 and choice <= 3:
+        if checkIfValidChoice(frame, choice, printTextBool):
+            frame.attack = frame.user.moves[choice - 1]
+            return True
 
-        gameOverBool = applyEndOfTurnEffects(frameOrder, w, t, gameOverBool)
+    elif choice >= 4 and choice <= 9:
+        if checkIfSwitchChoiceHasFainted(frame, inputList):
+            frame.switchChoice = choice - 3
+            return True
+    return False
 
-        if gameOverBool:
-            break
+
+def checkIfValidChoice(frame, choice, printTextBool=False):
+    if checkIfChoiceHasEnoughPP(
+        frame, choice, printTextBool
+    ) and checkIfUserHasMoveLock(frame, choice, printTextBool):
+        return True
+    return False
+
+
+def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
+    if frame.user.moves[choice - 1].pp <= 0:
+        if printTextBool:
+            print(f"{frame.user.moves[choice - 1].name} is out of PP.")
+            print()
+        return False
+    return True
+
+
+def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
+    if "Move Lock" in frame.user.vStatus and (
+        frame.user.prevMove != None
+        and frame.user.prevMove != frame.user.moves[choice - 1].name
+    ):
+        if printTextBool:
+            print(f"{frame.user.name} must use {frame.user.prevMove}.")
+            print()
+        return False
+    return True
+
+
+def checkIfSwitchChoiceHasFainted(frame, switchChoice):
+    switchChoice = switchChoice - 3
+
+    if frame.attackingTeam[switchChoice].status[0] == "Fainted":
+        return False
+    return True
+
+
+def applyTurn(frame1, frame2):
+    # Determines which player goes first for the turn (based on speed, priority moves, etc.)
+    frameOrder = getFrameOrder(frame1, frame2)
+
+    for curFrame in frameOrder:
+        if curFrame.switchChoice:
+            applySwitch(curFrame, frame1, frame2)
+
+        elif curFrame.user.status[0] != "Fainted":
+            print(f"{curFrame.user.name} used {curFrame.attack.name}!")
+            print()
+
+            if checkIfCanAttackAndAttackLands(curFrame):
+                applyAttack(curFrame)
+
+    gameOverBool = applyEndOfTurnEffects(frameOrder, w, t, gameOverBool)
+
+    if gameOverBool:
+        return False
+    return True
 
 
 def activateTurnOneSwitchAbilities(p1, p2, w, t):
@@ -70,17 +140,14 @@ def applyPreInputPreparations(p1, p2, w, t):
     frame1 = Frame(p1, p2, None, None, w, t)
     frame2 = Frame(p2, p1, None, None, w, t)
 
-    ui.printPokemonOnField(frame1, frame2)
+    gameTextList = []
+    frame1.gameText = gameTextList
+    frame2.gameText = gameTextList
 
     frame1.user.checkChoiceItem()
     frame2.user.checkChoiceItem()
 
     return frame1, frame2
-
-
-def getPlayerInputs(frame1, frame2):
-    ui.getChoice(frame1)
-    ai.chooseHighestDamagingAttack(frame2)
 
 
 def applySwitch(curFrame, frame1, frame2):
@@ -150,4 +217,4 @@ def getAppropriateSwitchChoice(frame):
 
 
 if __name__ == "__main__":
-    main()
+    app.run(host="127.0.0.1", port=8080, debug=True)
