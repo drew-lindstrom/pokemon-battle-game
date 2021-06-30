@@ -25,7 +25,6 @@ class Pokemon:
         self.IVs = IVs
         self.EVs = EVs
         self.nature = nature
-        self.Hp = None
         self.stat = {
             "maxHp": 0,
             "hp": 0,

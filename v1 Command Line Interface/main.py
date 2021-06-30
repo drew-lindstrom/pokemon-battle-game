@@ -14,10 +14,15 @@ import ai
 
 from teams import p1, p2
 
+from website import create_app
+
+app = create_app()
+
 
 def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
     and calls appropriate functions to apply damage and various effects."""
+    app.run(debug=True)
     ui.clearScreen()
     gameOverBool = False
 
@@ -57,8 +62,8 @@ def activateTurnOneSwitchAbilities(p1, p2, w, t):
     openingFrame1.switchChoice = 0
     openingFrame2 = Frame(p2, p1, None, None, w, t)
     openingFrame2.switchChoice = 0
-    switch(openingFrame1, printText=False)
-    switch(openingFrame2, printText=False)
+    switch(openingFrame1, printSwitchText=False)
+    switch(openingFrame2, printSwitchText=False)
 
 
 def applyPreInputPreparations(p1, p2, w, t):
