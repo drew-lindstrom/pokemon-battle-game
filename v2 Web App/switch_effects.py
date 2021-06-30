@@ -1,6 +1,7 @@
 from pokemon import Pokemon
 from terrain import Terrain
 from weather import Weather
+import gameText
 
 
 def activateGrassySurge(user, terrain):
@@ -12,8 +13,7 @@ def activateGrassySurge(user, terrain):
 def activateIntimidate(user, target):
     """Lowers target's attack by one when a pokemon with intimidate ability switches in."""
     if user.ability == "Intimidate":
-        print(f"{target.name} was initimated!")
-        print()
+        gameText.output += f"{target.name} was initimated!\n"
         target.updateStatModifier("attack", -1)
 
 

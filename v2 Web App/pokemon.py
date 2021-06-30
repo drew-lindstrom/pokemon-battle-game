@@ -2,6 +2,7 @@ from game_data import naturesDict, pokemonDict, movesDict
 from move import Move
 import math
 import random
+import gameText
 
 
 class Pokemon:
@@ -100,14 +101,13 @@ class Pokemon:
         self.statMod[stat] += n
 
         if n == 1:
-            print(f"{self.name}s {stat} increased!")
+            gameText.output += f"{self.name}s {stat} increased!\n"
         if n > 1:
-            print(f"{self.name}s {stat} greatly increased!")
+            gameText.output += f"{self.name}s {stat} greatly increased!\n"
         if n == -1:
-            print(f"{self.name}s {stat} decreased!")
+            gameText.output += f"{self.name}s {stat} decreased!\n"
         if n < -1:
-            print(f"{self.name}s {stat} greatly decreased!")
-        print()
+            gameText.output += f"{self.name}s {stat} greatly decreased!\n"
 
         if self.statMod[stat] > 6:
             self.statMod[stat] = 6
@@ -121,8 +121,7 @@ class Pokemon:
             self.statMod[stat] = 0
 
         if printStatResetText:
-            print(f"{self.name}s stats were reset!")
-            print()
+            gameText.output += f"{self.name}s stats were reset!\n"
 
     def showStats(self):
         """Prints the stats of the Pokemon with modifiers applied."""
@@ -176,8 +175,7 @@ class Pokemon:
         """Heal pokemon by n percentage of it's max hp. Won't work on fainted Pokemon. HP won't exceed max hp.
         Ex: Slowbro's HP = 150 -> slowbro.heal(0.5) -> Slowbro's HP = 150 + 50% of max hp"""
         if self.stat["hp"] <= 0:
-            print(f"{self.name} has fainted and can't be healed.")
-            print()
+            gameText.output += f"{self.name} has fainted and can't be healed.\n"
             return
 
         if (n * self.stat["maxHp"]) > (self.stat["maxHp"] - self.stat["hp"]):
@@ -186,8 +184,7 @@ class Pokemon:
             healAmount = int(n * self.stat["maxHp"])
 
         self.stat["hp"] += healAmount
-        print(f"{self.name} recovered {healAmount} HP!")
-        print()
+        gameText.output += f"{self.name} recovered {healAmount} HP!\n"
 
     def applyDamage(self, amount=None, percentage=None):
         """Damages pokemon by a specified amount or percentage. HP won't fall below 0. If HP is at 0, sets status to Fainted."""
@@ -202,8 +199,7 @@ class Pokemon:
 
             self.stat["hp"] -= damage
 
-            print(f"{self.name} lost {damage} HP!")
-            print()
+            gameText.output += f"{self.name} lost {damage} HP!\n"
 
             self.checkFainted()
 
@@ -213,8 +209,7 @@ class Pokemon:
             return True
 
         if self.stat["hp"] <= 0:
-            print(f"{self.name} fainted!")
-            print()
+            gameText.output += f"{self.name} fainted!\n"
             self.status = ["Fainted", 0]
             self.stat["hp"] = 0
             return True
@@ -238,8 +233,7 @@ class Pokemon:
                 self.status = [statusName, random.randint(1, 3)]
             else:
                 self.status = [statusName, 0]
-            print(f"{self.name} was inflicted with {statusName}!")
-            print()
+            gameText.output += f"{self.name} was inflicted with {statusName}!\n"
 
     def cureStatus(self):
         """Cures the non-volatile status for the Pokemon."""

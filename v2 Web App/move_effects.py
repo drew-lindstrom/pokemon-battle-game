@@ -2,13 +2,14 @@ from player import Player
 from pokemon import Pokemon
 from move import Move
 from terrain import Terrain
+import gameText
 
 
 def activateDefog(frame):
     """Using defog clears entry hazards from both sides of the field and lowers the opposing pokemon's evasion by 1."""
     frame.attackingTeam.clearHazards()
     frame.defendingTeam.clearHazards()
-    print("The entry hazards were removed from the field!")
+    gameText.output += "The entry hazards were removed from the field!\n"
     frame.target.updateStatModifier("evasion", -1)
 
 
@@ -27,5 +28,4 @@ def setStealthRocks(frame):
     """Adds stealth rocks to the target player's side."""
     if frame.defendingTeam.stealthRocks == False:
         frame.defendingTeam.stealthRocks = True
-        print("Stealth Rocks were placed on the opposing teams side!")
-        print()
+        gameText.output += "Stealth Rocks were placed on the opposing teams side!\n"

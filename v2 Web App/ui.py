@@ -1,21 +1,15 @@
 from player import Player
 import stat_calc
+import gameText
 
 
 def printPokemonOnField(frame1, frame2):
     frameOrder = [frame1, frame2]
 
     for frame in frameOrder:
-        print(
-            f"{frame.user.name} - HP: {frame.user.stat['hp']}/{frame.user.stat['maxHp']}, Status: {frame.user.status[0]}"
-        )
-        print(
-            f"Attack: {stat_calc.calcAttack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calcDefense(frame, 'user')}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calcSpAttack(frame)}/{frame.user.stat['spAttack']}"
-        )
-        print(
-            f"Special Defense: {stat_calc.calcSpDefense(frame, 'user')}/{frame.user.stat['spDefense']}   Speed: {stat_calc.calcSpeed(frame)}/{frame.user.stat['speed']}"
-        )
-        print()
+        gameText.output += f"{frame.user.name} - HP: {frame.user.stat['hp']}/{frame.user.stat['maxHp']}, Status: {frame.user.status[0]}\n"
+        gameText.output += f"Attack: {stat_calc.calcAttack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calcDefense(frame, 'user')}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calcSpAttack(frame)}/{frame.user.stat['spAttack']}\n"
+        gameText.output += f"Special Defense: {stat_calc.calcSpDefense(frame, 'user')}/{frame.user.stat['spDefense']}   Speed: {stat_calc.calcSpeed(frame)}/{frame.user.stat['speed']}\n"
 
 
 def getChoice(frame, inputList=[], printTextBool=False):
@@ -45,50 +39,50 @@ def getNextChoice(frame, inputList=[]):
         return 0
 
 
-def callAppropriateFunctionBasedOnChoice(
-    frame, choice, inputList=[], printTextBool=False
-):
-    if choice >= 1 and choice <= 4:
-        if checkIfValidChoice(frame, choice, printTextBool):
-            return True
+# def callAppropriateFunctionBasedOnChoice(
+#     frame, choice, inputList=[], printTextBool=False
+# ):
+#     if choice >= 1 and choice <= 4:
+#         if checkIfValidChoice(frame, choice, printTextBool):
+#             return True
 
-    elif choice == 5:
-        callGetSwitchFunction(frame, inputList)
-        return True
+#     elif choice == 5:
+#         callGetSwitchFunction(frame, inputList)
+#         return True
 
-    elif choice == 6:
-        printUserStats(frame)
-    return False
-
-
-def checkIfValidChoice(frame, choice, printTextBool=False):
-    if checkIfChoiceHasEnoughPP(
-        frame, choice, printTextBool
-    ) and checkIfUserHasMoveLock(frame, choice, printTextBool):
-        frame.attack = frame.user.moves[choice - 1]
-        return True
-    return False
+#     elif choice == 6:
+#         printUserStats(frame)
+#     return False
 
 
-def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
-    if frame.user.moves[choice - 1].pp <= 0:
-        if printTextBool:
-            print(f"{frame.user.moves[choice - 1].name} is out of PP.")
-            print()
-        return False
-    return True
+# def checkIfValidChoice(frame, choice, printTextBool=False):
+#     if checkIfChoiceHasEnoughPP(
+#         frame, choice, printTextBool
+#     ) and checkIfUserHasMoveLock(frame, choice, printTextBool):
+#         frame.attack = frame.user.moves[choice - 1]
+#         return True
+#     return False
 
 
-def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
-    if "Move Lock" in frame.user.vStatus and (
-        frame.user.prevMove != None
-        and frame.user.prevMove != frame.user.moves[choice - 1].name
-    ):
-        if printTextBool:
-            print(f"{frame.user.name} must use {frame.user.prevMove}.")
-            print()
-        return False
-    return True
+# def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
+#     if frame.user.moves[choice - 1].pp <= 0:
+#         if printTextBool:
+#             print(f"{frame.user.moves[choice - 1].name} is out of PP.")
+#             print()
+#         return False
+#     return True
+
+
+# def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
+#     if "Move Lock" in frame.user.vStatus and (
+#         frame.user.prevMove != None
+#         and frame.user.prevMove != frame.user.moves[choice - 1].name
+#     ):
+#         if printTextBool:
+#             print(f"{frame.user.name} must use {frame.user.prevMove}.")
+#             print()
+#         return False
+#     return True
 
 
 def callGetSwitchFunction(frame, inputList=[]):
@@ -102,12 +96,9 @@ def printUserStats(frame):
 
 
 def printOptions(team):
-    print(f"What will {team.curPokemon.name} do?")
-    print()
+    gameText.output += f"What will {team.curPokemon.name} do?\n"
     for n in range(len(team.curPokemon.moves)):
-        print(
-            f"({n+1}) {team.curPokemon.moves[n].name} - {team.curPokemon.moves[n].pp}/{team.curPokemon.moves[n].maxPp} PP"
-        )
+        gameText.output += f"({n+1}) {team.curPokemon.moves[n].name} - {team.curPokemon.moves[n].pp}/{team.curPokemon.moves[n].maxPp} PP\n"
     print()
     print("(5) Switch Pokemon")
     print("(6) Details")

@@ -7,6 +7,7 @@ from pokemon import Pokemon
 from player import Player
 from terrain import checkDamageModFromTerrain
 from stat_calc import *
+import gameText
 
 
 def rollCrit(frame, i=None):
@@ -15,8 +16,7 @@ def rollCrit(frame, i=None):
     if i is None or i < 0 or i > 24:
         i = random.randint(1, 24)
     if i == 1:
-        print("A critical hit!")
-        print()
+        gameText.output += "A critical hit!\n"
         frame.crit = True
         return 1.5
     else:
@@ -49,11 +49,11 @@ def checkTypeEffectiveness(frame, ghostCalc=False):
 
     if not ghostCalc:
         if modifier > 1:
-            print("It's super effective!")
+            gameText.output += "It's super effective!\n"
         elif modifier < 1 and modifier > 0:
-            print("It's not very effective...")
+            gameText.output += "It's not very effective...\n"
         elif modifier == 0:
-            print("It had no effect...")
+            gameText.output += "It had no effect...\n"
 
     return modifier
 
@@ -96,8 +96,7 @@ def activateKnockOff(frame, ghostCalc=False):
     """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
     if frame.target.item:
         if not ghostCalc:
-            print(f"{frame.target.name} lost their item!")
-            print()
+            gameText.output += f"{frame.target.name} lost their item!\n"
 
             frame.target.item = None
         return int(65 * 1.5)

@@ -1,4 +1,5 @@
 from pokemon import Pokemon
+import gameText
 
 
 class Terrain:
@@ -10,8 +11,7 @@ class Terrain:
         """Sets currentTerrain to the specified terrain and terrainCounter to 5 turns (or 8 turns if pokemon is holding Terrain Extender)."""
         if self.currentTerrain is None:
             self.currentTerrain = terrainName
-            print(f"{terrainName} has been activated!")
-            print()
+            gameText.output += f"{terrainName} has been activated!\n"
             if pokemon.item == "Terrain Extender":
                 self.counter = 7
             else:
@@ -27,8 +27,7 @@ class Terrain:
 
     def clearTerrain(self):
         """Resets terrain to None and resets counter to 0."""
-        print(f"The {self.currentTerrain.lower()} subsided.")
-        print()
+        gameText.output += f"The {self.currentTerrain.lower()} subsided.\n"
         self.currentTerrain = None
         self.counter = 0
 
@@ -65,5 +64,5 @@ def healFromGrassyTerrain(terrain, pokemon):
         and pokemon.grounded == True
         and not pokemon.checkFainted()
     ):
-        print(f"{pokemon.name} healed from the Grassy Terrain!")
+        gameText.output += f"{pokemon.name} healed from the Grassy Terrain!\n"
         pokemon.applyHeal(0.0625)

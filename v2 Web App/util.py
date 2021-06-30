@@ -6,6 +6,7 @@ from random import *
 import move_effects
 from game_data import priorityMoves, typeKey, typeChart
 from stat_calc import calcSpeed
+import gameText
 
 
 def getFrameOrder(frame1, frame2):
@@ -76,7 +77,7 @@ def rollParalysis(user, i=None):
         i = randint(1, 4)
 
     if i == 1:
-        print(f"{user.name} is paralyzed and can't move.")
+        gameText.output += f"{user.name} is paralyzed and can't move.\n"
         return False
     return True
 
@@ -91,8 +92,7 @@ def rollFrozen(user, i=None):
         print(f"{user.name} thawed out!")
         user.cureStatus()
         return True
-    print(f"{user.name} is frozen and cant attack!")
-    print()
+    gameText.output += f"{user.name} is frozen and cant attack!\n"
     return False
 
 
@@ -102,7 +102,7 @@ def rollConfusion(user, i=None):
         i = randint(1, 2)
 
     if i == 1:
-        print(f"{user.name} hit its self in confusion!")
+        gameText.output += f"{user.name} hit its self in confusion!\n"
         user.applyDamage(calcConfusionDamage(user), None)
         return False
     return True
@@ -159,8 +159,7 @@ def checkCanAttack(frame, i=None):
             return
 
     if frame.user.status[0] == "Asleep" and frame.attack.name != "Sleep Talk":
-        print(f"{frame.user.name} is asleep.")
-        print()
+        gameText.output += f"{frame.user.name} is asleep.\n"
         frame.canAttack = False
         return
 
@@ -175,20 +174,17 @@ def checkCanAttack(frame, i=None):
             return
 
     if "Flinched" in frame.user.vStatus:
-        print(f"{frame.user.name} flinched!")
-        print()
+        gameText.output += f"{frame.user.name} flinched!\n"
         frame.canAttack = False
         return
 
     if not checkImmunity(frame):
-        print(f"It had no effect.")
-        print()
+        gameText.output += f"It had no effect.\n"
         frame.canAttack = False
         return
 
     if frame.attack.type == "Fire" and frame.target.ability == "Flash Fire":
-        print(f"{frame.target.name}s attack was boosted by Flash Fire!")
-        print()
+        gameText.output += f"{frame.target.name}s attack was boosted by Flash Fire!\n"
         frame.target.updateStatModifier("attack", 1)
         frame.target.updateStatModifier("spAttack", 1)
         frame.canAttack = False
@@ -230,12 +226,11 @@ def checkAttackLands(frame, i=None):
         frame.attackLands = True
         return
 
-    print(f"{frame.user.name}s attack missed!")
-    print()
+    gameText.output += f"{frame.user.name}s attack missed!\n"
 
     # If high jump kick misses, it damages the user.
     if frame.attack.name == "High Jump Kick":
-        print(f"{frame.user.name} came crashing down...")
+        gameText.output += f"{frame.user.name} came crashing down...\n"
         frame.user.applyDamage(None, 0.5)
 
 
@@ -262,8 +257,7 @@ def switch(frame, printSwitchText=True, printStatResetText=True):
     Ex: Player team order is [Tyranitar, Slowbro] -> playerTeam.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
     n = int(frame.switchChoice)
     if frame.attackingTeam.team[n].stat["hp"] == 0:
-        print(f"{frame.attackingTeam.team[n].name} has already fainted!")
-        print()
+        gameText.output += f"{frame.attackingTeam.team[n].name} has already fainted!\n"
     else:
         frame.attackingTeam.team[0], frame.attackingTeam.team[n] = (
             frame.attackingTeam.team[n],
@@ -272,10 +266,7 @@ def switch(frame, printSwitchText=True, printStatResetText=True):
         frame.user = frame.attackingTeam[0]
         frame.attackingTeam.curPokemon = frame.attackingTeam.team[0]
         if printSwitchText:
-            print(
-                f"{frame.attackingTeam.team[n].name} switched with {frame.attackingTeam.team[0].name}."
-            )
-            print()
+            gameText.output += f"{frame.attackingTeam.team[n].name} switched with {frame.attackingTeam.team[0].name}.\n"
         frame.attackingTeam.team[n].resetPreviousMove()
         frame.attackingTeam.team[n].resetStatModifier(printStatResetText)
         frame.attackingTeam.team[n].resetStatuses()
@@ -328,8 +319,7 @@ def applyStealthRocksDamage(frame):
     except:
         mult2 = 1
 
-    print(f"Pointed stones dug into {frame.user.name}!")
-    print()
+    gameText.output += f"Pointed stones dug into {frame.user.name}!\n"
 
     frame.user.applyDamage(None, 0.125 * mult1 * mult2)
 
