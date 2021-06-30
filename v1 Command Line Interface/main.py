@@ -14,15 +14,11 @@ import ai
 
 from teams import p1, p2
 
-from website import create_app
-
-app = create_app()
-
 
 def main():
     """Main function of the program. Takes players' input for attacks, checks for win condition,
     and calls appropriate functions to apply damage and various effects."""
-    app.run(debug=True)
+
     ui.clearScreen()
     gameOverBool = False
 
