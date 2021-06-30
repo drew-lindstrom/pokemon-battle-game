@@ -12,6 +12,7 @@ from util import *
 from teams import p1, p2
 import ui
 import ai
+import gameText
 
 from flask import Flask, request, escape
 
@@ -25,6 +26,7 @@ t = Terrain()
 @app.route("/")
 def index():
     playerInput = int(escape(request.args.get("playerInput", "")))
+    gameText.output = ""
 
     if playerInput:
         frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
@@ -36,7 +38,7 @@ def index():
                 <input type="text" name="playerInput">
                 <input type="submit" value="Enter Input">
             </form>"""
-                + frame1.gameText
+                + gameText.output
             )
         else:
             return "Game Over"
@@ -48,7 +50,7 @@ def index():
             <input type="text" name="playerInput">
             <input type="submit" value="Enter Input">
         </form>"""
-            + frame1.gameText
+            + gameText.output
         )
 
 
@@ -78,8 +80,7 @@ def checkIfValidChoice(frame, choice, printTextBool=False):
 def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
     if frame.user.moves[choice - 1].pp <= 0:
         if printTextBool:
-            print(f"{frame.user.moves[choice - 1].name} is out of PP.")
-            print()
+            gameText.output += f"{frame.user.moves[choice - 1].name} is out of PP.\n"
         return False
     return True
 
@@ -90,8 +91,7 @@ def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
         and frame.user.prevMove != frame.user.moves[choice - 1].name
     ):
         if printTextBool:
-            print(f"{frame.user.name} must use {frame.user.prevMove}.")
-            print()
+            gameText.output += f"{frame.user.name} must use {frame.user.prevMove}.\n"
         return False
     return True
 
@@ -113,8 +113,7 @@ def applyTurn(frame1, frame2):
             applySwitch(curFrame, frame1, frame2)
 
         elif curFrame.user.status[0] != "Fainted":
-            print(f"{curFrame.user.name} used {curFrame.attack.name}!")
-            print()
+            gameText.output += f"{curFrame.user.name} used {curFrame.attack.name}!\n"
 
             if checkIfCanAttackAndAttackLands(curFrame):
                 applyAttack(curFrame)
@@ -193,9 +192,9 @@ def checkForGameOver(frameOrder):
         player = curFrame.attackingTeam
         if player.checkGameOver():
             if player == p1:
-                print("Player 2 Wins!")
+                gameText.output += "Player 2 Wins!\n"
             elif player == p2:
-                print("Player 1 Wins!")
+                gameText.output += "Player 1 Wins!\n"
             return True
     return False
 
