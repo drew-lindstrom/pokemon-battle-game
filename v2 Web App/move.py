@@ -1,5 +1,6 @@
 from game_data import movesDict
 from copy import deepcopy
+import gameText
 
 
 class Move:
@@ -48,13 +49,13 @@ class Move:
 
     def showStats(self):
 
-        print(f"Move: {self.name}")
-        print(f"Type: {self.type}")
-        print(f"Category: {self.category}")
-        print(f"Power: {self.power}")
-        print(f"Accuracy: {self.accuracy}")
-        print(f"PP: {self.pp}/{self.maxPp}")
-        print()
+        gameText.output.append(f"Move: {self.name}")
+        gameText.output.append(f"Type: {self.type}")
+        gameText.output.append(f"Category: {self.category}")
+        gameText.output.append(f"Power: {self.power}")
+        gameText.output.append(f"Accuracy: {self.accuracy}")
+        gameText.output.append(f"PP: {self.pp}/{self.maxPp}")
+        gameText.output.append("")
 
     def checkPp(self):
         """Returns True if a move has enough PP to be used (above 0 PP). Returns False otherwise.
@@ -62,7 +63,7 @@ class Move:
         Ex: move.pp == 0, return False.
         Ex: move.pp == 3, return True."""
         if self.pp <= 0:
-            print(f"{self.name} is out of PP!")
+            gameText.output.append(f"{self.name} is out of PP!")
             return False
         return True
 

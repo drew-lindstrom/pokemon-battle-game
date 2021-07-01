@@ -13,7 +13,7 @@ def activateGrassySurge(user, terrain):
 def activateIntimidate(user, target):
     """Lowers target's attack by one when a pokemon with intimidate ability switches in."""
     if user.ability == "Intimidate":
-        gameText.output += f"{target.name} was initimated!\n"
+        gameText.output.append(f"{target.name} was initimated!")
         target.updateStatModifier("attack", -1)
 
 

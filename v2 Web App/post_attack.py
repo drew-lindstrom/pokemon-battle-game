@@ -67,8 +67,8 @@ def applyLeftovers(pokemon):
         and pokemon.stat["hp"] != pokemon.stat["maxHp"]
         and not pokemon.checkFainted()
     ):
-        gameText.output += (
-            f"{pokemon.name} healed some of it's HP with it's leftovers.\n"
+        gameText.output.append(
+            f"{pokemon.name} healed some of it's HP with it's leftovers."
         )
         pokemon.applyHeal(0.0625)
 
@@ -76,7 +76,7 @@ def applyLeftovers(pokemon):
 def applyBurn(pokemon):
     """Damages a burned pokemon by 1/16 of its max HP. Fire type pokemon cannot be burned."""
     if pokemon.status[0] == "Burned":
-        gameText.output += f"{pokemon.name} was damaged by its burn!\n"
+        gameText.output.append(f"{pokemon.name} was damaged by its burn!")
         pokemon.applyDamage(None, 0.0625)
 
 
@@ -87,7 +87,7 @@ def applyPoison(pokemon):
 
     Damages a poisoned pokemon by 1/8 of their max hp."""
     if pokemon.status[0] == "Badly Poisoned" or pokemon.status[0] == "Poisoned":
-        gameText.output += f"{pokemon.name} was hurt by the poison!\n"
+        gameText.output.append(f"{pokemon.name} was hurt by the poison!")
         if pokemon.status[0] == "Badly Poisoned":
             pokemon.applyDamage(None, 0.0625 * (15 - pokemon.status[1]))
         if pokemon.status[0] == "Poisoned":
@@ -97,7 +97,7 @@ def applyPoison(pokemon):
 def applyRecoil(pokemon, moveDamage, n):
     """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
     if not pokemon.checkFainted():
-        gameText.output += f"{pokemon.name} was damaged by recoil!\n"
+        gameText.output.append(f"{pokemon.name} was damaged by recoil!")
         pokemon.stat["hp"] = max(0, int(pokemon.stat["hp"] - moveDamage * n))
 
 
@@ -112,7 +112,7 @@ def applyStatic(frame, i=None):
             i = random.randint(1, 100)
 
         if i <= 30:
-            gameText.output += (
-                f"{frame.user.name} was paralyzed by {frame.target.name}s Static!\n"
+            gameText.output.append(
+                f"{frame.user.name} was paralyzed by {frame.target.name}s Static!"
             )
             frame.user.setStatus("Paralyzed")

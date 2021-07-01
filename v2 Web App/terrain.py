@@ -11,7 +11,7 @@ class Terrain:
         """Sets currentTerrain to the specified terrain and terrainCounter to 5 turns (or 8 turns if pokemon is holding Terrain Extender)."""
         if self.currentTerrain is None:
             self.currentTerrain = terrainName
-            gameText.output += f"{terrainName} has been activated!\n"
+            gameText.output.append(f"{terrainName} has been activated!")
             if pokemon.item == "Terrain Extender":
                 self.counter = 7
             else:
@@ -27,7 +27,7 @@ class Terrain:
 
     def clearTerrain(self):
         """Resets terrain to None and resets counter to 0."""
-        gameText.output += f"The {self.currentTerrain.lower()} subsided.\n"
+        gameText.output.append(f"The {self.currentTerrain.lower()} subsided.")
         self.currentTerrain = None
         self.counter = 0
 
@@ -64,5 +64,5 @@ def healFromGrassyTerrain(terrain, pokemon):
         and pokemon.grounded == True
         and not pokemon.checkFainted()
     ):
-        gameText.output += f"{pokemon.name} healed from the Grassy Terrain!\n"
+        gameText.output.append(f"{pokemon.name} healed from the Grassy Terrain!")
         pokemon.applyHeal(0.0625)

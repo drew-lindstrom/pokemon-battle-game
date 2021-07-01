@@ -16,7 +16,7 @@ def rollCrit(frame, i=None):
     if i is None or i < 0 or i > 24:
         i = random.randint(1, 24)
     if i == 1:
-        gameText.output += "A critical hit!\n"
+        gameText.output.append("A critical hit!")
         frame.crit = True
         return 1.5
     else:
@@ -49,11 +49,11 @@ def checkTypeEffectiveness(frame, ghostCalc=False):
 
     if not ghostCalc:
         if modifier > 1:
-            gameText.output += "It's super effective!\n"
+            gameText.output.append("It's super effective!")
         elif modifier < 1 and modifier > 0:
-            gameText.output += "It's not very effective...\n"
+            gameText.output.append("It's not very effective...")
         elif modifier == 0:
-            gameText.output += "It had no effect...\n"
+            gameText.output.append("It had no effect...")
 
     return modifier
 
@@ -96,8 +96,7 @@ def activateKnockOff(frame, ghostCalc=False):
     """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
     if frame.target.item:
         if not ghostCalc:
-            gameText.output += f"{frame.target.name} lost their item!\n"
-
+            gameText.output.append(f"{frame.target.name} lost their item!")
             frame.target.item = None
         return int(65 * 1.5)
 

@@ -14,7 +14,7 @@ import ui
 import ai
 import gameText
 
-from flask import Flask, request, escape
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
@@ -26,19 +26,14 @@ t = Terrain()
 @app.route("/")
 def index():
     playerInput = request.args.get("playerInput", "")
-    gameText.output = ""
+    gameText.output = []
     if playerInput:
         frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-        callAppropriateFunctionBasedOnChoice(frame1, playerInput)
+        ui.callAppropriateFunctionBasedOnChoice(frame1, playerInput)
         ai.chooseHighestDamagingAttack(frame2)
-        if applyTurn(frame1, frame2):
-            return (
-                gameText.output
-                + """<form action="" method="get">
-                <input type="text" name="playerInput">
-                <input type="submit" value="Enter Input">
-            </form>"""
-            )
+        if applyTurn(frame1, frame2, gameOverBool):
+            ui.printOptions(frame1)
+            return render_template("home.html", gameText=gameText)
         else:
             return "Game Over"
 
@@ -46,66 +41,10 @@ def index():
         frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
         ui.printPokemonOnField(frame1, frame2)
         ui.printOptions(frame1)
-        return (
-            gameText.output
-            + """<form action="" method="get">
-            <input type="text" name="playerInput">
-            <input type="submit" value="Enter Input">
-        </form>"""
-        )
+        return render_template("home.html", gameText=gameText)
 
 
-def callAppropriateFunctionBasedOnChoice(
-    frame, choice, inputList=[], printTextBool=False
-):
-    if choice >= 0 and choice <= 3:
-        if checkIfValidChoice(frame, choice, printTextBool):
-            frame.attack = frame.user.moves[choice - 1]
-            return True
-
-    elif choice >= 4 and choice <= 9:
-        if checkIfSwitchChoiceHasFainted(frame, inputList):
-            frame.switchChoice = choice - 3
-            return True
-    return False
-
-
-def checkIfValidChoice(frame, choice, printTextBool=False):
-    if checkIfChoiceHasEnoughPP(
-        frame, choice, printTextBool
-    ) and checkIfUserHasMoveLock(frame, choice, printTextBool):
-        return True
-    return False
-
-
-def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
-    if frame.user.moves[choice - 1].pp <= 0:
-        if printTextBool:
-            gameText.output += f"{frame.user.moves[choice - 1].name} is out of PP.\n"
-        return False
-    return True
-
-
-def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
-    if "Move Lock" in frame.user.vStatus and (
-        frame.user.prevMove != None
-        and frame.user.prevMove != frame.user.moves[choice - 1].name
-    ):
-        if printTextBool:
-            gameText.output += f"{frame.user.name} must use {frame.user.prevMove}.\n"
-        return False
-    return True
-
-
-def checkIfSwitchChoiceHasFainted(frame, switchChoice):
-    switchChoice = switchChoice - 3
-
-    if frame.attackingTeam[switchChoice].status[0] == "Fainted":
-        return False
-    return True
-
-
-def applyTurn(frame1, frame2):
+def applyTurn(frame1, frame2, gameOverBool):
     # Determines which player goes first for the turn (based on speed, priority moves, etc.)
     frameOrder = getFrameOrder(frame1, frame2)
 
@@ -114,7 +53,7 @@ def applyTurn(frame1, frame2):
             applySwitch(curFrame, frame1, frame2)
 
         elif curFrame.user.status[0] != "Fainted":
-            gameText.output += f"{curFrame.user.name} used {curFrame.attack.name}!\n"
+            gameText.output.append(f"{curFrame.user.name} used {curFrame.attack.name}!")
 
             if checkIfCanAttackAndAttackLands(curFrame):
                 applyAttack(curFrame)
@@ -194,9 +133,9 @@ def checkForGameOver(frameOrder):
         player = curFrame.attackingTeam
         if player.checkGameOver():
             if player == p1:
-                gameText.output += "Player 2 Wins!\n"
+                gameText.output.append("Player 2 Wins!")
             elif player == p2:
-                gameText.output += "Player 1 Wins!\n"
+                gameText.output.append("Player 1 Wins!")
             return True
     return False
 
