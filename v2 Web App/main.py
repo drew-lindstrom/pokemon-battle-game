@@ -25,32 +25,33 @@ t = Terrain()
 
 @app.route("/")
 def index():
-    playerInput = int(escape(request.args.get("playerInput", "")))
+    playerInput = request.args.get("playerInput", "")
     gameText.output = ""
-
     if playerInput:
         frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
         callAppropriateFunctionBasedOnChoice(frame1, playerInput)
         ai.chooseHighestDamagingAttack(frame2)
         if applyTurn(frame1, frame2):
             return (
-                """<form action="" method="get">
+                gameText.output
+                + """<form action="" method="get">
                 <input type="text" name="playerInput">
                 <input type="submit" value="Enter Input">
             </form>"""
-                + gameText.output
             )
         else:
             return "Game Over"
 
     else:
-        activateTurnOneSwitchAbilities(p1, p2, w, t)
+        frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
+        ui.printPokemonOnField(frame1, frame2)
+        ui.printOptions(frame1)
         return (
-            """<form action="" method="get">
+            gameText.output
+            + """<form action="" method="get">
             <input type="text" name="playerInput">
             <input type="submit" value="Enter Input">
         </form>"""
-            + gameText.output
         )
 
 
@@ -133,6 +134,7 @@ def activateTurnOneSwitchAbilities(p1, p2, w, t):
     openingFrame2.switchChoice = 0
     switch(openingFrame1, printSwitchText=False)
     switch(openingFrame2, printSwitchText=False)
+    return openingFrame1, openingFrame2
 
 
 def applyPreInputPreparations(p1, p2, w, t):
