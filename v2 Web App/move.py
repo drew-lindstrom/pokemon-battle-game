@@ -64,6 +64,7 @@ class Move:
         Ex: move.pp == 3, return True."""
         if self.pp <= 0:
             gameText.output.append(f"{self.name} is out of PP!")
+            gameText.output.append("")
             return False
         return True
 

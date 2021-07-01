@@ -94,10 +94,12 @@ def applyPoison(pokemon):
             pokemon.applyDamage(None, 0.125)
 
 
+# TODO: incorporate with damage()?
 def applyRecoil(pokemon, moveDamage, n):
     """Damages pokemon by n percentage of it's max hp. HP won't fall below 0."""
     if not pokemon.checkFainted():
         gameText.output.append(f"{pokemon.name} was damaged by recoil!")
+        gameText.output.append("")
         pokemon.stat["hp"] = max(0, int(pokemon.stat["hp"] - moveDamage * n))
 
 
@@ -115,4 +117,5 @@ def applyStatic(frame, i=None):
             gameText.output.append(
                 f"{frame.user.name} was paralyzed by {frame.target.name}s Static!"
             )
+            gameText.output.append("")
             frame.user.setStatus("Paralyzed")

@@ -5,6 +5,7 @@ import gameText
 def checkFlinched(attacker, moveName, n):
     if "Flinched" in attacker.vStatus:
         gameText.output.append(f"{attacker.name} flinched!")
+        gameText.output.append("")
         return True
     return False
 
@@ -16,6 +17,7 @@ def checkChoiceItem(attacker, moveName, n):
         and attacker.prevMove != moveName
     ):
         gameText.output.append(f"{attacker.name} can only use {attacker.prevMove}")
+        gameText.output.append("")
         return True
     return False
 
@@ -27,6 +29,7 @@ def checkEncored(attacker, moveName, n):
         and attacker.prevMove != moveName
     ):
         gameText.output.append(f"{attacker.name} can only use {attacker.prevMove}")
+        gameText.output.append("")
         return True
     return False
 
@@ -36,6 +39,7 @@ def checkTaunted(attacker, moveName, n):
         gameText.output.append(
             f"{attacker.name} must use at attacking move while taunted."
         )
+        gameText.output.append("")
         return True
     return False
 
@@ -45,5 +49,6 @@ def checkDisabled(attacker, moveName, n):
         gameText.output.append(
             f"{attacker.name} is not able to use {moveName} while it is disabled."
         )
+        gameText.output.append("")
         return True
     return False

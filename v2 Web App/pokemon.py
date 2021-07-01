@@ -102,12 +102,16 @@ class Pokemon:
 
         if n == 1:
             gameText.output.append(f"{self.name}s {stat} increased!")
+            gameText.output.append("")
         if n > 1:
             gameText.output.append(f"{self.name}s {stat} greatly increased!")
+            gameText.output.append("")
         if n == -1:
             gameText.output.append(f"{self.name}s {stat} decreased!")
+            gameText.output.append("")
         if n < -1:
             gameText.output.append(f"{self.name}s {stat} greatly decreased!")
+            gameText.output.append("")
 
         if self.statMod[stat] > 6:
             self.statMod[stat] = 6
@@ -182,6 +186,7 @@ class Pokemon:
         Ex: Slowbro's HP = 150 -> slowbro.heal(0.5) -> Slowbro's HP = 150 + 50% of max hp"""
         if self.stat["hp"] <= 0:
             gameText.output.append(f"{self.name} has fainted and can't be healed.")
+            gameText.output.append("")
             return
 
         if (n * self.stat["maxHp"]) > (self.stat["maxHp"] - self.stat["hp"]):
@@ -191,6 +196,7 @@ class Pokemon:
 
         self.stat["hp"] += healAmount
         gameText.output.append(f"{self.name} recovered {healAmount} HP!")
+        gameText.output.append("")
 
     def applyDamage(self, amount=None, percentage=None):
         """Damages pokemon by a specified amount or percentage. HP won't fall below 0. If HP is at 0, sets status to Fainted."""
@@ -206,6 +212,7 @@ class Pokemon:
             self.stat["hp"] -= damage
 
             gameText.output.append(f"{self.name} lost {damage} HP!")
+            gameText.output.append("")
 
             self.checkFainted()
 
@@ -216,6 +223,7 @@ class Pokemon:
 
         if self.stat["hp"] <= 0:
             gameText.output.append(f"{self.name} fainted!")
+            gameText.output.append("")
             self.status = ["Fainted", 0]
             self.stat["hp"] = 0
             return True
@@ -240,6 +248,7 @@ class Pokemon:
             else:
                 self.status = [statusName, 0]
             gameText.output.append(f"{self.name} was inflicted with {statusName}!")
+            gameText.output.append("")
 
     def cureStatus(self):
         """Cures the non-volatile status for the Pokemon."""
@@ -255,6 +264,7 @@ class Pokemon:
         if statusName == "Confused":
             if statusName not in self.vStatus:
                 gameText.output.append(f"{self.name} became confused!")
+                gameText.output.append("")
                 self.vStatus["Confused"] = [random.randint(2, 5)]
 
     def decrementStatuses(self):

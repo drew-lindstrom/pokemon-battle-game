@@ -14,6 +14,7 @@ def activateIntimidate(user, target):
     """Lowers target's attack by one when a pokemon with intimidate ability switches in."""
     if user.ability == "Intimidate":
         gameText.output.append(f"{target.name} was initimated!")
+        gameText.output.append("")
         target.updateStatModifier("attack", -1)
 
 

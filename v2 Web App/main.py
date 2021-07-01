@@ -54,6 +54,7 @@ def applyTurn(frame1, frame2, gameOverBool):
 
         elif curFrame.user.status[0] != "Fainted":
             gameText.output.append(f"{curFrame.user.name} used {curFrame.attack.name}!")
+            gameText.output.append("")
 
             if checkIfCanAttackAndAttackLands(curFrame):
                 applyAttack(curFrame)
@@ -71,8 +72,8 @@ def activateTurnOneSwitchAbilities(p1, p2, w, t):
     openingFrame1.switchChoice = 0
     openingFrame2 = Frame(p2, p1, None, None, w, t)
     openingFrame2.switchChoice = 0
-    switch(openingFrame1, printSwitchText=False)
-    switch(openingFrame2, printSwitchText=False)
+    switch(openingFrame1, printSwitchText=False, printStatResetText=False)
+    switch(openingFrame2, printSwitchText=False, printStatResetText=False)
     return openingFrame1, openingFrame2
 
 

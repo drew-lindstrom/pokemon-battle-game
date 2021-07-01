@@ -10,6 +10,7 @@ def activateDefog(frame):
     frame.attackingTeam.clearHazards()
     frame.defendingTeam.clearHazards()
     gameText.output.append("The entry hazards were removed from the field!")
+    gameText.output.append("")
     frame.target.updateStatModifier("evasion", -1)
 
 
@@ -29,3 +30,4 @@ def setStealthRocks(frame):
     if frame.defendingTeam.stealthRocks == False:
         frame.defendingTeam.stealthRocks = True
         gameText.output.append("Stealth Rocks were placed on the opposing teams side!")
+        gameText.output.append("")

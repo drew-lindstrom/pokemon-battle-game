@@ -14,12 +14,16 @@ class Weather:
             self.currentWeather = weatherName
             if weatherName == "Sandstorm":
                 gameText.output.append("A sandstorm kicked up!")
+                gameText.output.append("")
             if weatherName == "Rain":
                 gameText.output.append("It started to rain!")
+                gameText.output.append("")
             if weatherName == "Harsh Sunlight":
                 gameText.output.append("The sunlight turned harsh!")
+                gameText.output.append("")
             if weatherName == "Hail":
                 gameText.output.append("It started to hail!")
+                gameText.output.append("")
             if (
                 (pokemon.item == "Smooth Rock" and weatherName == "Sandstorm")
                 or (pokemon.item == "Damp Rock" and weatherName == "Rain")
@@ -42,6 +46,7 @@ class Weather:
     def clearWeather(self):
         """Resets the current weather to Clears Skies and sets the counter to None."""
         gameText.output.append(f"The {self.currentWeather.lower()} subsided.")
+        gameText.output.append("")
         self.currentWeather = "Clear Skies"
         self.counter = 0
 
@@ -75,6 +80,7 @@ def applyWeatherDamage(weather, pokemon):
     gameText.output.append(
         f"{pokemon.name} was buffeted by the {weather.currentWeather.lower()}!"
     )
+    gameText.output.append("")
 
     pokemon.applyDamage(None, 1 / 16)
 

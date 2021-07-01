@@ -16,6 +16,7 @@ def printPokemonOnField(frame1, frame2):
         gameText.output.append(
             f"Special Defense: {stat_calc.calcSpDefense(frame, 'user')}/{frame.user.stat['spDefense']}   Speed: {stat_calc.calcSpeed(frame)}/{frame.user.stat['speed']}"
         )
+        gameText.output.append("")
 
 
 def callAppropriateFunctionBasedOnChoice(
@@ -46,6 +47,7 @@ def checkIfChoiceHasEnoughPP(frame, choice, printTextBool=False):
     if frame.user.moves[choice - 1].pp <= 0:
         if printTextBool:
             gameText.output.append(f"{frame.user.moves[choice - 1].name} is out of PP.")
+            gameText.output.append("")
         return False
     return True
 
@@ -57,6 +59,7 @@ def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
     ):
         if printTextBool:
             gameText.output.append(f"{frame.user.name} must use {frame.user.prevMove}.")
+            gameText.output.append("")
         return False
     return True
 
@@ -108,14 +111,18 @@ def checkIfSwitchChoiceHasFainted(frame, switchChoice):
 
 def printOptions(frame):
     gameText.output.append(f"What will {frame.user.name} do?")
+    gameText.output.append("")
     for n in range(len(frame.user.moves)):
         gameText.output.append(
             f"({n+1}) {frame.user.moves[n].name} - {frame.user.moves[n].pp}/{frame.user.moves[n].maxPp} PP"
         )
+    gameText.output.append("")
+    gameText.output.append("Or switch with...")
     for n in range(1, len(frame.attackingTeam)):
         gameText.output.append(
             f"({n+4}) {frame.attackingTeam[n].name} - {frame.attackingTeam[n].stat['hp']}/{frame.attackingTeam[n].stat['maxHp']} HP, Status: {frame.attackingTeam[n].status[0]}"
         )
+    gameText.output.append("")
 
 
 # def getSwitch(frame, inputList=[]):

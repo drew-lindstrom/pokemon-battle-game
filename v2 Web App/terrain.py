@@ -12,6 +12,7 @@ class Terrain:
         if self.currentTerrain is None:
             self.currentTerrain = terrainName
             gameText.output.append(f"{terrainName} has been activated!")
+            gameText.output.append("")
             if pokemon.item == "Terrain Extender":
                 self.counter = 7
             else:
@@ -28,6 +29,7 @@ class Terrain:
     def clearTerrain(self):
         """Resets terrain to None and resets counter to 0."""
         gameText.output.append(f"The {self.currentTerrain.lower()} subsided.")
+        gameText.output.append("")
         self.currentTerrain = None
         self.counter = 0
 

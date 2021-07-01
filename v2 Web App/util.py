@@ -78,6 +78,7 @@ def rollParalysis(user, i=None):
 
     if i == 1:
         gameText.output.append(f"{user.name} is paralyzed and can't move.")
+        gameText.output.append("")
         return False
     return True
 
@@ -90,9 +91,11 @@ def rollFrozen(user, i=None):
 
     if i == 1:
         gameText.output.append(f"{user.name} thawed out!")
+        gameText.output.append("")
         user.cureStatus()
         return True
     gameText.output.append(f"{user.name} is frozen and cant attack!")
+    gameText.output.append("")
     return False
 
 
@@ -103,6 +106,7 @@ def rollConfusion(user, i=None):
 
     if i == 1:
         gameText.output.append(f"{user.name} hit its self in confusion!")
+        gameText.output.append("")
         user.applyDamage(calcConfusionDamage(user), None)
         return False
     return True
@@ -160,6 +164,7 @@ def checkCanAttack(frame, i=None):
 
     if frame.user.status[0] == "Asleep" and frame.attack.name != "Sleep Talk":
         gameText.output.append(f"{frame.user.name} is asleep.")
+        gameText.output.append("")
         frame.canAttack = False
         return
 
@@ -175,11 +180,13 @@ def checkCanAttack(frame, i=None):
 
     if "Flinched" in frame.user.vStatus:
         gameText.output.append(f"{frame.user.name} flinched!")
+        gameText.output.append("")
         frame.canAttack = False
         return
 
     if not checkImmunity(frame):
         gameText.output.append(f"It had no effect.")
+        gameText.output.append("")
         frame.canAttack = False
         return
 
@@ -187,6 +194,7 @@ def checkCanAttack(frame, i=None):
         gameText.output.append(
             f"{frame.target.name}s attack was boosted by Flash Fire!"
         )
+        gameText.output.append("")
         frame.target.updateStatModifier("attack", 1)
         frame.target.updateStatModifier("spAttack", 1)
         frame.canAttack = False
@@ -229,10 +237,12 @@ def checkAttackLands(frame, i=None):
         return
 
     gameText.output.append(f"{frame.user.name}s attack missed!")
+    gameText.output.append("")
 
     # If high jump kick misses, it damages the user.
     if frame.attack.name == "High Jump Kick":
         gameText.output.append(f"{frame.user.name} came crashing down...")
+        gameText.output.append("")
         frame.user.applyDamage(None, 0.5)
 
 
@@ -262,6 +272,7 @@ def switch(frame, printSwitchText=True, printStatResetText=True):
         gameText.output.append(
             f"{frame.attackingTeam.team[n].name} has already fainted!"
         )
+        gameText.output.append("")
     else:
         frame.attackingTeam.team[0], frame.attackingTeam.team[n] = (
             frame.attackingTeam.team[n],
@@ -273,6 +284,7 @@ def switch(frame, printSwitchText=True, printStatResetText=True):
             gameText.output.append(
                 f"{frame.attackingTeam.team[n].name} switched with {frame.attackingTeam.team[0].name}."
             )
+            gameText.output.append("")
         frame.attackingTeam.team[n].resetPreviousMove()
         frame.attackingTeam.team[n].resetStatModifier(printStatResetText)
         frame.attackingTeam.team[n].resetStatuses()
@@ -326,6 +338,7 @@ def applyStealthRocksDamage(frame):
         mult2 = 1
 
     gameText.output.append(f"Pointed stones dug into {frame.user.name}!")
+    gameText.output.append("")
 
     frame.user.applyDamage(None, 0.125 * mult1 * mult2)
 
