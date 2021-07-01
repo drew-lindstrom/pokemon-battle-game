@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    <ul class="list-group list-group-flush" id="notes">
-        {% for text in gameText.output %}
-        <li class="list-group-item">
-            {{ text }}
-        </li>
-        {% endfor %}
-    </ul>
+    {% for text in gameText.output %}
+        {{ text }} </br>
+    {% endfor %}
 
     <form action="" method="get">
         <input type="text" name="playerInput">
