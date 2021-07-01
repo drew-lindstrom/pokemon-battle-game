@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <ul class="list-group list-group-flush" id="notes">
+        {% for text in gameText.output %}
+        <li class="list-group-item">
+            {{ text }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <form action="" method="get">
+        <input type="text" name="playerInput">
+        <input type="submit" value="Enter Input">
+    </form>
+</body>
+ </html>
