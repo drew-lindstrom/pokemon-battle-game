@@ -66,7 +66,8 @@ class TestAI:
         return testFrame
 
     def testChooseMove(self, testFrame):
-        assert chooseMove(testFrame) == testFrame.user.moves[1]
+        chooseMove(testFrame)
+        assert testFrame.attack == testFrame.user.moves[1]
 
     def testChooseHighestDamagingAttack(self, testFrame):
         assert chooseHighestDamagingAttack(testFrame) == (153, 1)
@@ -83,9 +84,10 @@ class TestAI:
     def testCheckIfDamagingAttack(
         self, testFrame, inputN, inputPp, inputVStatus, inputPrevMove, expectedBool
     ):
+        testFrame.attack = testFrame.user.moves[inputN]
         testFrame.user.moves[inputN].pp = inputPp
         testFrame.user.vStatus[inputVStatus] = None
-        testFrame.prevMove = inputPrevMove
+        testFrame.user.prevMove = inputPrevMove
         assert checkIfDamagingAttack(testFrame, inputN) == expectedBool
 
     @pytest.mark.parametrize(
@@ -101,7 +103,7 @@ class TestAI:
 
     @pytest.mark.parametrize(
         "inputDamage,inputHighestDamage,inputMoveNumber,inputN,expectedHighestDamage,expectedMoveNumber",
-        [(100, 150, 0, 1, 150, 1), (150, 100, 0, 1, 150, 0)],
+        [(100, 150, 0, 1, 150, 0), (150, 100, 0, 1, 150, 1)],
     )
     def testSetHighestDamageAndMoveNumber(
         self,
