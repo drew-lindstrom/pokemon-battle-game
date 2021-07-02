@@ -64,21 +64,21 @@ class TestUI:
         testFrame = Frame(p1, p2, None, None, w, t)
         return testFrame
 
-    def testGetChoice(self, testFrame):
-        getChoice(testFrame, ["8", "-4", "b", "2"])
-        assert testFrame.attack == testFrame.user.moves[1]
-        getChoice(testFrame, ["5", "1"])
-        assert testFrame.switchChoice == 1
+    # def testGetChoice(self, testFrame):
+    #     getChoice(testFrame, ["8", "-4", "b", "2"])
+    #     assert testFrame.attack == testFrame.user.moves[1]
+    #     getChoice(testFrame, ["5", "1"])
+    #     assert testFrame.switchChoice == 1
 
-    def testGetNextChoice(self, testFrame):
-        inputList = [1]
-        assert getNextChoice(testFrame, inputList) == 1
+    # def testGetNextChoice(self, testFrame):
+    #     inputList = [1]
+    #     assert getNextChoice(testFrame, inputList) == 1
 
     def testCallAppropriateFunctionBasedOnChoice(self, testFrame):
         callAppropriateFunctionBasedOnChoice(testFrame, 2, None)
         assert testFrame.attack == testFrame.user.moves[1]
-        callAppropriateFunctionBasedOnChoice(testFrame, 5, ["1"])
-        assert testFrame.switchChoice == "1"
+        callAppropriateFunctionBasedOnChoice(testFrame, 5)
+        assert testFrame.switchChoice == 1
 
     @pytest.mark.parametrize(
         "inputPP,inputVStatus,inputPrevMove,inputChoice,expectedBool",
@@ -122,21 +122,21 @@ class TestUI:
         testFrame.user.prevMove = inputPrevMove
         assert checkIfUserHasMoveLock(testFrame, inputChoice) == expectedBool
 
-    def testGetSwitch(self, testFrame):
-        getSwitch(testFrame, ["3", "a", "1"])
-        assert testFrame.switchChoice == 1
+    # def testGetSwitch(self, testFrame):
+    #     getSwitch(testFrame, ["3", "a", "1"])
+    #     assert testFrame.switchChoice == 1
 
-    def testGetNextSwitchChoice(self, testFrame):
-        inputList = [1]
-        assert getNextSwitchChoice(testFrame, inputList) == 1
+    # def testGetNextSwitchChoice(self, testFrame):
+    #     inputList = [1]
+    #     assert getNextSwitchChoice(testFrame, inputList) == 1
 
-    @pytest.mark.parametrize(
-        "inputSwitchChoice,inputStatus,expectedResult",
-        [(1, None, 1), (1, "Fainted", 0)],
-    )
-    def testCheckIfSwitchChoiceHasFainted(
-        self, testFrame, inputSwitchChoice, inputStatus, expectedResult
-    ):
-        switchChoice = inputSwitchChoice
-        testFrame.attackingTeam[1].status[0] = inputStatus
-        assert checkIfSwitchChoiceHasFainted(testFrame, switchChoice) == expectedResult
+    # @pytest.mark.parametrize(
+    #     "inputSwitchChoice,inputStatus,expectedResult",
+    #     [(1, None, 1), (1, "Fainted", 0)],
+    # )
+    # def testCheckIfSwitchChoiceHasFainted(
+    #     self, testFrame, inputSwitchChoice, inputStatus, expectedResult
+    # ):
+    #     switchChoice = inputSwitchChoice
+    #     testFrame.attackingTeam[1].status[0] = inputStatus
+    #     assert checkIfSwitchChoiceHasFainted(testFrame, switchChoice) == expectedResult
