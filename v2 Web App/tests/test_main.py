@@ -5,6 +5,9 @@ from player import Player
 from pokemon import Pokemon
 from weather import Weather
 from terrain import Terrain
+import gameText
+
+gameText.output = []
 
 
 class TestMain:

@@ -1,5 +1,8 @@
 import pytest
 from pokemon import Pokemon
+import gameText
+
+gameText.output = []
 
 
 class TestPokemon:

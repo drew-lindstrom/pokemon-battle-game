@@ -2,7 +2,10 @@ from pokemon import Pokemon
 from frame import Frame
 from player import Player
 from terrain import Terrain, checkDamageModFromTerrain, healFromGrassyTerrain
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestTerrain:

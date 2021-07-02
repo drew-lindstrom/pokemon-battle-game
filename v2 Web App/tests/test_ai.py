@@ -4,8 +4,10 @@ from player import Player
 from weather import Weather
 from terrain import Terrain
 from ai import *
-
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestAI:

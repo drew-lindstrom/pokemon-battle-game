@@ -1,6 +1,9 @@
 import pytest
 from pokemon import Pokemon
 import attack_verification
+import gameText
+
+gameText.output = []
 
 
 class TestAttackVerification:

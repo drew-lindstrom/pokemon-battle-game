@@ -4,7 +4,10 @@ from pokemon import Pokemon
 from player import Player
 from weather import Weather
 from terrain import Terrain
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestUI:

@@ -5,7 +5,10 @@ from weather import (
     checkSandstormSpDefBoost,
     checkDamageModFromWeather,
 )
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestWeather:

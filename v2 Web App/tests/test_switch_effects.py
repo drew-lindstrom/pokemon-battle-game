@@ -2,7 +2,10 @@ from pokemon import Pokemon
 from terrain import Terrain
 from weather import Weather
 import switch_effects
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestSwitchEffects:

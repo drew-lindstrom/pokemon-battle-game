@@ -4,7 +4,10 @@ from player import Player
 from frame import Frame
 from weather import Weather
 from terrain import Terrain
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestMoveEffects:

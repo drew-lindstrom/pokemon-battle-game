@@ -4,9 +4,11 @@ from move import Move
 from weather import Weather
 from terrain import Terrain
 from frame import Frame
-
 from damage_calc import *
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestDamageCalc:

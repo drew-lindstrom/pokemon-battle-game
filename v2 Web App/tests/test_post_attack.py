@@ -4,7 +4,10 @@ from player import Player
 from weather import Weather
 from terrain import Terrain
 from frame import Frame
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestPostAttack:

@@ -1,5 +1,8 @@
 from move import Move
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestMove:
