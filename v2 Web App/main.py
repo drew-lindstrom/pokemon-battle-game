@@ -36,9 +36,11 @@ def index():
         ):
             ai.chooseHighestDamagingAttack(frame2)
             if applyTurn(frame1, frame2, gameOverBool):
-                ui.printPokemonOnField(frame1, frame2)
-                ui.printOptions(frame1)
-                checkForFaintedPokemon(frame1, frame2)
+                if checkForFaintedPokemon(frame1, frame2):
+                    return render_template("home.html", gameText=gameText)
+                else:
+                    ui.printPokemonOnField(frame1, frame2)
+                    ui.printOptions(frame1)
                 return render_template("home.html", gameText=gameText)
             else:
                 return "Game Over"
@@ -157,6 +159,9 @@ def checkForFaintedPokemon(frame1, frame2):
         player = curFrame.attackingTeam
         if player.curPokemon.checkFainted():
             getAppropriateSwitchChoice(curFrame)
+            if curFrame == frame1:
+                return True
+    return False
 
 
 def getAppropriateSwitchChoice(frame):
