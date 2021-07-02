@@ -126,6 +126,7 @@ class Pokemon:
 
         if printStatResetText:
             gameText.output.append(f"{self.name}s stats were reset!")
+            gameText.output.append("")
 
     def showStats(self):
         """Prints the stats of the Pokemon with modifiers applied."""
