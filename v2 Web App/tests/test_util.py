@@ -5,8 +5,10 @@ from pokemon import Pokemon
 from weather import Weather
 from terrain import Terrain
 from frame import Frame
-
+import gameText
 import pytest
+
+gameText.output = []
 
 
 class TestUtil:
@@ -303,27 +305,25 @@ class TestUtil:
         assert calcConfusionDamage(testPokemon) == 19
 
     @pytest.mark.parametrize(
-        "attackType,targetType,inputGrounded,expected",
+        "attackType,targetType,inputItem,expected",
         [
-            ("Poison", "Steel", True, False),
-            ("Dragon", "Fairy", True, False),
-            ("Normal", "Ghost", True, False),
-            ("Fighting", "Ghost", True, False),
-            ("Ghost", "Normal", True, False),
-            ("Electric", "Ground", True, False),
-            ("Psychic", "Dark", True, False),
-            ("Poison", "Fire", True, True),
-            ("Ground", "Water", False, False),
-            ("Ground", "Water", True, True),
+            ("Poison", "Steel", None, False),
+            ("Dragon", "Fairy", None, False),
+            ("Normal", "Ghost", None, False),
+            ("Fighting", "Ghost", None, False),
+            ("Ghost", "Normal", None, False),
+            ("Electric", "Ground", None, False),
+            ("Psychic", "Dark", None, False),
+            ("Poison", "Fire", None, True),
+            ("Ground", "Water", "Air Balloon", False),
+            ("Ground", "Water", None, True),
         ],
     )
-    def testCheckImmunity(
-        self, testFrame, attackType, targetType, inputGrounded, expected
-    ):
+    def testCheckImmunity(self, testFrame, attackType, targetType, inputItem, expected):
         testFrame.attack = testFrame.user.moves[0]
         testFrame.attack.type = attackType
         testFrame.target.typing[0] = targetType
-        testFrame.target.grounded = inputGrounded
+        testFrame.target.item = inputItem
         assert checkImmunity(testFrame) == expected
 
     @pytest.mark.parametrize(
