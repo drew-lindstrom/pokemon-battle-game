@@ -61,3 +61,4 @@ def chooseNextPokemon(frame):
     for n in range(1, 6):
         if frame.attackingTeam[n].status[0] != "Fainted":
             frame.switchChoice = n
+            break
