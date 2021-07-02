@@ -28,15 +28,26 @@ def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
     if playerInput:
+        # try:
+        playerInput = int(playerInput)
         frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-        ui.callAppropriateFunctionBasedOnChoice(frame1, playerInput)
-        ai.chooseHighestDamagingAttack(frame2)
-        if applyTurn(frame1, frame2, gameOverBool):
+        if ui.callAppropriateFunctionBasedOnChoice(
+            frame1, playerInput, printTextBool=True
+        ):
+            ai.chooseHighestDamagingAttack(frame2)
+            if applyTurn(frame1, frame2, gameOverBool):
+                ui.printPokemonOnField(frame1, frame2)
+                ui.printOptions(frame1)
+                return render_template("home.html", gameText=gameText)
+            else:
+                return "Game Over"
+        else:
+            ui.printPokemonOnField(frame1, frame2)
             ui.printOptions(frame1)
             return render_template("home.html", gameText=gameText)
-        else:
-            return "Game Over"
-
+        # except Exception:
+        #     gameText.output.append("Improper input.")
+        #     return render_template("home.html", gameText=gameText)
     else:
         frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
         ui.printPokemonOnField(frame1, frame2)

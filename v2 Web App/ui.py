@@ -22,14 +22,13 @@ def printPokemonOnField(frame1, frame2):
 def callAppropriateFunctionBasedOnChoice(
     frame, choice, inputList=[], printTextBool=False
 ):
-    choice = int(choice)
     if choice >= 1 and choice <= 4:
         if checkIfValidChoice(frame, choice, printTextBool):
             frame.attack = frame.user.moves[choice - 1]
             return True
 
     elif choice >= 5 and choice <= 9:
-        if checkIfSwitchChoiceHasFainted(frame, inputList):
+        if checkIfSwitchChoiceHasFainted(frame, choice):
             frame.switchChoice = choice - 4
             return True
     return False
@@ -68,6 +67,10 @@ def checkIfSwitchChoiceHasFainted(frame, switchChoice):
     switchChoice = switchChoice - 4
 
     if frame.attackingTeam[switchChoice].status[0] == "Fainted":
+        gameText.output.append(
+            f"{frame.attackingTeam[switchChoice].name} has fainted and can't switch in."
+        )
+        gameText.output.append("")
         return False
     return True
 
