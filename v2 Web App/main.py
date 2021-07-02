@@ -38,6 +38,7 @@ def index():
             if applyTurn(frame1, frame2, gameOverBool):
                 ui.printPokemonOnField(frame1, frame2)
                 ui.printOptions(frame1)
+                checkForFaintedPokemon(frame1, frame2)
                 return render_template("home.html", gameText=gameText)
             else:
                 return "Game Over"
@@ -135,8 +136,6 @@ def applyEndOfTurnEffects(frameOrder, w, t, gameOverBool):
     if checkForGameOver(frameOrder):
         gameOverBool = True
         return gameOverBool
-
-    checkForFaintedPokemon(frameOrder)
     return gameOverBool
 
 
@@ -152,20 +151,26 @@ def checkForGameOver(frameOrder):
     return False
 
 
-def checkForFaintedPokemon(frameOrder):
+def checkForFaintedPokemon(frame1, frame2):
+    frameOrder = [frame1, frame2]
     for curFrame in frameOrder:
         player = curFrame.attackingTeam
-        if player.curPokemon.status[0] == "Fainted":
+        if player.curPokemon.checkFainted():
             getAppropriateSwitchChoice(curFrame)
-            switch(curFrame, printSwitchText=True, printStatResetText=False)
 
 
 def getAppropriateSwitchChoice(frame):
     player = frame.attackingTeam
     if player == p1:
-        ui.getSwitch(frame)
+        gameText.output.append(f"{frame.user.name} has fainted. Switch with...?")
+        for n in range(1, len(frame.attackingTeam)):
+            gameText.output.append(
+                f"({n+4}) {frame.attackingTeam[n].name} - {frame.attackingTeam[n].stat['hp']}/{frame.attackingTeam[n].stat['maxHp']} HP, Status: {frame.attackingTeam[n].status[0]}"
+            )
+        gameText.output.append("")
     if player == p2:
         ai.chooseNextPokemon(frame)
+        switch(frame, printSwitchText=True, printStatResetText=False)
 
 
 if __name__ == "__main__":
