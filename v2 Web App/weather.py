@@ -77,12 +77,13 @@ def applyWeatherDamage(weather, pokemon):
     if pokemon.item == "Safety Goggles":
         return False
 
-    gameText.output.append(
-        f"{pokemon.name} was buffeted by the {weather.currentWeather.lower()}!"
-    )
-    gameText.output.append("")
+    if not pokemon.checkFainted():
+        gameText.output.append(
+            f"{pokemon.name} was buffeted by the {weather.currentWeather.lower()}!"
+        )
+        gameText.output.append("")
 
-    pokemon.applyDamage(None, 1 / 16)
+        pokemon.applyDamage(None, 1 / 16)
 
     return True
 

@@ -124,7 +124,7 @@ class Pokemon:
         for stat in self.statMod:
             self.statMod[stat] = 0
 
-        if printStatResetText:
+        if printStatResetText and self.status[0] != "Fainted":
             gameText.output.append(f"{self.name}s stats were reset!")
             gameText.output.append("")
 

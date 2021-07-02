@@ -20,7 +20,7 @@ def activateIntimidate(user, target):
 
 def activateRegenerator(user):
     """Heals a pokemon by 1/3 of it's max hp if it's ability is regenerator and switches out."""
-    if user.ability == "Regenerator":
+    if user.ability == "Regenerator" and not user.checkFainted():
         user.applyHeal(1 / 3)
 
 
