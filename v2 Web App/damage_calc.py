@@ -100,7 +100,9 @@ def activateKnockOff(frame, ghostCalc=False):
     """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
     if frame.target.item:
         if not ghostCalc:
-            gameText.output.append(f"{frame.target.name} lost their item!")
+            gameText.output.append(
+                f"{frame.target.name} lost their {frame.target.item}!"
+            )
             gameText.output.append("")
             frame.target.item = None
         return int(65 * 1.5)
