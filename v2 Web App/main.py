@@ -39,8 +39,8 @@ def index():
                 if checkForFaintedPokemon(frame1, frame2):
                     return render_template(
                         "home.html",
-                        player1Data=frame1,
-                        player2Data=frame2,
+                        player1=frame1,
+                        player2=frame2,
                         gameText=gameText,
                     )
                 else:
@@ -48,8 +48,8 @@ def index():
                     ui.printOptions(frame1)
                 return render_template(
                     "home.html",
-                    player1Data=frame1,
-                    player2Data=frame2,
+                    player1=frame1,
+                    player2=frame2,
                     gameText=gameText,
                 )
             else:
@@ -58,7 +58,7 @@ def index():
             ui.printPokemonOnField(frame1, frame2)
             ui.printOptions(frame1)
             return render_template(
-                "home.html", player1Data=frame1, player2Data=frame2, gameText=gameText
+                "home.html", player1=frame1, player2=frame2, gameText=gameText
             )
         # except Exception:
         #     gameText.output.append("Improper input.")
@@ -68,7 +68,7 @@ def index():
         ui.printPokemonOnField(frame1, frame2)
         ui.printOptions(frame1)
         return render_template(
-            "home.html", player1Data=frame1, player2Data=frame2, gameText=gameText
+            "home.html", player1=frame1, player2=frame2, gameText=gameText
         )
 
 

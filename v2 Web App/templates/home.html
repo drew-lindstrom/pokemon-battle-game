@@ -15,13 +15,21 @@
         <input type="text" name="playerInput">
         <input type="submit" value="Enter Input">
     </form>
-
-    <div class='healthBar'>
-        {{ player1Data.user.stat['hp'] }}/{{ player1Data.user.stat['maxHp'] }}
+    <div class='gameBox'>
+        <div class='healthBar'>
+            {{ player1.user.stat['hp'] }}/{{ player1.user.stat['maxHp'] }}
+        </div>
+        </br>
+        <div class='healthBar'>
+            {{ player2.user.stat['hp'] }}/{{ player2.user.stat['maxHp'] }}
+        </div>
     </div>
-    </br>
-    <div class='healthBar'>
-        {{ player2Data.user.stat['hp'] }}/{{ player2Data.user.stat['maxHp'] }}
+
+    <div class='playerOptions'>
+        {% for n in range(4) %}
+        <input type="submit" value="{{ player1.user.moves[n].name }} {{ player1.user.moves[n].pp }}/{{
+            player1.user.moves[n].maxPp }} PP">
+        {% endfor %}
     </div>
 </body>
 
