@@ -15,7 +15,14 @@
         <input type="text" name="playerInput">
         <input type="submit" value="Enter Input">
     </form>
-    <div class='healthBar'></div>
+
+    <div class='healthBar'>
+        {{ player1Data.user.stat['hp'] }}/{{ player1Data.user.stat['maxHp'] }}
+    </div>
+    </br>
+    <div class='healthBar'>
+        {{ player2Data.user.stat['hp'] }}/{{ player2Data.user.stat['maxHp'] }}
+    </div>
 </body>
 
 </html>

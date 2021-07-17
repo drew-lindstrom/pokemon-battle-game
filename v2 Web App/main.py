@@ -37,17 +37,29 @@ def index():
             ai.chooseHighestDamagingAttack(frame2)
             if applyTurn(frame1, frame2, gameOverBool):
                 if checkForFaintedPokemon(frame1, frame2):
-                    return render_template("home.html", gameText=gameText)
+                    return render_template(
+                        "home.html",
+                        player1Data=frame1,
+                        player2Data=frame2,
+                        gameText=gameText,
+                    )
                 else:
                     ui.printPokemonOnField(frame1, frame2)
                     ui.printOptions(frame1)
-                return render_template("home.html", gameText=gameText)
+                return render_template(
+                    "home.html",
+                    player1Data=frame1,
+                    player2Data=frame2,
+                    gameText=gameText,
+                )
             else:
                 return "Game Over"
         else:
             ui.printPokemonOnField(frame1, frame2)
             ui.printOptions(frame1)
-            return render_template("home.html", gameText=gameText)
+            return render_template(
+                "home.html", player1Data=frame1, player2Data=frame2, gameText=gameText
+            )
         # except Exception:
         #     gameText.output.append("Improper input.")
         #     return render_template("home.html", gameText=gameText)
@@ -55,7 +67,9 @@ def index():
         frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
         ui.printPokemonOnField(frame1, frame2)
         ui.printOptions(frame1)
-        return render_template("home.html", gameText=gameText)
+        return render_template(
+            "home.html", player1Data=frame1, player2Data=frame2, gameText=gameText
+        )
 
 
 def applyTurn(frame1, frame2, gameOverBool):
