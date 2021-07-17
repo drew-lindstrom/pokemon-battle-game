@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<body>
-    {% for text in gameText.output %}
-        {{ text }} </br>
-    {% endfor %}
 
-    <form action="" method="get">
+<head>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+
+<body>
+    <div class="gameTextBlock">
+        {% for text in gameText.output %}
+        {{ text }} </br>
+        {% endfor %}
+    </div>
+    <form class="inputBlock" action="" method="get">
         <input type="text" name="playerInput">
         <input type="submit" value="Enter Input">
     </form>
+    <div class='healthBar'></div>
 </body>
- </html>
+
+</html>
