@@ -59,13 +59,19 @@ class TestUI:
         w = Weather()
         t = Terrain()
         testFrame = Frame(p1, p2, None, None, w, t)
+        testFrame.attack = testFrame.user.moves[0]
         return testFrame
 
-    def testGetChoice(self, testFrame):
-        getChoice(testFrame, ["8", "-4", "b", "2"])
-        assert testFrame.attack == testFrame.user.moves[1]
-        getChoice(testFrame, ["5", "1"])
-        assert testFrame.switchChoice == 1
+    @pytest.mark.parametrize(
+        "inputList,testAttribute,expectedResult",
+        [
+            (["8", "-4", "b", "2"], testFrame.attack, testFrame.user.moves[1]),
+            (["5", "1"], testFrame.switchChoice, 1),
+        ],
+    )
+    def testGetChoice(self, testFrame, inputList, testAttribute, expectedResult):
+        getChoice(testFrame, inputList)
+        assert testAttribute == expectedResult
 
     def testGetNextChoice(self, testFrame):
         inputList = [1]
