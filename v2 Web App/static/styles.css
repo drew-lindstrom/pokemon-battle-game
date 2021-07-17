@@ -1,0 +1,13 @@
+.gameTextBlock {
+    text-align: center;
+}
+
+.inputBlock {
+    text-align: center;
+}
+
+.healthBar {
+    height: 50px;
+    width: 100px;
+    background-color: rgb(7, 180, 45);
+  }
