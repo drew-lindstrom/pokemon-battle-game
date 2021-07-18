@@ -13,10 +13,10 @@
         {{ text }} </br>
         {% endfor %}
     </div>
-    <form class="inputBlock" action="" method="get">
+    <!-- <form class="inputBlock" action="" method="get">
         <input type="text" name="playerInput">
         <input type="submit" value="Enter Input">
-    </form>
+    </form> -->
     <div class='gameBox'>
         <div class='healthBar'>
             {{ player1.user.stat['hp'] }}/{{ player1.user.stat['maxHp'] }}
@@ -27,16 +27,33 @@
         </div>
     </div>
 
-    <div class='playerOptions' action="" method="get">
-        {% for n in range(4) %}
-        <button type="button" class="btn btn-primary {{ player1.user.moves[n].type }}">{{ player1.user.moves[n].name }}
-            {{ player1.user.moves[n].pp }}/{{
-            player1.user.moves[n].maxPp }} PP</button>
-        {% endfor %}
+    <div class='attackOptions'>
+        <form class="inputBlock" action="" method="get">
+            {% for n in range(4) %}
+            <input type="button" class="btn btn-primary {{ player1.user.moves[n].type }}" name="playerInput" value="{{ player1.user.moves[n].name }}
+                {{ player1.user.moves[n].pp }}/{{
+                player1.user.moves[n].maxPp }} PP"></button>
+            {% endfor %}
+        </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+
+    <div class="switchOptions">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for n in range(1, 6) %}
+            <a class="dropdown-item" href="#">{{ player1.attackingTeam[n] }} {{ player1.attackingTeam[n].stat['hp']
+                }}/{{
+                player1.attackingTeam[n].stat['maxHp'] }} HP Status: {{ player1.attackingTeam[n].status[0] }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src=" https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+        </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
