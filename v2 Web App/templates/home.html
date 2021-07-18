@@ -29,7 +29,8 @@
 
     <div class='playerOptions' action="" method="get">
         {% for n in range(4) %}
-        <button type="button" class="btn btn-primary {{ player1.user.moves[n].type }}">{{ player1.user.moves[n].pp }}/{{
+        <button type="button" class="btn btn-primary {{ player1.user.moves[n].type }}">{{ player1.user.moves[n].name }}
+            {{ player1.user.moves[n].pp }}/{{
             player1.user.moves[n].maxPp }} PP</button>
         {% endfor %}
     </div>
