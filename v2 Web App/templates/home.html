@@ -25,9 +25,9 @@
         </div>
     </div>
 
-    <div class='playerOptions'>
+    <div class='playerOptions' action="" method="get">
         {% for n in range(4) %}
-        <input type="submit" value="{{ player1.user.moves[n].name }} {{ player1.user.moves[n].pp }}/{{
+        <input class="{{ player1.user.moves[n].type }}" type="submit" value="{{ player1.user.moves[n].name }} {{ player1.user.moves[n].pp }}/{{
             player1.user.moves[n].maxPp }} PP">
         {% endfor %}
     </div>
