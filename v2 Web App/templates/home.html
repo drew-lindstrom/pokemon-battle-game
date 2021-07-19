@@ -13,14 +13,13 @@
         {{ text }} </br>
         {% endfor %}
     </div>
-    <!-- <form class="inputBlock" action="" method="get">
-        <input type="text" name="playerInput">
-        <input type="submit" value="Enter Input">
-    </form> -->
-    <div class='gameBox'>
+
+    <div class='gameBlock'>
+        <img src='../static/images/{{ player1.user.name }}-back.webp' />
         <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
             max="{{ player1.user.stat['maxHp'] }}"></progress>
         </br>
+        <img src='../static/images/{{ player2.user.name }}-front.webp' />
         <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
             max="{{ player2.user.stat['maxHp'] }}"></progress>
     </div>
