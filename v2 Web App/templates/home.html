@@ -18,13 +18,11 @@
         <input type="submit" value="Enter Input">
     </form> -->
     <div class='gameBox'>
-        <div class='healthBar'>
-            {{ player1.user.stat['hp'] }}/{{ player1.user.stat['maxHp'] }}
-        </div>
+        <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
+            max="{{ player1.user.stat['maxHp'] }}"></progress>
         </br>
-        <div class='healthBar'>
-            {{ player2.user.stat['hp'] }}/{{ player2.user.stat['maxHp'] }}
-        </div>
+        <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
+            max="{{ player2.user.stat['maxHp'] }}"></progress>
     </div>
 
     <form class="inputBlock" action="" method="get">
