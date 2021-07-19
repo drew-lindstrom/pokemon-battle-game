@@ -1,5 +1,6 @@
-.gameTextBlock {
-    text-align: right;
+.overflow-auto {
+    height: 50px;
+    width: 200px;
 }
 
 .inputBlock {
@@ -7,7 +8,7 @@
 }
 
 .healthBar {
-    height: 50px;
+    height: 25px;
     width: 100px;
     background-color: rgb(7, 180, 45);
   }
