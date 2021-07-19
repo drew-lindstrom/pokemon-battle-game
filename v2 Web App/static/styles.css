@@ -12,14 +12,74 @@
     background-color: rgb(7, 180, 45);
   }
 
+.Bug {
+    background-color: rgb(137, 204, 12);
+}
+
+.Dark {
+    background-color: rgb(86, 87, 84);
+}
+
+.Dragon {
+    background-color: rgb(15, 68, 211);
+}
+
+.Electric {
+    background-color: rgb(236, 240, 27);
+}
+
 .Fairy {
     background-color: rgb(241, 0, 209)
+}
+
+.Fire {
+    background-color: rgb(221, 37, 13);
 }
 
 .Fighting {
     background-color: rgb(180, 99, 7)
 }
 
+.Flying {
+    background-color: rgb(208, 245, 250);
+}
+
+.Grass {
+    background-color: rgb(88, 211, 6);
+}
+
+.Ghost {
+    background-color: rgb(181, 90, 241);
+}
+
+.Ground {
+    background-color: rgb(250, 158, 37);
+}
+
+.Ice {
+    background-color: rgb(147, 221, 221);
+}
+
+.Normal {
+    background-color: rgb(240, 240, 240);
+}
+
+.Water {
+    background-color: rgb(47, 117, 247);
+}
+
+.Poison {
+    background-color: rgb(135, 4, 196);
+}
+
 .Psychic {
     background-color:rgb(174, 7, 180)
+}
+
+.Rock {
+    background-color: rgb(148, 63, 7);
+}
+
+.Steel {
+    background-color: rgb(151, 151, 151);
 }
