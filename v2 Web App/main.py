@@ -45,7 +45,6 @@ def index():
                     )
                 else:
                     ui.printPokemonOnField(frame1, frame2)
-                    # ui.printOptions(frame1)
                 return render_template(
                     "home.html",
                     player1=frame1,
@@ -56,7 +55,6 @@ def index():
                 return "Game Over"
         else:
             ui.printPokemonOnField(frame1, frame2)
-            # ui.printOptions(frame1)
             return render_template(
                 "home.html", player1=frame1, player2=frame2, gameText=gameText
             )
@@ -66,7 +64,6 @@ def index():
     else:
         frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
         ui.printPokemonOnField(frame1, frame2)
-        # ui.printOptions(frame1)
         return render_template(
             "home.html", player1=frame1, player2=frame2, gameText=gameText
         )
