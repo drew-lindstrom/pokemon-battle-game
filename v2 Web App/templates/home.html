@@ -19,10 +19,17 @@
         <img src='../static/images/{{ player1.user.name }}-back.webp' />
         <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
             max="{{ player1.user.stat['maxHp'] }}"></progress>
+        {% if player1.user.status[0] != None %}
+        {{ player1.user.status[0] }}
+        {% endif %}
         </br>
-        <img src='../static/images/{{ player2.user.name }}-front.webp' />
         <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
             max="{{ player2.user.stat['maxHp'] }}"></progress>
+        {% if player2.user.status[0] != None %}
+        {{ player2.user.status[0] }}
+        {% endif %}
+        <img src='../static/images/{{ player2.user.name }}-front.webp' />
+
     </div>
 
     <form class="inputBlock" action="" method="get">
