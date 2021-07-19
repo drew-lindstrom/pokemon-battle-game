@@ -27,30 +27,31 @@
         </div>
     </div>
 
-    <form>
+    <form class="inputBlock" action="" method="get">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             {% for n in range(4) %}
-            <button type="button" class="btn btn-secondary {{ player1.user.moves[n].type }}" href="{{ n }}">{{
+            <button type="submit" name='playerInput' class="btn btn-secondary {{ player1.user.moves[n].type }}"
+                value="{{ n + 1 }}">{{
                 player1.user.moves[n] }} {{
                 player1.user.moves[n].pp
                 }}/{{
                 player1.user.moves[n].maxPp }}</button>
             {% endfor %}
+        </div>
 
-            <div class="btn-group" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Switch With:
-                </button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    {% for n in range(1, 6) %}
-                    <a class="dropdown-item" href="#">{{ player1.attackingTeam[n] }} {{
-                        player1.attackingTeam[n].stat['hp']
-                        }}/{{
-                        player1.attackingTeam[n].stat['maxHp'] }} HP Status: {{ player1.attackingTeam[n].status[0]
-                        }}</a>
-                    {% endfor %}
-                </div>
+        <div class="btn-group" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Switch With:
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                {% for n in range(1, 6) %}
+                <a type="submit" class="dropdown-item" name='playerInput'>{{ player1.attackingTeam[n] }} {{
+                    player1.attackingTeam[n].stat['hp']
+                    }}/{{
+                    player1.attackingTeam[n].stat['maxHp'] }} HP Status: {{ player1.attackingTeam[n].status[0]
+                    }}</a>
+                {% endfor %}
             </div>
         </div>
     </form>
