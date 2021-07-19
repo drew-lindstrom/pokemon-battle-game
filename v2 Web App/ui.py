@@ -3,20 +3,20 @@ import stat_calc
 import gameText
 
 
-def printPokemonOnField(frame1, frame2):
-    frameOrder = [frame1, frame2]
+# def printPokemonOnField(frame1, frame2):
+#     frameOrder = [frame1, frame2]
 
-    for frame in frameOrder:
-        gameText.output.append(
-            f"{frame.user.name} - HP: {frame.user.stat['hp']}/{frame.user.stat['maxHp']}, Status: {frame.user.status[0]}"
-        )
-        gameText.output.append(
-            f"Attack: {stat_calc.calcAttack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calcDefense(frame, 'user')}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calcSpAttack(frame)}/{frame.user.stat['spAttack']}"
-        )
-        gameText.output.append(
-            f"Special Defense: {stat_calc.calcSpDefense(frame, 'user')}/{frame.user.stat['spDefense']}   Speed: {stat_calc.calcSpeed(frame)}/{frame.user.stat['speed']}"
-        )
-        gameText.output.append("")
+#     for frame in frameOrder:
+#         gameText.output.append(
+#             f"{frame.user.name} - HP: {frame.user.stat['hp']}/{frame.user.stat['maxHp']}, Status: {frame.user.status[0]}"
+#         )
+#         gameText.output.append(
+#             f"Attack: {stat_calc.calcAttack(frame)}/{frame.user.stat['attack']}   Defense: {stat_calc.calcDefense(frame, 'user')}/{frame.user.stat['defense']}   Special Attack: {stat_calc.calcSpAttack(frame)}/{frame.user.stat['spAttack']}"
+#         )
+#         gameText.output.append(
+#             f"Special Defense: {stat_calc.calcSpDefense(frame, 'user')}/{frame.user.stat['spDefense']}   Speed: {stat_calc.calcSpeed(frame)}/{frame.user.stat['speed']}"
+#         )
+#         gameText.output.append("")
 
 
 def callAppropriateFunctionBasedOnChoice(
@@ -112,20 +112,20 @@ def checkIfSwitchChoiceHasFainted(frame, switchChoice):
 #     frame.user.showStats()
 
 
-def printOptions(frame):
-    gameText.output.append(f"What will {frame.user.name} do?")
-    gameText.output.append("")
-    for n in range(len(frame.user.moves)):
-        gameText.output.append(
-            f"({n+1}) {frame.user.moves[n].name} - {frame.user.moves[n].pp}/{frame.user.moves[n].maxPp} PP"
-        )
-    gameText.output.append("")
-    gameText.output.append("Or switch with...")
-    for n in range(1, len(frame.attackingTeam)):
-        gameText.output.append(
-            f"({n+4}) {frame.attackingTeam[n].name} - {frame.attackingTeam[n].stat['hp']}/{frame.attackingTeam[n].stat['maxHp']} HP, Status: {frame.attackingTeam[n].status[0]}"
-        )
-    gameText.output.append("")
+# def printOptions(frame):
+#     gameText.output.append(f"What will {frame.user.name} do?")
+#     gameText.output.append("")
+#     for n in range(len(frame.user.moves)):
+#         gameText.output.append(
+#             f"({n+1}) {frame.user.moves[n].name} - {frame.user.moves[n].pp}/{frame.user.moves[n].maxPp} PP"
+#         )
+#     gameText.output.append("")
+#     gameText.output.append("Or switch with...")
+#     for n in range(1, len(frame.attackingTeam)):
+#         gameText.output.append(
+#             f"({n+4}) {frame.attackingTeam[n].name} - {frame.attackingTeam[n].stat['hp']}/{frame.attackingTeam[n].stat['maxHp']} HP, Status: {frame.attackingTeam[n].status[0]}"
+#         )
+#     gameText.output.append("")
 
 
 # def getSwitch(frame, inputList=[]):
