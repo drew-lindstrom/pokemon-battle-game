@@ -46,12 +46,13 @@
             </button>
             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                 {% for n in range(1, 6) %}
-                <a type="submit" class="dropdown-item" name='playerInput'>{{ player1.attackingTeam[n] }} {{
+                <button type="submit" name='playerInput' class="dropdown-item" value="{{ n + 4 }}">{{
+                    player1.attackingTeam[n] }} {{
                     player1.attackingTeam[n].stat['hp']
                     }}/{{
                     player1.attackingTeam[n].stat['maxHp'] }} HP Status: {{ player1.attackingTeam[n].status[0]
                     }}</a>
-                {% endfor %}
+                    {% endfor %}
             </div>
         </div>
     </form>
