@@ -15,63 +15,74 @@
     </div>
 
     <div class='gameBlock'>
-        <img src='../static/images/background.webp' />
-        <img src='../static/images/{{ player1.user.name }}-back.gif' />
-        <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
-            max="{{ player1.user.stat['maxHp'] }}"></progress>
-        {% if player1.user.status[0] != None %}
-        {{ player1.user.status[0] }}
-        {% endif %}
-        </br>
-        <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
-            max="{{ player2.user.stat['maxHp'] }}"></progress>
-        {% if player2.user.status[0] != None %}
-        {{ player2.user.status[0] }}
-        {% endif %}
-        <img src='../static/images/{{ player2.user.name }}-front.gif' />
+        <div class='container'>
+            <div class='col'>
+                <div class='row'>
+                    <img src='../static/images/background.webp' />
+                    <div class='row'>
+                        <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
+                            max="{{ player2.user.stat['maxHp'] }}"></progress>
+                        {% if player2.user.status[0] != None %}
+                        {{ player2.user.status[0] }}
+                        {% endif %}
+                        <img src='../static/images/{{ player2.user.name }}-front.gif' />
+                    </div>
+                    <div class='row'>
+                        <img src='../static/images/{{ player1.user.name }}-back.gif' />
+                        <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
+                            max="{{ player1.user.stat['maxHp'] }}"></progress>
+                        {% if player1.user.status[0] != None %}
+                        {{ player1.user.status[0] }}
+                        {% endif %}
+                    </div>
+                </div>
 
-    </div>
+                <div class="row">
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Switch With:
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            {% for n in range(1, 6) %}
+                            <button type="submit" name='playerInput' class="dropdown-item" value="{{ n + 4 }}">{{
+                                player1.attackingTeam[n] }} {{
+                                player1.attackingTeam[n].stat['hp']
+                                }}/{{
+                                player1.attackingTeam[n].stat['maxHp'] }} HP Status: {{
+                                player1.attackingTeam[n].status[0]
+                                }}</a>
+                                {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <form class="inputBlock" action="" method="get">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            {% for n in range(4) %}
-            <button type="submit" name='playerInput' class="btn btn-secondary {{ player1.user.moves[n].type }}"
-                value="{{ n + 1 }}">{{
-                player1.user.moves[n] }} {{
-                player1.user.moves[n].pp
-                }}/{{
-                player1.user.moves[n].maxPp }}</button>
-            {% endfor %}
-        </div>
-
-        <div class="btn-group" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                Switch With:
-            </button>
-            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                {% for n in range(1, 6) %}
-                <button type="submit" name='playerInput' class="dropdown-item" value="{{ n + 4 }}">{{
-                    player1.attackingTeam[n] }} {{
-                    player1.attackingTeam[n].stat['hp']
-                    }}/{{
-                    player1.attackingTeam[n].stat['maxHp'] }} HP Status: {{ player1.attackingTeam[n].status[0]
-                    }}</a>
-                    {% endfor %}
+            <div class='col'>
+                <form class="inputBlock" action="" method="get">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        {% for n in range(4) %}
+                        <button type="submit" name='playerInput'
+                            class="btn btn-secondary {{ player1.user.moves[n].type }}" value="{{ n + 1 }}">{{
+                            player1.user.moves[n] }} {{
+                            player1.user.moves[n].pp
+                            }}/{{
+                            player1.user.moves[n].maxPp }}</button>
+                        {% endfor %}
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
 
-
-    <script src=" https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-        </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+        <script src=" https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+            </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>
