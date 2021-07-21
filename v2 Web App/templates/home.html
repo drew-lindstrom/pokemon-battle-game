@@ -9,12 +9,6 @@
 </head>
 
 <body>
-    <div class="gameTextBlock overflow-auto">
-        {% for text in gameText.output %}
-        {{ text }} </br>
-        {% endfor %}
-    </div>
-
     <div class='row'>
         <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
             max="{{ player2.user.stat['maxHp'] }}"></progress>
@@ -35,7 +29,7 @@
 
     <div class='gameBlock container'>
         <div class='col'>
-            <div class='row'>
+            <div class='background row'>
                 <img src='../static/images/background.webp' />
             </div>
 
@@ -69,6 +63,13 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class='col'>
+            <div class="gameTextBlock">
+                {% for text in gameText.output %}
+                {{ text }} </br>
+                {% endfor %}
             </div>
         </div>
     </div>
