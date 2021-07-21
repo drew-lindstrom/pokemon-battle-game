@@ -23,6 +23,14 @@
     1px 1px 0 #000;  
 }
 
+.pokemonName {
+    color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;    
+}
 .healthBar {
     height: 25px;
     width: 100px;

@@ -16,21 +16,31 @@
                     <img class='background' src='../static/images/background.webp' />
 
                     <div class='row opponentCurrentPokemonHealthAndStatus'>
-                        <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
-                            max="{{ player2.user.stat['maxHp'] }}"></progress>
-                        {% if player2.user.status[0] != None %}
-                        {{ player2.user.status[0] }}
-                        {% endif %}
-                        <img src='../static/images/{{ player2.user.name }}-front.gif' />
+                        <div class='row pokemonName'>
+                            {{ player2.user.name }}
+                        </div>
+                        <div class='row'>
+                            <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
+                                max="{{ player2.user.stat['maxHp'] }}"></progress>
+                            {% if player2.user.status[0] != None %}
+                            {{ player2.user.status[0] }}
+                            {% endif %}
+                            <img src='../static/images/{{ player2.user.name }}-front.gif' />
+                        </div>
                     </div>
 
                     <div class='row playerCurrentPokemonHealthAndStatus'>
-                        <img src='../static/images/{{ player1.user.name }}-back.gif' />
-                        <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
-                            max="{{ player1.user.stat['maxHp'] }}"></progress>
-                        {% if player1.user.status[0] != None %}
-                        {{ player1.user.status[0] }}
-                        {% endif %}
+                        <div class='row pokemonName'>
+                            {{ player1.user.name }}
+                        </div>
+                        <div class='row'>
+                            <img src='../static/images/{{ player1.user.name }}-back.gif' />
+                            <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
+                                max="{{ player1.user.stat['maxHp'] }}"></progress>
+                            {% if player1.user.status[0] != None %}
+                            {{ player1.user.status[0] }}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
