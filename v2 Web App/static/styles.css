@@ -4,13 +4,13 @@
 }
 
 .opponentCurrentPokemonHealthAndStatus {
-    right: 20%;
-    top: 20%;
+    right: 30%;
+    top: 10%;
     position: absolute;
 }
 .playerCurrentPokemonHealthAndStatus {
-    left: 20%;
-    bottom: 20%;
+    left: 10%;
+    bottom: 15%;
     position: absolute;
 }
 
