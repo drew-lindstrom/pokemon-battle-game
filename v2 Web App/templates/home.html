@@ -16,26 +16,31 @@
                     <img class='background' src='../static/images/background.webp' />
 
                     <div class='row opponentCurrentPokemonHealthAndStatus'>
-                        <div class='row pokemonName'>
-                            {{ player2.user.name }}
-                        </div>
-                        <div class='row'>
-                            <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
-                                max="{{ player2.user.stat['maxHp'] }}"></progress>
-                            <div class='status'>
-                                {% if player2.user.status[0] != None and player2.user.status[0] != 'Fainted' %}
-                                {{ player2.user.status[0] }}
-                                {% endif %}
+                        <div class='col'>
+                            <div class='pokemonName'>
+                                {{ player2.user.name }}
                             </div>
+                            <div class='row'>
+                                <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
+                                    max="{{ player2.user.stat['maxHp'] }}"></progress>
+                                <div class='status'>
+                                    {% if player2.user.status[0] != None and player2.user.status[0] != 'Fainted' %}
+                                    {{ player2.user.status[0] }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col'>
                             <img class='pokemonImage' src='../static/images/{{ player2.user.name }}-front.gif' />
                         </div>
                     </div>
 
                     <div class='row playerCurrentPokemonHealthAndStatus'>
-
-                        <div class='row'>
+                        <div class='col'>
                             <img class='pokemonImage' src='../static/images/{{ player1.user.name }}-back.gif' />
-                            <div class='row pokemonName'>
+                        </div>
+                        <div class='col'>
+                            <div class='pokemonName'>
                                 {{ player1.user.name }}
                             </div>
                             <div class='row'>
