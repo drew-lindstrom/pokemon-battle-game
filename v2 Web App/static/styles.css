@@ -23,6 +23,11 @@
     1px 1px 0 #000;  
 }
 
+.pokemonImage {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
 .healthBar {
     height: 25px;
     width: 100px;

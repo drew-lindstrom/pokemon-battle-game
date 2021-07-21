@@ -27,7 +27,7 @@
                                 {{ player2.user.status[0] }}
                                 {% endif %}
                             </div>
-                            <img src='../static/images/{{ player2.user.name }}-front.gif' />
+                            <img class='pokemonImage' src='../static/images/{{ player2.user.name }}-front.gif' />
                         </div>
                     </div>
 
@@ -36,7 +36,7 @@
                             {{ player1.user.name }}
                         </div>
                         <div class='row'>
-                            <img src='../static/images/{{ player1.user.name }}-back.gif' />
+                            <img class='pokemonImage' src='../static/images/{{ player1.user.name }}-back.gif' />
                             <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
                                 max="{{ player1.user.stat['maxHp'] }}"></progress>
                             <div class='status'>
