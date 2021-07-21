@@ -14,6 +14,24 @@
             <div class='col-9'>
                 <div class='row'>
                     <img class='background' src='../static/images/background.webp' />
+
+                    <div class='row opponentCurrentPokemonHealthAndStatus'>
+                        <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
+                            max="{{ player2.user.stat['maxHp'] }}"></progress>
+                        {% if player2.user.status[0] != None %}
+                        {{ player2.user.status[0] }}
+                        {% endif %}
+                        <img src='../static/images/{{ player2.user.name }}-front.gif' />
+                    </div>
+
+                    <div class='row playerCurrentPokemonHealthAndStatus'>
+                        <img src='../static/images/{{ player1.user.name }}-back.gif' />
+                        <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
+                            max="{{ player1.user.stat['maxHp'] }}"></progress>
+                        {% if player1.user.status[0] != None %}
+                        {{ player1.user.status[0] }}
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class='container'>
@@ -60,23 +78,10 @@
             </div>
         </div>
     </div>
-    <!-- <div class='row'>
-        <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
-            max="{{ player2.user.stat['maxHp'] }}"></progress>
-        {% if player2.user.status[0] != None %}
-        {{ player2.user.status[0] }}
-        {% endif %}
-        <img src='../static/images/{{ player2.user.name }}-front.gif' />
-    </div>
 
-    <div class='row'>
-        <img src='../static/images/{{ player1.user.name }}-back.gif' />
-        <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
-            max="{{ player1.user.stat['maxHp'] }}"></progress>
-        {% if player1.user.status[0] != None %}
-        {{ player1.user.status[0] }}
-        {% endif %}
-    </div> -->
+
+
+
     <script src=" https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
         </script>

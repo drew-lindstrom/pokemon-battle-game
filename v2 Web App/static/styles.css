@@ -1,7 +1,18 @@
-/* .inputBlock {
-    text-align: center;
+.background {
+    position: relative;
+    display: block;
+}
 
-} */
+.opponentCurrentPokemonHealthAndStatus {
+    right: 20%;
+    top: 20%;
+    position: absolute;
+}
+.playerCurrentPokemonHealthAndStatus {
+    left: 20%;
+    bottom: 20%;
+    position: absolute;
+}
 
 .btn {
     color: white;
