@@ -14,7 +14,6 @@
             <div class='col-9'>
                 <div class='row'>
                     <img class='background' src='../static/images/background.webp' />
-
                     <div class='row opponentCurrentPokemonHealthAndStatus'>
                         <div class='col'>
                             <div class='pokemonName'>
@@ -92,10 +91,12 @@
                 </div>
             </div>
             <div class='col'>
-                <div class="gameTextBlock">
-                    {% for text in gameText.output %}
-                    {{ text }}</br>
-                    {% endfor %}
+                <div class='card'>
+                    <div class='card-body gameText'>
+                        {% for text in gameText.output %}
+                        {{ text }}</br>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>

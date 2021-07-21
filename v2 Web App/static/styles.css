@@ -34,6 +34,12 @@
     background-color: rgb(7, 180, 45);
   }
 
+.gameText {
+        height: 500px;
+        max-height: 500px;
+        overflow-y: auto;
+}
+
 .Bug {
     background-color: rgb(137, 204, 12);
 }
