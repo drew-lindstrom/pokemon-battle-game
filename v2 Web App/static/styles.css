@@ -37,7 +37,26 @@
 .gameText {
         height: 500px;
         max-height: 500px;
+        overflow: scroll;
         overflow-y: auto;
+}
+
+.gameText::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.gameText::-webkit-scrollbar:vertical {
+    width: 11px;
+}
+
+.gameText::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+
+.gameText::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0, .5);
 }
 
 .Bug {
