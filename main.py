@@ -23,7 +23,7 @@ w = Weather()
 t = Terrain()
 
 
-@app.route("/")
+@app.route("obscure-caverns-74799.herokuapp.com/")
 def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
@@ -78,7 +78,8 @@ def applyTurn(frame1, frame2, gameOverBool):
             applySwitch(curFrame, frame1, frame2)
 
         elif curFrame.user.status[0] != "Fainted":
-            gameText.output.append(f"{curFrame.user.name} used {curFrame.attack.name}!")
+            gameText.output.append(
+                f"{curFrame.user.name} used {curFrame.attack.name}!")
             gameText.output.append("")
 
             if checkIfCanAttackAndAttackLands(curFrame):
@@ -92,7 +93,7 @@ def applyTurn(frame1, frame2, gameOverBool):
 
 
 def activateTurnOneSwitchAbilities(p1, p2, w, t):
-    #'Switches' leading pokemon with their respective selves in order to activate any abilities that activate on switch in.
+    # 'Switches' leading pokemon with their respective selves in order to activate any abilities that activate on switch in.
     openingFrame1 = Frame(p1, p2, None, None, w, t)
     openingFrame1.switchChoice = 0
     openingFrame2 = Frame(p2, p1, None, None, w, t)
