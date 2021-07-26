@@ -23,7 +23,7 @@ w = Weather()
 t = Terrain()
 
 
-@app.route("obscure-caverns-74799.herokuapp.com/")
+@app.route("https://pokemon-battle-game-1.herokuapp.com/")
 def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
