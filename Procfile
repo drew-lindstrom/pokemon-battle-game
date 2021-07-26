@@ -1,2 +1,2 @@
-set FLASK_APP=webapp
+web: set FLASK_APP=webapp
 web: flask run
