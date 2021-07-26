@@ -190,5 +190,5 @@ def getAppropriateSwitchChoice(frame):
         switch(frame, printSwitchText=True, printStatResetText=False)
 
 
-if __name__ == "__main__":
-    app.run()
+# if __name__ == "__main__":
+#     app.run()
