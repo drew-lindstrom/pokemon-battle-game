@@ -48,7 +48,6 @@ def index():
 
 
 def applyTurn(frame1, frame2, gameOverBool):
-    # Determines which player goes first for the turn (based on speed, priority moves, etc.)
     frameOrder = getFrameOrder(frame1, frame2)
 
     for curFrame in frameOrder:
@@ -65,13 +64,10 @@ def applyTurn(frame1, frame2, gameOverBool):
 
     gameOverBool = applyEndOfTurnEffects(frameOrder, w, t, gameOverBool)
 
-    if gameOverBool:
-        return False
-    return True
+    return gameOverBool
 
 
 def activateTurnOneSwitchAbilities(p1, p2, w, t):
-    # 'Switches' leading pokemon with their respective selves in order to activate any abilities that activate on switch in.
     openingFrame1 = Frame(p1, p2, None, None, w, t)
     openingFrame1.switchChoice = 0
     openingFrame2 = Frame(p2, p1, None, None, w, t)
@@ -84,10 +80,6 @@ def activateTurnOneSwitchAbilities(p1, p2, w, t):
 def applyPreInputPreparations(p1, p2, w, t):
     frame1 = Frame(p1, p2, None, None, w, t)
     frame2 = Frame(p2, p1, None, None, w, t)
-
-    gameTextList = []
-    frame1.gameText = gameTextList
-    frame2.gameText = gameTextList
 
     frame1.user.checkChoiceItem()
     frame2.user.checkChoiceItem()
