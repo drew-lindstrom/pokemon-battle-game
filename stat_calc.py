@@ -5,9 +5,6 @@ import weather
 
 
 def calcAttack(frame):
-    """Calculates the attack stat of the given pokemon by calculating its modified attack stat and mulitplying it with any additional modifiers.
-    If the given attack roled a critical hit, a negative attack statMod is ignored and calcModifiedStat is not called.
-    Additional modifiers are still applied."""
     additionalModifier = 1
 
     if frame.user.item == "Choice Band":
@@ -20,9 +17,6 @@ def calcAttack(frame):
 
 
 def calcDefense(frame, pokemon=None):
-    """Calculates the defense stat of the given pokemon by calculating its modified defense stat and mulitplying it with any additional modifiers.
-    If the given attack roled a critical hit, a positive defense statMod is ignored and calcModifiedStat is not called.
-    Additional modifiers are still applied."""
     additionalModifier = 1
 
     if pokemon == "user":
@@ -36,10 +30,8 @@ def calcDefense(frame, pokemon=None):
 
 
 def calcSpAttack(frame):
-    """Calculates the special attack stat of the given pokemon by calculating its modified spAttack stat and mulitplying it with any additional modifiers.
-    If the given attack roled a critical hit, a negative spAttack statMod is ignored and calcModifiedStat is not called.
-    Additional modifiers are still applied."""
     additionalModifier = 1
+
     if frame.user.item == "Choice Spec":
         additionalModifier *= 1.5
     if frame.user.ability == "Blaze":
@@ -50,11 +42,9 @@ def calcSpAttack(frame):
 
 
 def calcSpDefense(frame, pokemon=None):
-    """Calculates the special defense stat of the given pokemon by calculating its modified spDefense stat and mulitplying it with any additional modifiers.
-    If the given attack roled a critical hit, a positive spDefense statMod is ignored and calcModifiedStat is not called.
-    Additional modifiers are still applied."""
     additionalModifier = 1
-    additionalModifier *= weather.checkSandstormSpDefBoost(frame.weather, frame.user)
+    additionalModifier *= weather.checkSandstormSpDefBoost(
+        frame.weather, frame.user)
 
     if pokemon == "user":
         pokemon = frame.user
@@ -67,8 +57,8 @@ def calcSpDefense(frame, pokemon=None):
 
 
 def calcSpeed(frame):
-    """Calculates the speed stat of the given pokemon by calculating its modified speed stat and mulitplying it with any additional modifiers."""
     additionalModifier = 1
+
     if frame.user.item == "Choice Scarf":
         additionalModifier *= 1.5
     if frame.user.status and frame.user.status[0] == "Paralyzed":
@@ -83,7 +73,6 @@ def calcSpeed(frame):
 
 
 def checkBlaze(frame):
-    """Returns 1.5 is user is using a fire type move and user's hp is below 1/3 of their max hp."""
     if (
         frame.attack.type == "Fire"
         and frame.user.stat["hp"] < frame.user.stat["maxHp"] // 3

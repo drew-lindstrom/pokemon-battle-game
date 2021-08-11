@@ -8,8 +8,6 @@ class Weather:
         self.counter = counter
 
     def setWeather(self, weatherName, pokemon):
-        """Sets currentWeather to the specified weather if currently Clear Skies and
-        set weatherCounter to 5 turns (or 8 turns if pokemon is holding the correct item)."""
         if self.currentWeather == "Clear Skies":
             self.currentWeather = weatherName
             if weatherName == "Sandstorm":
@@ -35,7 +33,6 @@ class Weather:
                 self.counter = 4
 
     def decrementWeather(self):
-        """Decrements the weather counter by one at the end of each turn. If the counter equals 0, the weather is reset to Clear Skies."""
         if self.currentWeather != "Clear Skies":
             if self.counter == 0:
 
@@ -44,7 +41,6 @@ class Weather:
                 self.counter -= 1
 
     def clearWeather(self):
-        """Resets the current weather to Clears Skies and sets the counter to None."""
         gameText.output.append(f"The {self.currentWeather.lower()} subsided.")
         gameText.output.append("")
         self.currentWeather = "Clear Skies"
@@ -52,8 +48,6 @@ class Weather:
 
 
 def applyWeatherDamage(weather, pokemon):
-    """If weather is currently Sandstorm or Hail, damages all pokemon on the field at end of turn
-    unless pokemon is of specific type, ability, or holding Safety Goggles."""
     if weather.currentWeather not in ("Sandstorm", "Hail"):
         return False
     if weather.currentWeather == "Sandstorm":
@@ -89,7 +83,6 @@ def applyWeatherDamage(weather, pokemon):
 
 
 def checkSandstormSpDefBoost(weather, pokemon):
-    """Increases special defense of Rock type pokemon while weather is Sandstorm."""
     if weather.currentWeather == "Sandstorm" and (
         (pokemon.typing[0] == "Rock") or (pokemon.typing[1] == "Rock")
     ):
@@ -98,8 +91,6 @@ def checkSandstormSpDefBoost(weather, pokemon):
 
 
 def checkDamageModFromWeather(weather, pokemon, n):
-    """Boosts power of fire type moves by 50% and lowers power of water type moves by 50% if weather is Harsh Sunlight.
-    Boosts power of water type moves by 50% and lower power of fire types moves by 50% if weather is Rain."""
     if weather.currentWeather == "Harsh Sunlight":
         if pokemon.moves[n].type == "Fire":
             return 1.5

@@ -10,11 +10,6 @@ import gameText
 
 
 def getFrameOrder(frame1, frame2):
-    """Gets the turn order for the current turn of the game.
-    Turn order is determined by the speeds of the current pokemon on the field.
-    With the exception of the effects from certian moves, items, or abilities,
-    the faster pokemon always switches or attacks before the slower pokemon.
-    Switching to a different pokemon always occurs before a pokemon attacks (unless the opposing pokemon uses the move Pursuit)."""
     if frame1.attack and frame1.attack.name == "Pursuit" and frame2.switchChoice:
         return [frame1, frame2]
     elif frame2.attack and frame2.attack.name == "Pursuit" and frame1.switchChoice:
@@ -37,23 +32,16 @@ def getFrameOrder(frame1, frame2):
 
 
 def checkSpeed(frame1, frame2):
-    """Checks the speed of both pokemon on field to determine who moves first.
-    Takes into account things like Choice Scarf, abilities that effect priority or speed, priority moves, paraylsis, etc."""
     p1Speed = calcSpeed(frame1)
     p2Speed = calcSpeed(frame2)
 
     if p1Speed > p2Speed:
         return [frame1, frame2]
-    # If the speed check is a tie, its usually random who goes first, but for the sake of AI consistency, the opponent will always go first.
     else:
         return [frame2, frame1]
 
 
 def checkPriority(frame):
-    """Calls priorityMoves dictionary to see if the given attack has a priority number, if not returns 0.
-    Attacks with a priority higher number will go before the opponent's attack regardless of speed.
-    Standard moves have a prioirty of 0. If both pokemon use a move with the same priority, speed is used to determine who goes first."""
-
     if (
         frame.terrain.currentTerrain == "Psychic Terrain"
         and frame.target.grounded == True
@@ -72,7 +60,6 @@ def checkPriority(frame):
 
 
 def rollParalysis(user, i=None):
-    """Rolls to determine if a paralyzed pokemon can successfully use an attack. 25% that pokemon won't be able to move due to paralysis."""
     if i == None or i < 1 or i > 4:
         i = randint(1, 4)
 
@@ -84,8 +71,6 @@ def rollParalysis(user, i=None):
 
 
 def rollFrozen(user, i=None):
-    """Rolls to determine if a frozen pokemon thaws out during it's attack. Frozen pokemon are not able to attack. 20% chance to thaw out.
-    The pokemon can use it's attack on the turn that it thaws out."""
     if i == None or i < 1 or i > 5:
         i = randint(1, 5)
 
@@ -100,7 +85,6 @@ def rollFrozen(user, i=None):
 
 
 def rollConfusion(user, i=None):
-    """Rolls to determine if a confused pokemon can successfully use an attack. 33% chance they will hit themselves in confusion."""
     if i == None or i < 1 or i > 2:
         i = randint(1, 2)
 
@@ -113,7 +97,6 @@ def rollConfusion(user, i=None):
 
 
 def calcConfusionDamage(user):
-    """Returns damage inflicted by a pokemon to itself if they hit themselves in confusion."""
     # TODO: Need to add random to damage calc. Probably better to combine this with calcDamage function.
     randomMod = 1
 
@@ -136,7 +119,6 @@ def calcConfusionDamage(user):
 
 
 def checkImmunity(frame):
-    """Returns boolean if current attack isn't able to land due to target being immune to the attack's type."""
     frame.target.checkGrounded()
     if (
         (frame.attack.type == "Poison" and "Steel" in frame.target.typing)
@@ -155,8 +137,6 @@ def checkImmunity(frame):
 
 
 def checkCanAttack(frame, i=None):
-    """Checks to make sure if an attacker is able to use a move based on any present status conditions.
-    Calls functions that require a roll for an attack to be successful (like paralysis or confusion)."""
     if frame.user.status[0] == "Paralyzed":
         if not rollParalysis(frame.user, i):
             frame.canAttack = False
@@ -204,9 +184,6 @@ def checkCanAttack(frame, i=None):
 
 
 def checkAttackLands(frame, i=None):
-    """Calculates required accuracy for an attack to land based on the accuracy of the attack,
-    accuracy of user, evasion of target, and any additional modifiers. Rolls i in range 0 to 100.
-    If i is less than or equal to required accuracy, attack hits and function returns True."""
     if frame.attack.accuracy == 0:
         frame.attackLands = True
         return
@@ -239,7 +216,6 @@ def checkAttackLands(frame, i=None):
     gameText.output.append(f"{frame.user.name}s attack missed!")
     gameText.output.append("")
 
-    # If high jump kick misses, it damages the user.
     if frame.attack.name == "High Jump Kick":
         gameText.output.append(f"{frame.user.name} came crashing down...")
         gameText.output.append("")
@@ -247,7 +223,6 @@ def checkAttackLands(frame, i=None):
 
 
 def applyNonDamagingMove(frame):
-    """Applies effect of current non damaging move being used."""
     if frame.attack.name == "Stealth Rock":
         move_effects.setStealthRocks(frame)
 
@@ -265,8 +240,6 @@ def applyNonDamagingMove(frame):
 
 
 def switch(frame, printSwitchText=True, printStatResetText=True):
-    """Switch current pokemon with another pokemon on player's team. Won't work if player's choice to switch into is already fainted.
-    Ex: Player team order is [Tyranitar, Slowbro] -> playerTeam.switch(1) -> Player team order is [Slowbro, Tyranitar]"""
     n = int(frame.switchChoice)
     if frame.attackingTeam.team[n].stat["hp"] == 0:
         gameText.output.append(
@@ -294,7 +267,6 @@ def switch(frame, printSwitchText=True, printStatResetText=True):
 
 
 def applySwitchEffect(frame, n, switchDir):
-    """Applies switch effect for current pokemon that's switched in or switched out."""
     user = frame.attackingTeam[n]
     if switchDir == "In":
         if user.ability == "Grassy Surge":
@@ -315,8 +287,6 @@ def applySwitchEffect(frame, n, switchDir):
 
 
 def applyEntryHazards(frame):
-    """Applies the appropriate entry hazards effects after a pokemon switches in.
-    Calls funciton to clear toxic spikes if target if a grounded poison type."""
     if (
         frame.user.item != "Heavy Duty Boots"
         and frame.attackingTeam.stealthRocks == True
@@ -327,7 +297,6 @@ def applyEntryHazards(frame):
 
 
 def applyStealthRocksDamage(frame):
-    """Applies stealth rock damage to the target depending on target's weakness to Rock."""
     atkId = typeKey.get("Rock")
     def1Id = typeKey.get(frame.user.typing[0])
     mult1 = typeChart[atkId][def1Id]
@@ -344,7 +313,6 @@ def applyStealthRocksDamage(frame):
 
 
 def applyPostAttackEffects(frame, i=None):
-    """Applies post attack effects (lowering or raising stats, applying a status, etc) to the user/target of the given frame."""
     applyStatAltAttack(frame.user, frame.target, frame.attack.name)
     applyStatusInflictingAttack(frame.user, frame.target, frame.attack.name)
     applyVStatusInflictingAttack(frame.user, frame.target, frame.attack.name)
@@ -353,7 +321,6 @@ def applyPostAttackEffects(frame, i=None):
 
 
 def applyEndOfTurnAttackEffects(frameOrder):
-    """Applies end of turn events (recoil, leftovers healing, etc) to the user of the given frame."""
     for frame in frameOrder:
         frame.user.decrementStatuses()
         if not frame.switchChoice:

@@ -25,7 +25,6 @@ def rollCrit(frame, i=None):
 
 
 def checkStab(frame):
-    """Checks to see if the attacking move is the same type as the attacker. If so, attack power is boosted by 50%."""
     if frame.attack.type in frame.user.typing:
         return 1.5
     else:
@@ -63,7 +62,6 @@ def checkTypeEffectiveness(frame, ghostCalc=False):
 
 
 def checkBurn(frame):
-    """Returns damage modifer is user is burned and currently attacking with a physical move."""
     if frame.user.status[0] == "Burn" and frame.attack.category == "Physical":
         return 0.5
     return 1
@@ -76,8 +74,6 @@ def rollRandom(i=None):
 
 
 def checkAttackingAndDefendingStats(frame):
-    """Checks if the attack for the given frame is Physical or Special. If physical, returns Attack and Defense for stats used in damage calc.
-    If special, returns Special Attack and Special Defense. If the attack is Psyshock, returns Special Attack and Defense."""
     if frame.attack.name == "Psyshock":
         attackStat = calcSpAttack(frame)
         defenseStat = calcDefense(frame)
@@ -92,12 +88,10 @@ def checkAttackingAndDefendingStats(frame):
 
 
 def activateEruption(frame):
-    """Returns base power for the move eruption based on the users hp."""
     return int(150 * frame.user.stat["hp"] / frame.user.stat["maxHp"])
 
 
 def activateKnockOff(frame, ghostCalc=False):
-    """Returns knock off base power raised by 50% if target is holding an item. Target then loses held item."""
     if frame.target.item:
         if not ghostCalc:
             gameText.output.append(
@@ -112,7 +106,6 @@ def activateKnockOff(frame, ghostCalc=False):
 
 
 def calcModifiedBaseDamage(frame, baseDamage, ghostCalc=False):
-    """Returns base power for various moves that have varying base powers based on different parameters."""
     if frame.attack.name == "Eruption":
         baseDamage = activateEruption(frame)
 
@@ -126,7 +119,6 @@ def calcModifiedBaseDamage(frame, baseDamage, ghostCalc=False):
 
 
 def calcDamage(frame, includeCrit=True, includeRandom=True, ghostCalc=False):
-    """Returns damage from an attack for a given frame."""
     crit, randomMod = 1, 1
 
     if includeCrit == True:

@@ -38,7 +38,6 @@ def checkIfDamagingAttack(frame, n):
     if (
         moveCategory == "Physical" or moveCategory == "Special"
     ) and ui.checkIfValidChoice(frame, n + 1):
-        # ui.checkIfValidChoice subtracts 1 from the given int due to first attack being tied with '1' key.
         return True
     return False
 

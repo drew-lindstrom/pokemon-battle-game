@@ -48,7 +48,6 @@ class Move:
             self._pp = n
 
     def showStats(self):
-
         gameText.output.append(f"Move: {self.name}")
         gameText.output.append(f"Type: {self.type}")
         gameText.output.append(f"Category: {self.category}")
@@ -58,10 +57,6 @@ class Move:
         gameText.output.append("")
 
     def checkPp(self):
-        """Returns True if a move has enough PP to be used (above 0 PP). Returns False otherwise.
-        move.pp (int) -> Boolean
-        Ex: move.pp == 0, return False.
-        Ex: move.pp == 3, return True."""
         if self.pp <= 0:
             gameText.output.append(f"{self.name} is out of PP!")
             gameText.output.append("")
@@ -69,5 +64,4 @@ class Move:
         return True
 
     def decrementPp(self):
-        """Decrements a move's pp by one at the end of the turn."""
         self.pp -= 1
