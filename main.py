@@ -16,6 +16,7 @@ import gameText
 
 from flask import Flask, request, render_template
 
+
 app = Flask(__name__)
 
 gameOverBool = False
@@ -28,7 +29,6 @@ def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
     if playerInput:
-        # try:
         playerInput = int(playerInput)
         frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
         if ui.callAppropriateFunctionBasedOnChoice(
@@ -43,8 +43,6 @@ def index():
                         player2=frame2,
                         gameText=gameText,
                     )
-                # else:
-                # ui.printPokemonOnField(frame1, frame2)
                 return render_template(
                     "home.html",
                     player1=frame1,
@@ -54,16 +52,11 @@ def index():
             else:
                 return "Game Over"
         else:
-            # ui.printPokemonOnField(frame1, frame2)
             return render_template(
                 "home.html", player1=frame1, player2=frame2, gameText=gameText
             )
-        # except Exception:
-        #     gameText.output.append("Improper input.")
-        #     return render_template("home.html", gameText=gameText)
     else:
         frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
-        # ui.printPokemonOnField(frame1, frame2)
         return render_template(
             "home.html", player1=frame1, player2=frame2, gameText=gameText
         )
@@ -178,17 +171,10 @@ def checkForFaintedPokemon(frame1, frame2):
 
 def getAppropriateSwitchChoice(frame):
     player = frame.attackingTeam
-    # if player == p1:
-    #     gameText.output.append(f"{frame.user.name} has fainted. Switch with...?")
-    #     for n in range(1, len(frame.attackingTeam)):
-    #         gameText.output.append(
-    #             f"({n+4}) {frame.attackingTeam[n].name} - {frame.attackingTeam[n].stat['hp']}/{frame.attackingTeam[n].stat['maxHp']} HP, Status: {frame.attackingTeam[n].status[0]}"
-    #         )
-    #     gameText.output.append("")
     if player == p2:
         ai.chooseNextPokemon(frame)
         switch(frame, printSwitchText=True, printStatResetText=False)
 
 
-# if __name__ == "__main__":
-#     app.run()
+if __name__ == "__main__":
+    app.run()

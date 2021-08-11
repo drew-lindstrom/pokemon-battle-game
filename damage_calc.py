@@ -125,10 +125,6 @@ def calcModifiedBaseDamage(frame, baseDamage, ghostCalc=False):
     return baseDamage
 
 
-def calcModifiedDamage():
-    pass
-
-
 def calcDamage(frame, includeCrit=True, includeRandom=True, ghostCalc=False):
     """Returns damage from an attack for a given frame."""
     crit, randomMod = 1, 1
