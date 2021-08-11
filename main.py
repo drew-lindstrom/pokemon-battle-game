@@ -28,38 +28,23 @@ t = Terrain()
 def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
-    if playerInput:
-        playerInput = int(playerInput)
-        frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-        if ui.callAppropriateFunctionBasedOnChoice(
-            frame1, playerInput, printTextBool=True
-        ):
+
+    if gameOverBool == False:
+        if playerInput:
+            playerInput = int(playerInput)
+            frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
+            ui.callAppropriateFunctionBasedOnChoice(
+                frame1, playerInput, printTextBool=True)
             ai.chooseHighestDamagingAttack(frame2)
-            if applyTurn(frame1, frame2, gameOverBool):
-                if checkForFaintedPokemon(frame1, frame2):
-                    return render_template(
-                        "home.html",
-                        player1=frame1,
-                        player2=frame2,
-                        gameText=gameText,
-                    )
-                return render_template(
-                    "home.html",
-                    player1=frame1,
-                    player2=frame2,
-                    gameText=gameText,
-                )
-            else:
-                return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
+            applyTurn(frame1, frame2, gameOverBool)
+            checkForFaintedPokemon(frame1, frame2)
         else:
-            return render_template(
-                "home.html", player1=frame1, player2=frame2, gameText=gameText
-            )
+            frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
+
+        return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
+
     else:
-        frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
-        return render_template(
-            "home.html", player1=frame1, player2=frame2, gameText=gameText
-        )
+        return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
 
 
 def applyTurn(frame1, frame2, gameOverBool):
