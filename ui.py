@@ -7,9 +7,14 @@ def validatePlayerChoice(
     frame, choice, inputList=[], printTextBool=False
 ):
     if choice >= 1 and choice <= 4:
-        if checkIfValidChoice(frame, choice, printTextBool):
-            frame.attack = frame.user.moves[choice - 1]
-            return True
+        if frame.user.checkFainted() == False:
+            if checkIfValidChoice(frame, choice, printTextBool):
+                frame.attack = frame.user.moves[choice - 1]
+                return True
+        else:
+            gameText.output.append(
+                f"{frame.user.name} has fainted and much switch out.")
+            gameText.output.append("")
 
     elif choice >= 5 and choice <= 9:
         if checkIfSwitchChoiceHasFainted(frame, choice):
