@@ -50,7 +50,7 @@ def index():
                     gameText=gameText,
                 )
             else:
-                return "Game Over"
+                return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
         else:
             return render_template(
                 "home.html", player1=frame1, player2=frame2, gameText=gameText
