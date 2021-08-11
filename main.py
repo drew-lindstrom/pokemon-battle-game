@@ -19,7 +19,6 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
-gameOverBool = False
 w = Weather()
 t = Terrain()
 
@@ -29,26 +28,26 @@ def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
 
-    if gameOverBool == False:
-        if playerInput:
-            playerInput = int(playerInput)
-            frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-            if ui.callAppropriateFunctionBasedOnChoice(frame1, playerInput, printTextBool=True):
-                ai.chooseHighestDamagingAttack(frame2)
-                applyTurn(frame1, frame2, gameOverBool)
-                checkForFaintedPokemon(frame1, frame2)
-        else:
-            frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
+    if playerInput:
+        playerInput = int(playerInput)
+        frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
+        if ui.validatePlayerChoice(frame1, playerInput, printTextBool=True):
+            ai.chooseHighestDamagingAttack(frame2)
 
-        return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
+            frameOrder = getFrameOrder(frame1, frame2)
 
+            applyTurn(frameOrder, frame1, frame2)
+            applyEndOfTurnEffects(frameOrder, frame1.weather, frame1.terrain)
+            if checkForGameOver(frameOrder):
+                return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
+            checkForFaintedPokemon(frame1, frame2)
     else:
-        return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
+        frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
+
+    return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
 
 
-def applyTurn(frame1, frame2, gameOverBool):
-    frameOrder = getFrameOrder(frame1, frame2)
-
+def applyTurn(frameOrder, frame1, frame2):
     for curFrame in frameOrder:
         if curFrame.switchChoice:
             applySwitch(curFrame, frame1, frame2)
@@ -60,10 +59,6 @@ def applyTurn(frame1, frame2, gameOverBool):
 
             if checkIfCanAttackAndAttackLands(curFrame):
                 applyAttack(curFrame)
-
-    gameOverBool = applyEndOfTurnEffects(frameOrder, w, t, gameOverBool)
-
-    return gameOverBool
 
 
 def activateTurnOneSwitchAbilities(p1, p2, w, t):
@@ -110,16 +105,11 @@ def applyAttack(frame):
     applyPostAttackEffects(frame)
 
 
-def applyEndOfTurnEffects(frameOrder, w, t, gameOverBool):
+def applyEndOfTurnEffects(frameOrder, w, t):
     applyEndOfTurnAttackEffects(frameOrder)
 
     w.decrementWeather()
     t.decrementTerrain()
-
-    if checkForGameOver(frameOrder):
-        gameOverBool = True
-        return gameOverBool
-    return gameOverBool
 
 
 def checkForGameOver(frameOrder):

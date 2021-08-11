@@ -3,7 +3,7 @@ import stat_calc
 import gameText
 
 
-def callAppropriateFunctionBasedOnChoice(
+def validatePlayerChoice(
     frame, choice, inputList=[], printTextBool=False
 ):
     if choice >= 1 and choice <= 4:
