@@ -33,11 +33,10 @@ def index():
         if playerInput:
             playerInput = int(playerInput)
             frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-            ui.callAppropriateFunctionBasedOnChoice(
-                frame1, playerInput, printTextBool=True)
-            ai.chooseHighestDamagingAttack(frame2)
-            applyTurn(frame1, frame2, gameOverBool)
-            checkForFaintedPokemon(frame1, frame2)
+            if ui.callAppropriateFunctionBasedOnChoice(frame1, playerInput, printTextBool=True):
+                ai.chooseHighestDamagingAttack(frame2)
+                applyTurn(frame1, frame2, gameOverBool)
+                checkForFaintedPokemon(frame1, frame2)
         else:
             frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
 
