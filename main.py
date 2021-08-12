@@ -46,12 +46,17 @@ def index():
                 applyEndOfTurnEffects(
                     frameOrder, gameWeather, gameTerrain)
 
-            ai.checkForFaintedPokemon(frame2)
-            frameOrder = getFrameOrder(frame1, frame2)
+                ai.checkForFaintedPokemon(frame2)
+                if frame2.switchChoice:
+                    applySwitch(frame2, frame1, frame2)
 
-            for frame in frameOrder:
-                if frame.switchChoice:
-                    applySwitch(frame, frame1, frame2)
+            else:
+                ai.checkForFaintedPokemon(frame2)
+
+                frameOrder = getFrameOrder(frame1, frame2)
+                for frame in frameOrder:
+                    if frame.switchChoice:
+                        applySwitch(frame, frame1, frame2)
 
         frameOrder = getFrameOrder(frame1, frame2)
         if checkForGameOver(frameOrder):
