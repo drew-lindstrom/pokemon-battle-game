@@ -37,7 +37,7 @@ def checkIfDamagingAttack(frame, n):
     moveCategory = frame.user.moves[n].category
     if (
         moveCategory == "Physical" or moveCategory == "Special"
-    ) and ui.checkIfValidChoice(frame, n + 1):
+    ) and ui.checkIfValidAttackChoice(frame, n + 1):
         return True
     return False
 
@@ -54,6 +54,11 @@ def setHighestDamageAndMoveNumber(highestDamage, damage, moveNumber, n):
         highestDamage = damage
         moveNumber = n
     return highestDamage, moveNumber
+
+
+def checkForFaintedPokemon(frame):
+    if frame.user.checkFainted():
+        chooseNextPokemon(frame)
 
 
 def chooseNextPokemon(frame):
