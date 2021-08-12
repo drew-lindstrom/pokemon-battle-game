@@ -3,27 +3,31 @@ import stat_calc
 import gameText
 
 
-def validatePlayerChoice(
+def validateIfPlayerChoiceIsPossible(
     frame, choice, inputList=[], printTextBool=False
 ):
     if choice >= 1 and choice <= 4:
-        if frame.user.checkFainted() == False:
-            if checkIfValidChoice(frame, choice, printTextBool):
+        if checkIfUsersPokemonHasFainted(frame) == False:
+            if checkIfValidAttackChoice(frame, choice, printTextBool):
                 frame.attack = frame.user.moves[choice - 1]
                 return True
-        else:
-            gameText.output.append(
-                f"{frame.user.name} has fainted and much switch out.")
-            gameText.output.append("")
 
     elif choice >= 5 and choice <= 9:
         if checkIfSwitchChoiceHasFainted(frame, choice):
             frame.switchChoice = choice - 4
             return True
+
+
+def checkIfUsersPokemonHasFainted(frame):
+    if frame.user.checkFainted():
+        gameText.output.append(
+            f"{frame.user.name} has fainted and must switch out.")
+        gameText.output.append("")
+        return True
     return False
 
 
-def checkIfValidChoice(frame, choice, printTextBool=False):
+def checkIfValidAttackChoice(frame, choice, printTextBool=False):
     if checkIfChoiceHasEnoughPP(
         frame, choice, printTextBool
     ) and checkIfUserHasMoveLock(frame, choice, printTextBool):
