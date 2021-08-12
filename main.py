@@ -19,8 +19,8 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
-w = Weather()
-t = Terrain()
+gameWeather = Weather()
+gameTerrain = Terrain()
 
 
 @app.route("/")
@@ -28,21 +28,34 @@ def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
 
-    if playerInput:
-        playerInput = int(playerInput)
-        frame1, frame2 = applyPreInputPreparations(p1, p2, w, t)
-        if ui.validatePlayerChoice(frame1, playerInput, printTextBool=True):
-            ai.chooseHighestDamagingAttack(frame2)
+    if not playerInput:
+        frame1, frame2 = activateTurnOneSwitchAbilities(
+            p1, p2, gameWeather, gameTerrain)
 
+    else:
+        playerInput = int(playerInput)
+        frame1, frame2 = applyPreInputPreparations(
+            p1, p2, gameWeather, gameTerrain)
+        if ui.validateIfPlayerChoiceIsPossible(frame1, playerInput, printTextBool=True):
+            if frame1.user.checkFainted() == False:
+                ai.chooseHighestDamagingAttack(frame2)
+
+                frameOrder = getFrameOrder(frame1, frame2)
+
+                applyTurn(frameOrder, frame1, frame2)
+                applyEndOfTurnEffects(
+                    frameOrder, gameWeather, gameTerrain)
+
+            ai.checkForFaintedPokemon(frame2)
             frameOrder = getFrameOrder(frame1, frame2)
 
-            applyTurn(frameOrder, frame1, frame2)
-            applyEndOfTurnEffects(frameOrder, frame1.weather, frame1.terrain)
-            if checkForGameOver(frameOrder):
-                return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
-            checkForFaintedPokemon(frame1, frame2)
-    else:
-        frame1, frame2 = activateTurnOneSwitchAbilities(p1, p2, w, t)
+            for frame in frameOrder:
+                if frame.switchChoice:
+                    applySwitch(frame, frame1, frame2)
+
+        frameOrder = getFrameOrder(frame1, frame2)
+        if checkForGameOver(frameOrder):
+            return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
 
     return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
 
@@ -122,24 +135,6 @@ def checkForGameOver(frameOrder):
                 gameText.output.append("Player 1 Wins!")
             return True
     return False
-
-
-def checkForFaintedPokemon(frame1, frame2):
-    frameOrder = [frame1, frame2]
-    for curFrame in frameOrder:
-        player = curFrame.attackingTeam
-        if player.curPokemon.checkFainted():
-            getAppropriateSwitchChoice(curFrame)
-            if curFrame == frame1:
-                return True
-    return False
-
-
-def getAppropriateSwitchChoice(frame):
-    player = frame.attackingTeam
-    if player == p2:
-        ai.chooseNextPokemon(frame)
-        switch(frame, printSwitchText=True, printStatResetText=False)
 
 
 if __name__ == "__main__":
