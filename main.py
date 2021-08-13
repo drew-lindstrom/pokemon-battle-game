@@ -33,10 +33,10 @@ def index():
     gameText.output = []
 
     # Need to json dump at end of function as well.
-    if session['p1'] == None:
-        p1, p2 = createNewTeams()
-        gameWeather = Weather()
-        gameTerrain = Terrain()
+    # if session['p1'] == None:
+    #     p1, p2 = createNewTeams()
+    #     gameWeather = Weather()
+    #     gameTerrain = Terrain()
 
     # global p1
     # global p2
