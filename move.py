@@ -69,7 +69,7 @@ class Move:
     #         self._pp = n
 
     def showStats(self):
-        gameText.output.append(f"Move: {self.name}")
+        gameText.output.append(f"Move: {self.moveName}")
         gameText.output.append(f"Type: {self.type}")
         gameText.output.append(f"Category: {self.category}")
         gameText.output.append(f"Power: {self.power}")
