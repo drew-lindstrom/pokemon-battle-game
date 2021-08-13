@@ -1,51 +1,72 @@
 from game_data import movesDict
 from copy import deepcopy
 import gameText
+import json
 
 
 class Move:
-    def __init__(self, name):
+    def __init__(self, name, type=None, category=None, power=None, accuracy=None, pp=None, maxPp=None):
         self.name = name
         self.type = movesDict[name][0]
         self.category = movesDict[name][1]
         self.pp = None
 
+        power = movesDict[self.name][2]
+        if power == None:
+            power = 0
+        self.power = power
+
+        accuracy = movesDict[self.name][3]
+        if accuracy == None:
+            accuracy = 0
+        self.accuracy = accuracy
+
+        maxPp = int(movesDict[self.name][4])
+        if maxPp <= 1:
+            pass
+        else:
+            maxPp = int(maxPp * 1.6)
+        self.maxPp = maxPp
+
+        self.pp = self.maxPp
+
     def __repr__(self):
         return self.name
 
-    @property
-    def power(self):
-        power = movesDict[self.name][2]
-        if power == None:
-            return 0
-        return int(power)
+    # @property
+    # def power(self):
+    #     power = movesDict[self.name][2]
+    #     if power == None:
+    #         return 0
+    #     return int(power)
 
-    @property
-    def accuracy(self):
-        accuracy = movesDict[self.name][3]
-        if accuracy == None:
-            return 0
-        return int(accuracy)
+    # @property
+    # def accuracy(self):
+    #     accuracy = movesDict[self.name][3]
+    #     if accuracy == None:
+    #         return 0
+    #     return int(accuracy)
 
-    @property
-    def maxPp(self):
-        maxPp = int(movesDict[self.name][4])
-        if maxPp <= 1:
-            return maxPp
-        return int(maxPp * 1.6)
+    # @property
+    # def maxPp(self):
+    #     maxPp = int(movesDict[self.name][4])
+    #     if maxPp <= 1:
+    #         return maxPp
+    #     return int(maxPp * 1.6)
 
-    @property
-    def pp(self):
-        return self._pp
+    # @property
+    # def pp(self):
+    #     return self._pp
 
-    @pp.setter
-    def pp(self, n):
-        if n == None or n > self.maxPp:
-            self.pp = self.maxPp
-        elif n <= 0:
-            self._pp = 0
-        else:
-            self._pp = n
+    # TODO: Will need to update this later.
+    # @pp.setter
+    # def pp(self, n):
+    #     if n == None or n > self.maxPp:
+    #         self.pp = self.maxPp
+    #     elif n <= 0:
+    #         self._pp = 0
+    #     else:
+    #         self._pp = n
 
     def showStats(self):
         gameText.output.append(f"Move: {self.name}")
@@ -65,3 +86,7 @@ class Move:
 
     def decrementPp(self):
         self.pp -= 1
+
+    @classmethod
+    def deserializeAndUpdateMoveFromJson(cls, data):
+        return cls(**data)
