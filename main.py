@@ -14,15 +14,17 @@ import ui
 import ai
 import gameText
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 
+import json
 
 app = Flask(__name__)
+app.secret_key = b'k6gzLIwYia'
 
-gameWeather = None
-gameTerrain = None
-p1 = None
-p2 = None
+# gameWeather = None
+# gameTerrain = None
+# p1 = None
+# p2 = None
 
 
 @app.route("/")
@@ -30,10 +32,29 @@ def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
 
-    global p1
-    global p2
-    global gameWeather
-    global gameTerrain
+    # Need to json dump at end of function as well.
+    if session['p1'] == None:
+        p1, p2 = createNewTeams()
+        gameWeather = Weather()
+        gameTerrain = Terrain()
+        session['p1'] = json.dumps(p1, default=lambda o: o.__dict__, indent=4)
+        session['p2'] = json.dumps(p2, default=lambda o: o.__dict__, indent=4)
+        session['weather'] = json.dumps(
+            gameWeather, default=lambda o: o.__dict__, indent=4)
+        session['terrain'] = json.dumps(
+            gameTerrain, default=lambda o: o.__dict__, indent=4)
+
+    p1 = Player.deserializeAndUpdatePlayerFromJson(json.loads(session['p1']))
+    p2 = Player.deserializeAndUpdatePlayerFromJson(json.loads(session['p2']))
+    gameWeather = Weather.deserializeAndUpdateWeatherFromJson(
+        json.loads(session['weather']))
+    gameTerrain = Terrain.deserializeAndUpdateTerrainFromJson(
+        json.loads(session['terrain']))
+
+    # global p1
+    # global p2
+    # global gameWeather
+    # global gameTerrain
 
     if not playerInput or playerInput == "reset":
         p1, p2 = createNewTeams()
@@ -73,6 +94,13 @@ def index():
         frameOrder = getFrameOrder(frame1, frame2)
         if checkForGameOver(frameOrder):
             return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
+
+    session['p1'] = json.dumps(p1, default=lambda o: o.__dict__, indent=4)
+    session['p2'] = json.dumps(p2, default=lambda o: o.__dict__, indent=4)
+    session['weather'] = json.dumps(
+        gameWeather, default=lambda o: o.__dict__, indent=4)
+    session['terrain'] = json.dumps(
+        gameTerrain, default=lambda o: o.__dict__, indent=4)
 
     return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
 
@@ -155,4 +183,4 @@ def checkForGameOver(frameOrder):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

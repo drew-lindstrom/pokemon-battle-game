@@ -15,6 +15,7 @@ class Pokemon:
         self.gender = gender
         self.typing = list(pokemonDict[name][0])
 
+        # TODO: Will probably need to add logic like this for all attributes besides name/level/etc.
         if isinstance(moves[0], str):
             self.moves = [None, None, None, None]
             for n in range(4):

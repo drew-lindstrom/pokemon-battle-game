@@ -14,12 +14,12 @@ class Move:
         power = movesDict[self.name][2]
         if power == None:
             power = 0
-        self.power = power
+        self.power = int(power)
 
         accuracy = movesDict[self.name][3]
         if accuracy == None:
             accuracy = 0
-        self.accuracy = accuracy
+        self.accuracy = int(accuracy)
 
         maxPp = int(movesDict[self.name][4])
         if maxPp <= 1:
@@ -32,41 +32,6 @@ class Move:
 
     def __repr__(self):
         return self.name
-
-    # @property
-    # def power(self):
-    #     power = movesDict[self.name][2]
-    #     if power == None:
-    #         return 0
-    #     return int(power)
-
-    # @property
-    # def accuracy(self):
-    #     accuracy = movesDict[self.name][3]
-    #     if accuracy == None:
-    #         return 0
-    #     return int(accuracy)
-
-    # @property
-    # def maxPp(self):
-    #     maxPp = int(movesDict[self.name][4])
-    #     if maxPp <= 1:
-    #         return maxPp
-    #     return int(maxPp * 1.6)
-
-    # @property
-    # def pp(self):
-    #     return self._pp
-
-    # TODO: Will need to update this later.
-    # @pp.setter
-    # def pp(self, n):
-    #     if n == None or n > self.maxPp:
-    #         self.pp = self.maxPp
-    #     elif n <= 0:
-    #         self._pp = 0
-    #     else:
-    #         self._pp = n
 
     def showStats(self):
         gameText.output.append(f"Move: {self.moveName}")
