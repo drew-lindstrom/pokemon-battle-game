@@ -37,19 +37,6 @@ def index():
         p1, p2 = createNewTeams()
         gameWeather = Weather()
         gameTerrain = Terrain()
-        session['p1'] = json.dumps(p1, default=lambda o: o.__dict__, indent=4)
-        session['p2'] = json.dumps(p2, default=lambda o: o.__dict__, indent=4)
-        session['weather'] = json.dumps(
-            gameWeather, default=lambda o: o.__dict__, indent=4)
-        session['terrain'] = json.dumps(
-            gameTerrain, default=lambda o: o.__dict__, indent=4)
-
-    p1 = Player.deserializeAndUpdatePlayerFromJson(json.loads(session['p1']))
-    p2 = Player.deserializeAndUpdatePlayerFromJson(json.loads(session['p2']))
-    gameWeather = Weather.deserializeAndUpdateWeatherFromJson(
-        json.loads(session['weather']))
-    gameTerrain = Terrain.deserializeAndUpdateTerrainFromJson(
-        json.loads(session['terrain']))
 
     # global p1
     # global p2
@@ -62,8 +49,23 @@ def index():
         gameTerrain = Terrain()
         frame1, frame2 = activateTurnOneSwitchAbilities(
             p1, p2, gameWeather, gameTerrain)
+        session['p1'] = json.dumps(p1, default=lambda o: o.__dict__, indent=4)
+        session['p2'] = json.dumps(p2, default=lambda o: o.__dict__, indent=4)
+        session['weather'] = json.dumps(
+            gameWeather, default=lambda o: o.__dict__, indent=4)
+        session['terrain'] = json.dumps(
+            gameTerrain, default=lambda o: o.__dict__, indent=4)
 
     else:
+        p1 = Player.deserializeAndUpdatePlayerFromJson(
+            json.loads(session['p1']))
+        p2 = Player.deserializeAndUpdatePlayerFromJson(
+            json.loads(session['p2']))
+        gameWeather = Weather.deserializeAndUpdateWeatherFromJson(
+            json.loads(session['weather']))
+        gameTerrain = Terrain.deserializeAndUpdateTerrainFromJson(
+            json.loads(session['terrain']))
+
         playerInput = int(playerInput)
         frame1, frame2 = applyPreInputPreparations(
             p1, p2, gameWeather, gameTerrain)
@@ -183,5 +185,4 @@ def checkForGameOver(frameOrder):
 
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    pass
+    app.run(debug=True)
