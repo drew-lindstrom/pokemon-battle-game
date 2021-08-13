@@ -9,7 +9,7 @@ from move_effects import *
 from post_attack import *
 from switch_effects import *
 from util import *
-from teams import p1, p2
+from teams import createNewTeams
 import ui
 import ai
 import gameText
@@ -19,8 +19,10 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
-gameWeather = Weather()
-gameTerrain = Terrain()
+gameWeather = None
+gameTerrain = None
+p1 = None
+p2 = None
 
 
 @app.route("/")
@@ -28,7 +30,15 @@ def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
 
-    if not playerInput:
+    global p1
+    global p2
+    global gameWeather
+    global gameTerrain
+
+    if not playerInput or playerInput == "reset":
+        p1, p2 = createNewTeams()
+        gameWeather = Weather()
+        gameTerrain = Terrain()
         frame1, frame2 = activateTurnOneSwitchAbilities(
             p1, p2, gameWeather, gameTerrain)
 
@@ -50,10 +60,12 @@ def index():
                 if frame2.switchChoice:
                     applySwitch(frame2, frame1, frame2)
 
+            # TODO: Clean up frameOrder and clean up applySwitch method.
             else:
                 ai.checkForFaintedPokemon(frame2)
 
                 frameOrder = getFrameOrder(frame1, frame2)
+
                 for frame in frameOrder:
                     if frame.switchChoice:
                         applySwitch(frame, frame1, frame2)
