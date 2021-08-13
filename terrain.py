@@ -1,10 +1,11 @@
 from pokemon import Pokemon
 import gameText
+import json
 
 
 class Terrain:
-    def __init__(self, terrain=None, counter=0):
-        self.currentTerrain = terrain
+    def __init__(self, currentTerrain=None, counter=0):
+        self.currentTerrain = currentTerrain
         self.counter = counter
 
     def setTerrain(self, terrainName, pokemon):
@@ -29,6 +30,10 @@ class Terrain:
         gameText.output.append("")
         self.currentTerrain = None
         self.counter = 0
+
+    @classmethod
+    def deserializeAndUpdateTerrainFromJson(cls, data):
+        return cls(**data)
 
 
 def checkDamageModFromTerrain(frame):
