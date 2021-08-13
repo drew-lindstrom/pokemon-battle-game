@@ -3,23 +3,26 @@ from move import Move
 import math
 import random
 import gameText
+import json
 
 
 class Pokemon:
     def __init__(
-        self, name, level, gender, moves, ability, item, IVs, EVs, nature, grounded=True
-    ):
+            self, name, level, gender, moves, ability, item, IVs, EVs, nature, typing=[], prevMove=None,
+            stat={}, statMod={}, status=[], vStatus={}, grounded=True):
         self.name = name
         self.level = level
         self.gender = gender
         self.typing = list(pokemonDict[name][0])
 
-        self.moves = [None, None, None, None]
+        if isinstance(moves[0], str):
+            self.moves = [None, None, None, None]
+            for n in range(4):
+                self.setMove(n, moves[n])
+        else:
+            self.moves = moves
 
         self.prevMove = None
-
-        for n in range(4):
-            self.setMove(n, moves[n])
 
         self.ability = ability
         self.item = item
@@ -82,8 +85,8 @@ class Pokemon:
                     (statsFormula(n) + 5) * naturesDict[self.nature][n - 1]
                 )
 
-    def setMove(self, n, moveName):
-        self.moves[n] = Move(moveName)
+    def setMove(self, n, name):
+        self.moves[n] = Move(name)
 
     def updateStatModifier(self, stat, n):
         self.statMod[stat] += n
@@ -292,3 +295,11 @@ class Pokemon:
         if "Move Lock" in self.vStatus:
             return True
         return False
+
+    @classmethod
+    def deserializeAndUpdatePokemonFromJson(cls, data):
+        moves = list(
+            map(Move.deserializeAndUpdateMoveFromJson, data['moves']))
+        return cls(name=data['name'], level=data['level'], gender=data['gender'], moves=moves, ability=data['ability'], item=data['item'],
+                   IVs=data['IVs'], EVs=data['EVs'], nature=data['nature'], typing=data['typing'], prevMove=data['prevMove'], stat=data['stat'],
+                   statMod=data['statMod'], status=data['status'], vStatus=data['vStatus'], grounded=data['grounded'])
