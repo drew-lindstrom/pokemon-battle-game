@@ -1,10 +1,11 @@
 from pokemon import Pokemon
 import gameText
+import json
 
 
 class Weather:
-    def __init__(self, weatherName="Clear Skies", counter=0):
-        self.currentWeather = weatherName
+    def __init__(self, currentWeather="Clear Skies", counter=0):
+        self.currentWeather = currentWeather
         self.counter = counter
 
     def setWeather(self, weatherName, pokemon):
@@ -45,6 +46,10 @@ class Weather:
         gameText.output.append("")
         self.currentWeather = "Clear Skies"
         self.counter = 0
+
+    @classmethod
+    def deserializeAndUpdateWeatherFromJson(cls, data):
+        return cls(**data)
 
 
 def applyWeatherDamage(weather, pokemon):
