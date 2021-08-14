@@ -9,13 +9,12 @@ import json
 class Pokemon:
     def __init__(
             self, name, level, gender, moves, ability, item, IVs, EVs, nature, typing=[], prevMove=None,
-            stat={}, statMod={}, status=[], vStatus={}, grounded=True):
+            stat={}, statMod={}, status=[], vStatus={}, grounded=None):
         self.name = name
         self.level = level
         self.gender = gender
         self.typing = list(pokemonDict[name][0])
 
-        # TODO: Will probably need to add logic like this for all attributes besides name/level/etc.
         if isinstance(moves[0], str):
             self.moves = [None, None, None, None]
             for n in range(4):
@@ -23,36 +22,58 @@ class Pokemon:
         else:
             self.moves = moves
 
-        self.prevMove = None
+        if prevMove == None:
+            self.prevMove = None
+        else:
+            self.prevMove = prevMove
 
         self.ability = ability
         self.item = item
         self.IVs = IVs
         self.EVs = EVs
         self.nature = nature
-        self.stat = {
-            "maxHp": 0,
-            "hp": 0,
-            "attack": 0,
-            "defense": 0,
-            "spAttack": 0,
-            "spDefense": 0,
-            "speed": 0,
-        }
-        self.initStat()
 
-        self.statMod = {
-            "attack": 0,
-            "defense": 0,
-            "spAttack": 0,
-            "spDefense": 0,
-            "speed": 0,
-            "accuracy": 0,
-            "evasion": 0,
-        }
-        self.status = [None, 0]
-        self.vStatus = {}
-        self.grounded = True
+        if stat == {}:
+            self.stat = {
+                "maxHp": 0,
+                "hp": 0,
+                "attack": 0,
+                "defense": 0,
+                "spAttack": 0,
+                "spDefense": 0,
+                "speed": 0,
+            }
+            self.initStat()
+        else:
+            self.stat = stat
+
+        if statMod == {}:
+            self.statMod = {
+                "attack": 0,
+                "defense": 0,
+                "spAttack": 0,
+                "spDefense": 0,
+                "speed": 0,
+                "accuracy": 0,
+                "evasion": 0,
+            }
+        else:
+            self.statMod = statMod
+
+        if status == []:
+            self.status = [None, 0]
+        else:
+            self.status = status
+
+        if vStatus == {}:
+            self.vStatus = {}
+        else:
+            self.vStatus = vStatus
+
+        if grounded == None:
+            self.grounded = True
+        else:
+            self.grounded = grounded
 
     def __repr__(self):
         return self.name
