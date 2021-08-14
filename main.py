@@ -21,54 +21,24 @@ import json
 app = Flask(__name__)
 app.secret_key = b'k6gzLIwYia'
 
-# gameWeather = None
-# gameTerrain = None
-# p1 = None
-# p2 = None
-
 
 @app.route("/")
 def index():
     playerInput = request.args.get("playerInput", "")
     gameText.output = []
 
-    # Need to json dump at end of function as well.
-    # if session['p1'] == None:
-    #     p1, p2 = createNewTeams()
-    #     gameWeather = Weather()
-    #     gameTerrain = Terrain()
-
-    # global p1
-    # global p2
-    # global gameWeather
-    # global gameTerrain
-
     if not playerInput or playerInput == "reset":
-        p1, p2 = createNewTeams()
-        gameWeather = Weather()
-        gameTerrain = Terrain()
+        p1, p2, gameWeather, gameTerrain = createNewGame()
         frame1, frame2 = activateTurnOneSwitchAbilities(
             p1, p2, gameWeather, gameTerrain)
-        session['p1'] = json.dumps(p1, default=lambda o: o.__dict__, indent=4)
-        session['p2'] = json.dumps(p2, default=lambda o: o.__dict__, indent=4)
-        session['weather'] = json.dumps(
-            gameWeather, default=lambda o: o.__dict__, indent=4)
-        session['terrain'] = json.dumps(
-            gameTerrain, default=lambda o: o.__dict__, indent=4)
+        # updateDataToJson(p1, p2, gameWeather, gameTerrain)
 
     else:
-        p1 = Player.deserializeAndUpdatePlayerFromJson(
-            json.loads(session['p1']))
-        p2 = Player.deserializeAndUpdatePlayerFromJson(
-            json.loads(session['p2']))
-        gameWeather = Weather.deserializeAndUpdateWeatherFromJson(
-            json.loads(session['weather']))
-        gameTerrain = Terrain.deserializeAndUpdateTerrainFromJson(
-            json.loads(session['terrain']))
-
+        p1, p2, gameWeather, gameTerrain = loadDataFromJson()
         playerInput = int(playerInput)
         frame1, frame2 = applyPreInputPreparations(
             p1, p2, gameWeather, gameTerrain)
+
         if ui.validateIfPlayerChoiceIsPossible(frame1, playerInput, printTextBool=True):
             if frame1.user.checkFainted() == False:
                 ai.chooseHighestDamagingAttack(frame2)
@@ -97,14 +67,37 @@ def index():
         if checkForGameOver(frameOrder):
             return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
 
+    updateDataToJson(p1, p2, gameWeather, gameTerrain)
+
+    return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
+
+
+def createNewGame():
+    p1, p2 = createNewTeams()
+    gameWeather = Weather()
+    gameTerrain = Terrain()
+    return p1, p2, gameWeather, gameTerrain
+
+
+def loadDataFromJson():
+    p1 = Player.deserializeAndUpdatePlayerFromJson(
+        json.loads(session['p1']))
+    p2 = Player.deserializeAndUpdatePlayerFromJson(
+        json.loads(session['p2']))
+    gameWeather = Weather.deserializeAndUpdateWeatherFromJson(
+        json.loads(session['weather']))
+    gameTerrain = Terrain.deserializeAndUpdateTerrainFromJson(
+        json.loads(session['terrain']))
+    return p1, p2, gameWeather, gameTerrain
+
+
+def updateDataToJson(p1, p2, gameWeather, gameTerrain):
     session['p1'] = json.dumps(p1, default=lambda o: o.__dict__, indent=4)
     session['p2'] = json.dumps(p2, default=lambda o: o.__dict__, indent=4)
     session['weather'] = json.dumps(
         gameWeather, default=lambda o: o.__dict__, indent=4)
     session['terrain'] = json.dumps(
         gameTerrain, default=lambda o: o.__dict__, indent=4)
-
-    return render_template("home.html", player1=frame1, player2=frame2, gameText=gameText)
 
 
 def applyTurn(frameOrder, frame1, frame2):
