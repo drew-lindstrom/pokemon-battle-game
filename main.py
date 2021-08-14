@@ -31,7 +31,6 @@ def index():
         p1, p2, gameWeather, gameTerrain = createNewGame()
         frame1, frame2 = activateTurnOneSwitchAbilities(
             p1, p2, gameWeather, gameTerrain)
-        # updateDataToJson(p1, p2, gameWeather, gameTerrain)
 
     else:
         p1, p2, gameWeather, gameTerrain = loadDataFromJson()
@@ -64,7 +63,7 @@ def index():
                         applySwitch(frame, frame1, frame2)
 
         frameOrder = getFrameOrder(frame1, frame2)
-        if checkForGameOver(frameOrder):
+        if checkForGameOver(frameOrder, p1, p2):
             return render_template("gameOver.html", player1=frame1, player2=frame2, gameText=gameText)
 
     updateDataToJson(p1, p2, gameWeather, gameTerrain)
@@ -165,7 +164,7 @@ def applyEndOfTurnEffects(frameOrder, w, t):
     t.decrementTerrain()
 
 
-def checkForGameOver(frameOrder):
+def checkForGameOver(frameOrder, p1, p2):
     for curFrame in frameOrder:
         player = curFrame.attackingTeam
         if player.checkGameOver():
