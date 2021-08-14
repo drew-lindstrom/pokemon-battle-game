@@ -28,7 +28,10 @@ class Move:
             maxPp = int(maxPp * 1.6)
         self.maxPp = maxPp
 
-        self.pp = self.maxPp
+        if pp == None:
+            self.pp = self.maxPp
+        else:
+            self.pp = pp
 
     def __repr__(self):
         return self.name
