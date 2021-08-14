@@ -177,4 +177,4 @@ def checkForGameOver(frameOrder, p1, p2):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
