@@ -20,7 +20,9 @@
                                 {{ player2.user.name }}
                             </div>
                             <div class='row'>
-                                <progress class='healthBar' value="{{ player2.user.stat['hp'] }}"
+                                <label for="player2Health">{{ player2.user.stat['hp'] }}/{{
+                                    player2.user.stat['maxHp'] }} HP</label>
+                                <progress class='healthBar' id="player2Health" value="{{ player2.user.stat['hp'] }}"
                                     max="{{ player2.user.stat['maxHp'] }}"></progress>
                                 <div class='status'>
                                     {% if player2.user.status[0] != None and player2.user.status[0] != 'Fainted' %}
@@ -43,7 +45,9 @@
                                 {{ player1.user.name }}
                             </div>
                             <div class='row'>
-                                <progress class='healthBar' value="{{ player1.user.stat['hp'] }}"
+                                <label for="player1Health">{{ player1.user.stat['hp'] }}/{{
+                                    player1.user.stat['maxHp'] }} HP</label>
+                                <progress class='healthBar' id="player1Health" value="{{ player1.user.stat['hp'] }}"
                                     max="{{ player1.user.stat['maxHp'] }}"></progress>
                                 <div class='status'>
                                     {% if player1.user.status[0] != None and player1.user.status[0] != 'Fainted' %}
