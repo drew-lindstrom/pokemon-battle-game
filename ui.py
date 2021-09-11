@@ -52,7 +52,7 @@ def checkIfUserHasMoveLock(frame, choice, printTextBool=False):
     ):
         if printTextBool:
             gameText.output.append(
-                f"{frame.user.name} must use {frame.user.prevMove}.")
+                f"{frame.user.name} is holding a {frame.user.item} and because of the items effect must use its first move: {frame.user.prevMove}.")
             gameText.output.append("")
         return False
     return True
