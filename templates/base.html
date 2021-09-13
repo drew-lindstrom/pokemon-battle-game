@@ -12,23 +12,26 @@
     <div class='container'>
         <div class='row'>
             <div class='col-9'>
-                <div class='row'>
+
+                <div id='fightWindow' class='row'>
                     <img class='background' src='../static/images/background.webp' />
-                    <div class='row opponentCurrentPokemonHealthAndStatus'>
+                    <div class='row opponentPokemonBlock'>
                         <div class='col'>
-                            <div class='pokemonName'>
+                            <div class='uiText'>
                                 {{ player2.user.name }}
                             </div>
-                            <div class='row'>
-                                <label for="player2Health">{{ player2.user.stat['hp'] }}/{{
-                                    player2.user.stat['maxHp'] }} HP</label>
-                                <progress class='healthBar' id="player2Health" value="{{ player2.user.stat['hp'] }}"
-                                    max="{{ player2.user.stat['maxHp'] }}"></progress>
-                                <div class='status'>
-                                    {% if player2.user.status[0] != None and player2.user.status[0] != 'Fainted' %}
-                                    {{ player2.user.status[0] }}
-                                    {% endif %}
-                                </div>
+                            <div class='row progress'>
+                                <div class="progress-bar bg-success player2HpBar" role="progressbar"
+                                    aria-valuenow="{{ player2.user.stat['hp'] }}" aria-valuemin="0"
+                                    aria-valuemax="{{ player2.user.stat['maxHp'] }}"></div>
+                            </div>
+                            <div class='uiText'>
+                                {{ player2.user.stat['hp'] }}/{{ player2.user.stat['maxHp'] }} HP
+                            </div>
+                            <div class='uiText'>
+                                {% if player2.user.status[0] != None and player2.user.status[0] != 'Fainted' %}
+                                {{ player2.user.status[0] }}
+                                {% endif %}
                             </div>
                         </div>
                         <div class='col'>
@@ -36,24 +39,26 @@
                         </div>
                     </div>
 
-                    <div class='row playerCurrentPokemonHealthAndStatus'>
+                    <div class='row playerPokemonBlock'>
                         <div class='col'>
                             <img class='pokemonImage' src='../static/images/{{ player1.user.name }}-back.gif' />
                         </div>
                         <div class='col'>
-                            <div class='pokemonName'>
+                            <div class='uiText'>
                                 {{ player1.user.name }}
                             </div>
-                            <div class='row'>
-                                <label for="player1Health">{{ player1.user.stat['hp'] }}/{{
-                                    player1.user.stat['maxHp'] }} HP</label>
-                                <progress class='healthBar' id="player1Health" value="{{ player1.user.stat['hp'] }}"
-                                    max="{{ player1.user.stat['maxHp'] }}"></progress>
-                                <div class='status'>
-                                    {% if player1.user.status[0] != None and player1.user.status[0] != 'Fainted' %}
-                                    {{ player1.user.status[0] }}
-                                    {% endif %}
-                                </div>
+                            <div class='row progress'>
+                                <div class="progress-bar bg-success player1HpBar" role="progressbar"
+                                    aria-valuenow="{{ player2.user.stat['hp'] }}" aria-valuemin="0"
+                                    aria-valuemax="{{ player2.user.stat['maxHp'] }}"></div>
+                            </div>
+                            <div class='uiText'>
+                                {{ player1.user.stat['hp'] }}/{{ player1.user.stat['maxHp'] }} HP
+                            </div>
+                            <div class='uiText'>
+                                {% if player1.user.status[0] != None and player1.user.status[0] != 'Fainted' %}
+                                {{ player1.user.status[0] }}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -61,17 +66,19 @@
 
                 {% block content %}{% endblock %}
 
-                <div class='container'>
+                <div id='resetButton' class='container'>
                     <div class="row">
-                        <form class="resetBlock" action="" method="get">
-                            <button type="submit" name='playerInput' class="btn btn-secondary" value="reset">Reset
+                        <form class="uiText" action="" method="get">
+                            <button type="submit" name='playerInput' class="btn btn-secondary uiText"
+                                value="reset">Reset
                                 Game</button>
                         </form>
                     </div>
                 </div>
 
             </div>
-            <div class='col'>
+
+            <div id='gameTextBlock' class='col'>
                 <div class='card'>
                     <div class='card-body gameText'>
                         {% for text in gameText.output %}
@@ -95,6 +102,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script>
+        function addCss(rule) {
+            let css = document.createElement('style');
+            css.type = 'text/css';
+            if (css.styleSheet) css.styleSheet.cssText = rule; // Support for IE
+            else css.appendChild(document.createTextNode(rule)); // Support for the rest
+            document.getElementsByTagName("head")[0].appendChild(css);
+        }
+
+        // CSS rules
+        let player1Hp = '.player1HpBar { width: {{ player1.user.stat["hp"]/player1.user.stat["maxHp"] * 100 }}%; }';
+        let player2Hp = '.player2HpBar { width: {{ player2.user.stat["hp"]/player2.user.stat["maxHp"] * 100 }}%; }';
+
+        // Load the rules and execute after the DOM loads
+        window.addEventListener("load", addCss(player1Hp), false);
+        window.addEventListener("load", addCss(player2Hp), false);
+        // window.onload = function () { addCss(player1Hp) };
+        // window.onload = function () { addCss(player2Hp) };
+    </script>
+
 </body>
 
 </html>

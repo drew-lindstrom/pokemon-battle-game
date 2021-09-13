@@ -3,18 +3,18 @@
     display: block;
 }
 
-.opponentCurrentPokemonHealthAndStatus {
+.opponentPokemonBlock {
     right: 30%;
     top: 10%;
     position: absolute;
 }
-.playerCurrentPokemonHealthAndStatus {
+.playerPokemonBlock {
     left: 10%;
     bottom: 15%;
     position: absolute;
 }
 
-.btn, .pokemonName, .status, label {
+.uiText{
     color: white;
     text-shadow:
     -1px -1px 0 #000,
@@ -28,6 +28,11 @@
     height: 150px;
     object-fit: cover;
 }
+
+.progress-bar {
+    object-fit: cover;
+}
+
 .healthBar {
     height: 25px;
     width: 100px;

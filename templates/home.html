@@ -6,8 +6,8 @@
         <form class="inputBlock" action="" method="get">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                 {% for n in range(4) %}
-                <button type="submit" name='playerInput' class="btn btn-secondary {{ player1.user.moves[n].type }}"
-                    value="{{ n + 1 }}">{{
+                <button type="submit" name='playerInput'
+                    class="btn btn-secondary {{ player1.user.moves[n].type }} uiText" value="{{ n + 1 }}">{{
                     player1.user.moves[n] }} {{
                     player1.user.moves[n].pp
                     }}/{{
@@ -15,7 +15,7 @@
                 {% endfor %}
             </div>
             <div class="btn-group" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle uiText"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Switch With:
                 </button>
