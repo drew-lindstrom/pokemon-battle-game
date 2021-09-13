@@ -21,7 +21,7 @@
                                 {{ player2.user.name }}
                             </div>
                             <div class='row progress'>
-                                <div class="progress-bar bg-success player2HpBar" role="progressbar"
+                                <div id="player2HpBar" class="progress-bar player2HpBar" role="progressbar"
                                     aria-valuenow="{{ player2.user.stat['hp'] }}" aria-valuemin="0"
                                     aria-valuemax="{{ player2.user.stat['maxHp'] }}"></div>
                             </div>
@@ -48,7 +48,7 @@
                                 {{ player1.user.name }}
                             </div>
                             <div class='row progress'>
-                                <div class="progress-bar bg-success player1HpBar" role="progressbar"
+                                <div id="player1HpBar" class="progress-bar player1HpBar" role="progressbar"
                                     aria-valuenow="{{ player2.user.stat['hp'] }}" aria-valuemin="0"
                                     aria-valuemax="{{ player2.user.stat['maxHp'] }}"></div>
                             </div>
@@ -111,15 +111,49 @@
             document.getElementsByTagName("head")[0].appendChild(css);
         }
 
+        function addHtmlClass(elementName) {
+            var element = document.getElementById(elementName);
+            var playerHp = 0;
+
+            if (elementName === 'player1HpBar') {
+                playerHp = parseFloat('{{ player1.user.stat["hp"]/player1.user.stat["maxHp"] }}');
+            }
+            else {
+                playerHp = parseFloat('{{ player2.user.stat["hp"]/player2.user.stat["maxHp"] }}');
+            }
+
+            console.log(playerHp);
+
+            if (playerHp > 0.5) {
+                element.classList.add("bg-success");
+            }
+            else if (playerHp < 0.5 && playerHp > 0.25) {
+                element.classList.add("bg-warning");
+            }
+            else {
+                element.classList.add("bg-danger");
+            }
+        }
+
+        function removeHtmlClass(elementName) {
+            var element = document.getElementById(elementName);
+            element.classList.remove("bg-success");
+            element.classList.remove("bg-warning");
+            element.classList.remove("bg-danger");
+        }
+
         // CSS rules
         let player1Hp = '.player1HpBar { width: {{ player1.user.stat["hp"]/player1.user.stat["maxHp"] * 100 }}%; }';
         let player2Hp = '.player2HpBar { width: {{ player2.user.stat["hp"]/player2.user.stat["maxHp"] * 100 }}%; }';
 
         // Load the rules and execute after the DOM loads
+        window.addEventListener("load", removeHtmlClass("player1HpBar"));
+        window.addEventListener("load", removeHtmlClass("player2HpBar"));
+        window.addEventListener("load", addHtmlClass("player1HpBar"));
+        window.addEventListener("load", addHtmlClass("player2HpBar"));
         window.addEventListener("load", addCss(player1Hp), false);
         window.addEventListener("load", addCss(player2Hp), false);
-        // window.onload = function () { addCss(player1Hp) };
-        // window.onload = function () { addCss(player2Hp) };
+
     </script>
 
 </body>
