@@ -17,7 +17,7 @@
                     <img class='background' src='../static/images/background.webp' />
                     <div class='row opponentPokemonBlock'>
                         <div class='col'>
-                            <div class='uiText'>
+                            <div class='row justify-content-start uiText '>
                                 {{ player2.user.name }}
                             </div>
                             <div class='row progress'>
@@ -25,10 +25,10 @@
                                     aria-valuenow="{{ player2.user.stat['hp'] }}" aria-valuemin="0"
                                     aria-valuemax="{{ player2.user.stat['maxHp'] }}"></div>
                             </div>
-                            <div class='uiText'>
+                            <div class='row justify-content-end uiText'>
                                 {{ player2.user.stat['hp'] }}/{{ player2.user.stat['maxHp'] }} HP
                             </div>
-                            <div class='uiText'>
+                            <div class='row justify-content-end uiText'>
                                 {% if player2.user.status[0] != None and player2.user.status[0] != 'Fainted' %}
                                 {{ player2.user.status[0] }}
                                 {% endif %}
@@ -44,7 +44,7 @@
                             <img class='pokemonImage' src='../static/images/{{ player1.user.name }}-back.gif' />
                         </div>
                         <div class='col'>
-                            <div class='uiText'>
+                            <div class='row justify-content-start uiText'>
                                 {{ player1.user.name }}
                             </div>
                             <div class='row progress'>
@@ -52,10 +52,10 @@
                                     aria-valuenow="{{ player2.user.stat['hp'] }}" aria-valuemin="0"
                                     aria-valuemax="{{ player2.user.stat['maxHp'] }}"></div>
                             </div>
-                            <div class='uiText'>
+                            <div class='row justify-content-end uiText'>
                                 {{ player1.user.stat['hp'] }}/{{ player1.user.stat['maxHp'] }} HP
                             </div>
-                            <div class='uiText'>
+                            <div class='row justify-content-end uiText'>
                                 {% if player1.user.status[0] != None and player1.user.status[0] != 'Fainted' %}
                                 {{ player1.user.status[0] }}
                                 {% endif %}
