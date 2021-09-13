@@ -1,23 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class='container'>
-    <div class="row">
+<div class="row">
+    <form class="col-9 inputBlock" action="" method="get">
+        <div class="col btn-group" role="group" aria-label="Button group with nested dropdown">
+            {% for n in range(4) %}
+            <button type="submit" name='playerInput'
+                class="col btn btn-secondary {{ player1.user.moves[n].type }} uiText" value="{{ n + 1 }}">{{
+                player1.user.moves[n] }} {{
+                player1.user.moves[n].pp
+                }}/{{
+                player1.user.moves[n].maxPp }}</button>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+<div class='row'>
+    <div class='col' id='switchButton'>
         <form class="inputBlock" action="" method="get">
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                {% for n in range(4) %}
-                <button type="submit" name='playerInput'
-                    class="btn btn-secondary {{ player1.user.moves[n].type }} uiText" value="{{ n + 1 }}">{{
-                    player1.user.moves[n] }} {{
-                    player1.user.moves[n].pp
-                    }}/{{
-                    player1.user.moves[n].maxPp }}</button>
-                {% endfor %}
-            </div>
             <div class="btn-group" role="group">
-                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle uiText"
+                <button id="btnGroupDrop1" type="button" class="col btn btn-secondary dropdown-toggle uiText"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Switch With:
+                    Switch Current Pokemon With:
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                     {% for n in range(1, 6) %}
@@ -33,5 +38,13 @@
             </div>
         </form>
     </div>
+
+    <div class='col justify-content-end' id='resetButton'>
+        <form class="uiText" action="" method="get">
+            <button type="submit" name='playerInput' class="btn btn-secondary uiText" value="reset">Reset
+                Game</button>
+        </form>
+    </div>
 </div>
+
 {% endblock %}

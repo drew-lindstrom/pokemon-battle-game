@@ -12,9 +12,12 @@
     <div class='container'>
         <div class='row'>
             <div class='col-9'>
-
                 <div id='fightWindow' class='row'>
-                    <img class='background' src='../static/images/background.webp' />
+
+                    <div class='col-9'>
+                        <img class='background image-responsive' width='100%' src='../static/images/background.webp' />
+                    </div>
+
                     <div class='row opponentPokemonBlock'>
                         <div class='col'>
                             <div class='row justify-content-start uiText '>
@@ -62,20 +65,10 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 {% block content %}{% endblock %}
-
-                <div id='resetButton' class='container'>
-                    <div class="row">
-                        <form class="uiText" action="" method="get">
-                            <button type="submit" name='playerInput' class="btn btn-secondary uiText"
-                                value="reset">Reset
-                                Game</button>
-                        </form>
-                    </div>
-                </div>
-
             </div>
 
             <div id='gameTextBlock' class='col'>
