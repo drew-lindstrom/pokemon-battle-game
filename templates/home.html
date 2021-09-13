@@ -2,18 +2,20 @@
 
 {% block content %}
 <div class="row">
-    <form class="col-9 inputBlock" action="" method="get">
-        <div class="col btn-group" role="group" aria-label="Button group with nested dropdown">
-            {% for n in range(4) %}
-            <button type="submit" name='playerInput'
-                class="col btn btn-secondary {{ player1.user.moves[n].type }} uiText" value="{{ n + 1 }}">{{
-                player1.user.moves[n] }} {{
-                player1.user.moves[n].pp
-                }}/{{
-                player1.user.moves[n].maxPp }}</button>
-            {% endfor %}
-        </div>
-    </form>
+    <div class="col">
+        <form class="inputBlock" action="" method="get">
+            <div class="col btn-group" role="group" aria-label="Button group with nested dropdown">
+                {% for n in range(4) %}
+                <button type="submit" name='playerInput'
+                    class="col btn btn-secondary {{ player1.user.moves[n].type }} uiText" value="{{ n + 1 }}">{{
+                    player1.user.moves[n] }} {{
+                    player1.user.moves[n].pp
+                    }}/{{
+                    player1.user.moves[n].maxPp }}</button>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class='row'>
@@ -39,7 +41,7 @@
         </form>
     </div>
 
-    <div class='col justify-content-end' id='resetButton'>
+    <div class='justify-content-end' id='resetButton'>
         <form class="uiText" action="" method="get">
             <button type="submit" name='playerInput' class="btn btn-secondary uiText" value="reset">Reset
                 Game</button>
